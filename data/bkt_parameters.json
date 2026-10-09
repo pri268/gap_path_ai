@@ -1,0 +1,596 @@
+{
+  "metadata": {
+    "model": "Bayesian Knowledge Tracing (Standard Corbett & Anderson formulation)",
+    "tuning_status": "Experimental (Synthetic Dataset Benchmark)",
+    "scientific_validation_notice": "Tuned on synthetic student diagnostic records for development & algorithmic benchmarking. Parameters are experimental and not clinically calibrated on human student populations.",
+    "split": "70% Train (7,000 items) / 30% Validation (3,000 items)",
+    "mastery_threshold_default": 0.8
+  },
+  "topics": {},
+  "subjects": {
+    "CN": {
+      "subject_id": "CN",
+      "subject_name": "Computer Networks",
+      "topics": {
+        "CN_01_OSI_LAYERS": {
+          "topic_id": "CN_01_OSI_LAYERS",
+          "topic_name": "OSI & TCP/IP Architecture",
+          "empirical_accuracy": 0.773,
+          "p_init": 0.3,
+          "p_transit": 0.1,
+          "p_guess": 0.25,
+          "p_slip": 0.08,
+          "mastery_threshold": 0.8,
+          "validation_metrics": {
+            "val_rmse": 0.5286,
+            "val_acc": 0.224
+          }
+        },
+        "CN_02_FRAMING_CRC": {
+          "topic_id": "CN_02_FRAMING_CRC",
+          "topic_name": "Data Link Framing & CRC Error Detection",
+          "empirical_accuracy": 0.613,
+          "p_init": 0.3,
+          "p_transit": 0.1,
+          "p_guess": 0.25,
+          "p_slip": 0.08,
+          "mastery_threshold": 0.8,
+          "validation_metrics": {
+            "val_rmse": 0.5131,
+            "val_acc": 0.3887
+          }
+        },
+        "CN_03_FLOW_CONTROL": {
+          "topic_id": "CN_03_FLOW_CONTROL",
+          "topic_name": "Flow & Error Control (Stop-and-Wait, Go-Back-N, SR)",
+          "empirical_accuracy": 0.544,
+          "p_init": 0.3,
+          "p_transit": 0.1,
+          "p_guess": 0.25,
+          "p_slip": 0.08,
+          "mastery_threshold": 0.8,
+          "validation_metrics": {
+            "val_rmse": 0.5064,
+            "val_acc": 0.459
+          }
+        },
+        "CN_04_SUBNETTING_IP": {
+          "topic_id": "CN_04_SUBNETTING_IP",
+          "topic_name": "IPv4 Addressing & Subnet Masking",
+          "empirical_accuracy": 0.515,
+          "p_init": 0.3,
+          "p_transit": 0.1,
+          "p_guess": 0.25,
+          "p_slip": 0.08,
+          "mastery_threshold": 0.8,
+          "validation_metrics": {
+            "val_rmse": 0.5035,
+            "val_acc": 0.489
+          }
+        },
+        "CN_05_ROUTING_ALGO": {
+          "topic_id": "CN_05_ROUTING_ALGO",
+          "topic_name": "Distance Vector & Link State Routing",
+          "empirical_accuracy": 0.483,
+          "p_init": 0.3,
+          "p_transit": 0.1,
+          "p_guess": 0.25,
+          "p_slip": 0.08,
+          "mastery_threshold": 0.8,
+          "validation_metrics": {
+            "val_rmse": 0.5003,
+            "val_acc": 0.5217
+          }
+        },
+        "CN_06_TCP_UDP_TRANSPORT": {
+          "topic_id": "CN_06_TCP_UDP_TRANSPORT",
+          "topic_name": "TCP vs UDP Transport Protocols",
+          "empirical_accuracy": 0.607,
+          "p_init": 0.3,
+          "p_transit": 0.1,
+          "p_guess": 0.25,
+          "p_slip": 0.08,
+          "mastery_threshold": 0.8,
+          "validation_metrics": {
+            "val_rmse": 0.513,
+            "val_acc": 0.3897
+          }
+        },
+        "CN_07_TCP_CONGESTION": {
+          "topic_id": "CN_07_TCP_CONGESTION",
+          "topic_name": "TCP Congestion Control (AIMD, Slow Start)",
+          "empirical_accuracy": 0.356,
+          "p_init": 0.15,
+          "p_transit": 0.1,
+          "p_guess": 0.2,
+          "p_slip": 0.08,
+          "mastery_threshold": 0.8,
+          "validation_metrics": {
+            "val_rmse": 0.4737,
+            "val_acc": 0.6627
+          }
+        },
+        "CN_08_DNS_SYSTEM": {
+          "topic_id": "CN_08_DNS_SYSTEM",
+          "topic_name": "Domain Name System (DNS) & Name Resolution",
+          "empirical_accuracy": 0.615,
+          "p_init": 0.3,
+          "p_transit": 0.1,
+          "p_guess": 0.25,
+          "p_slip": 0.08,
+          "mastery_threshold": 0.8,
+          "validation_metrics": {
+            "val_rmse": 0.5125,
+            "val_acc": 0.3957
+          }
+        },
+        "CN_09_HTTP_APPLICATION": {
+          "topic_id": "CN_09_HTTP_APPLICATION",
+          "topic_name": "HTTP/HTTPS & Application Layer Protocols",
+          "empirical_accuracy": 0.646,
+          "p_init": 0.3,
+          "p_transit": 0.1,
+          "p_guess": 0.25,
+          "p_slip": 0.08,
+          "mastery_threshold": 0.8,
+          "validation_metrics": {
+            "val_rmse": 0.5166,
+            "val_acc": 0.3527
+          }
+        },
+        "CN_10_NETWORK_SECURITY": {
+          "topic_id": "CN_10_NETWORK_SECURITY",
+          "topic_name": "Network Security, Cryptography & Firewalls",
+          "empirical_accuracy": 0.493,
+          "p_init": 0.3,
+          "p_transit": 0.1,
+          "p_guess": 0.25,
+          "p_slip": 0.08,
+          "mastery_threshold": 0.8,
+          "validation_metrics": {
+            "val_rmse": 0.5017,
+            "val_acc": 0.507
+          }
+        }
+      }
+    },
+    "OS": {
+      "subject_id": "OS",
+      "subject_name": "Operating Systems",
+      "topics": {
+        "OS_01_PROCESS_MGMT": {
+          "topic_id": "OS_01_PROCESS_MGMT",
+          "topic_name": "Process Lifecycle, States & PCB",
+          "empirical_accuracy": 0.65,
+          "p_init": 0.2,
+          "p_transit": 0.15,
+          "p_guess": 0.2,
+          "p_slip": 0.1,
+          "mastery_threshold": 0.8,
+          "validation_metrics": {
+            "val_rmse": 0.477,
+            "val_acc": 0.65
+          }
+        },
+        "OS_02_CPU_SCHEDULING": {
+          "topic_id": "OS_02_CPU_SCHEDULING",
+          "topic_name": "CPU Scheduling (FCFS, SJF, Round Robin, Priority)",
+          "empirical_accuracy": 0.65,
+          "p_init": 0.2,
+          "p_transit": 0.15,
+          "p_guess": 0.2,
+          "p_slip": 0.1,
+          "mastery_threshold": 0.8,
+          "validation_metrics": {
+            "val_rmse": 0.477,
+            "val_acc": 0.65
+          }
+        },
+        "OS_03_SYNCHRONIZATION": {
+          "topic_id": "OS_03_SYNCHRONIZATION",
+          "topic_name": "Process Synchronization, Critical Section & Semaphores",
+          "empirical_accuracy": 0.65,
+          "p_init": 0.2,
+          "p_transit": 0.15,
+          "p_guess": 0.2,
+          "p_slip": 0.1,
+          "mastery_threshold": 0.8,
+          "validation_metrics": {
+            "val_rmse": 0.477,
+            "val_acc": 0.65
+          }
+        },
+        "OS_04_DEADLOCKS": {
+          "topic_id": "OS_04_DEADLOCKS",
+          "topic_name": "Deadlock Detection, Prevention & Banker's Algorithm",
+          "empirical_accuracy": 0.65,
+          "p_init": 0.2,
+          "p_transit": 0.15,
+          "p_guess": 0.2,
+          "p_slip": 0.1,
+          "mastery_threshold": 0.8,
+          "validation_metrics": {
+            "val_rmse": 0.477,
+            "val_acc": 0.65
+          }
+        },
+        "OS_05_MEMORY_PAGING": {
+          "topic_id": "OS_05_MEMORY_PAGING",
+          "topic_name": "Main Memory Management, Paging & Segmentation",
+          "empirical_accuracy": 0.65,
+          "p_init": 0.2,
+          "p_transit": 0.15,
+          "p_guess": 0.2,
+          "p_slip": 0.1,
+          "mastery_threshold": 0.8,
+          "validation_metrics": {
+            "val_rmse": 0.477,
+            "val_acc": 0.65
+          }
+        },
+        "OS_06_VIRTUAL_MEMORY": {
+          "topic_id": "OS_06_VIRTUAL_MEMORY",
+          "topic_name": "Virtual Memory, Page Faults & Page Replacement (LRU, FIFO)",
+          "empirical_accuracy": 0.65,
+          "p_init": 0.2,
+          "p_transit": 0.15,
+          "p_guess": 0.2,
+          "p_slip": 0.1,
+          "mastery_threshold": 0.8,
+          "validation_metrics": {
+            "val_rmse": 0.477,
+            "val_acc": 0.65
+          }
+        },
+        "OS_07_FILE_SYSTEMS": {
+          "topic_id": "OS_07_FILE_SYSTEMS",
+          "topic_name": "File Systems, Directory Structures & Inodes",
+          "empirical_accuracy": 0.65,
+          "p_init": 0.2,
+          "p_transit": 0.15,
+          "p_guess": 0.2,
+          "p_slip": 0.1,
+          "mastery_threshold": 0.8,
+          "validation_metrics": {
+            "val_rmse": 0.477,
+            "val_acc": 0.65
+          }
+        },
+        "OS_08_DISK_SCHEDULING": {
+          "topic_id": "OS_08_DISK_SCHEDULING",
+          "topic_name": "Disk Scheduling Algorithms (SCAN, C-SCAN, LOOK)",
+          "empirical_accuracy": 0.65,
+          "p_init": 0.2,
+          "p_transit": 0.15,
+          "p_guess": 0.2,
+          "p_slip": 0.1,
+          "mastery_threshold": 0.8,
+          "validation_metrics": {
+            "val_rmse": 0.477,
+            "val_acc": 0.65
+          }
+        },
+        "OS_09_THREADS_CONCURRENCY": {
+          "topic_id": "OS_09_THREADS_CONCURRENCY",
+          "topic_name": "Multithreading Models & Kernel vs User Threads",
+          "empirical_accuracy": 0.65,
+          "p_init": 0.2,
+          "p_transit": 0.15,
+          "p_guess": 0.2,
+          "p_slip": 0.1,
+          "mastery_threshold": 0.8,
+          "validation_metrics": {
+            "val_rmse": 0.477,
+            "val_acc": 0.65
+          }
+        },
+        "OS_10_SECURITY_PROTECTION": {
+          "topic_id": "OS_10_SECURITY_PROTECTION",
+          "topic_name": "System Calls, Dual-Mode Operation & Protection",
+          "empirical_accuracy": 0.65,
+          "p_init": 0.2,
+          "p_transit": 0.15,
+          "p_guess": 0.2,
+          "p_slip": 0.1,
+          "mastery_threshold": 0.8,
+          "validation_metrics": {
+            "val_rmse": 0.477,
+            "val_acc": 0.65
+          }
+        }
+      }
+    },
+    "DBMS": {
+      "subject_id": "DBMS",
+      "subject_name": "Database Management Systems",
+      "topics": {
+        "DBMS_01_RELATIONAL_MODEL": {
+          "topic_id": "DBMS_01_RELATIONAL_MODEL",
+          "topic_name": "Relational Data Model, Schema & Key Constraints",
+          "empirical_accuracy": 0.65,
+          "p_init": 0.2,
+          "p_transit": 0.15,
+          "p_guess": 0.2,
+          "p_slip": 0.1,
+          "mastery_threshold": 0.8,
+          "validation_metrics": {
+            "val_rmse": 0.477,
+            "val_acc": 0.65
+          }
+        },
+        "DBMS_02_SQL_QUERIES": {
+          "topic_id": "DBMS_02_SQL_QUERIES",
+          "topic_name": "SQL Queries, Aggregations, Grouping & Outer Joins",
+          "empirical_accuracy": 0.65,
+          "p_init": 0.2,
+          "p_transit": 0.15,
+          "p_guess": 0.2,
+          "p_slip": 0.1,
+          "mastery_threshold": 0.8,
+          "validation_metrics": {
+            "val_rmse": 0.477,
+            "val_acc": 0.65
+          }
+        },
+        "DBMS_03_RELATIONAL_ALGEBRA": {
+          "topic_id": "DBMS_03_RELATIONAL_ALGEBRA",
+          "topic_name": "Relational Algebra Operations & Query Equivalence",
+          "empirical_accuracy": 0.65,
+          "p_init": 0.2,
+          "p_transit": 0.15,
+          "p_guess": 0.2,
+          "p_slip": 0.1,
+          "mastery_threshold": 0.8,
+          "validation_metrics": {
+            "val_rmse": 0.477,
+            "val_acc": 0.65
+          }
+        },
+        "DBMS_04_ER_MODELING": {
+          "topic_id": "DBMS_04_ER_MODELING",
+          "topic_name": "Entity-Relationship Modeling & Schema Conversion",
+          "empirical_accuracy": 0.65,
+          "p_init": 0.2,
+          "p_transit": 0.15,
+          "p_guess": 0.2,
+          "p_slip": 0.1,
+          "mastery_threshold": 0.8,
+          "validation_metrics": {
+            "val_rmse": 0.477,
+            "val_acc": 0.65
+          }
+        },
+        "DBMS_05_NORMALIZATION": {
+          "topic_id": "DBMS_05_NORMALIZATION",
+          "topic_name": "Functional Dependencies & Normal Forms (1NF to BCNF)",
+          "empirical_accuracy": 0.65,
+          "p_init": 0.2,
+          "p_transit": 0.15,
+          "p_guess": 0.2,
+          "p_slip": 0.1,
+          "mastery_threshold": 0.8,
+          "validation_metrics": {
+            "val_rmse": 0.477,
+            "val_acc": 0.65
+          }
+        },
+        "DBMS_06_TRANSACTIONS_ACID": {
+          "topic_id": "DBMS_06_TRANSACTIONS_ACID",
+          "topic_name": "Transaction Management & ACID Properties",
+          "empirical_accuracy": 0.65,
+          "p_init": 0.2,
+          "p_transit": 0.15,
+          "p_guess": 0.2,
+          "p_slip": 0.1,
+          "mastery_threshold": 0.8,
+          "validation_metrics": {
+            "val_rmse": 0.477,
+            "val_acc": 0.65
+          }
+        },
+        "DBMS_07_CONCURRENCY_CONTROL": {
+          "topic_id": "DBMS_07_CONCURRENCY_CONTROL",
+          "topic_name": "Concurrency Control & Two-Phase Locking (2PL)",
+          "empirical_accuracy": 0.65,
+          "p_init": 0.2,
+          "p_transit": 0.15,
+          "p_guess": 0.2,
+          "p_slip": 0.1,
+          "mastery_threshold": 0.8,
+          "validation_metrics": {
+            "val_rmse": 0.477,
+            "val_acc": 0.65
+          }
+        },
+        "DBMS_08_RECOVERY_SYSTEMS": {
+          "topic_id": "DBMS_08_RECOVERY_SYSTEMS",
+          "topic_name": "Database Recovery, Write-Ahead Logging & Checkpoints",
+          "empirical_accuracy": 0.65,
+          "p_init": 0.2,
+          "p_transit": 0.15,
+          "p_guess": 0.2,
+          "p_slip": 0.1,
+          "mastery_threshold": 0.8,
+          "validation_metrics": {
+            "val_rmse": 0.477,
+            "val_acc": 0.65
+          }
+        },
+        "DBMS_09_INDEXING_BTREES": {
+          "topic_id": "DBMS_09_INDEXING_BTREES",
+          "topic_name": "Indexing, B-Trees & B+ Tree File Structures",
+          "empirical_accuracy": 0.65,
+          "p_init": 0.2,
+          "p_transit": 0.15,
+          "p_guess": 0.2,
+          "p_slip": 0.1,
+          "mastery_threshold": 0.8,
+          "validation_metrics": {
+            "val_rmse": 0.477,
+            "val_acc": 0.65
+          }
+        },
+        "DBMS_10_QUERY_OPTIMIZATION": {
+          "topic_id": "DBMS_10_QUERY_OPTIMIZATION",
+          "topic_name": "Query Processing, Evaluation Plans & Cost Estimation",
+          "empirical_accuracy": 0.65,
+          "p_init": 0.2,
+          "p_transit": 0.15,
+          "p_guess": 0.2,
+          "p_slip": 0.1,
+          "mastery_threshold": 0.8,
+          "validation_metrics": {
+            "val_rmse": 0.477,
+            "val_acc": 0.65
+          }
+        }
+      }
+    },
+    "DSA": {
+      "subject_id": "DSA",
+      "subject_name": "Data Structures and Algorithms",
+      "topics": {
+        "DSA_01_ARRAYS_LINKEDLISTS": {
+          "topic_id": "DSA_01_ARRAYS_LINKEDLISTS",
+          "topic_name": "Arrays, Linked Lists & Pointer Manipulations",
+          "empirical_accuracy": 0.65,
+          "p_init": 0.2,
+          "p_transit": 0.15,
+          "p_guess": 0.2,
+          "p_slip": 0.1,
+          "mastery_threshold": 0.8,
+          "validation_metrics": {
+            "val_rmse": 0.477,
+            "val_acc": 0.65
+          }
+        },
+        "DSA_02_STACKS_QUEUES": {
+          "topic_id": "DSA_02_STACKS_QUEUES",
+          "topic_name": "Stacks, Queues & Monotonic Sequences",
+          "empirical_accuracy": 0.65,
+          "p_init": 0.2,
+          "p_transit": 0.15,
+          "p_guess": 0.2,
+          "p_slip": 0.1,
+          "mastery_threshold": 0.8,
+          "validation_metrics": {
+            "val_rmse": 0.477,
+            "val_acc": 0.65
+          }
+        },
+        "DSA_03_BINARY_TREES": {
+          "topic_id": "DSA_03_BINARY_TREES",
+          "topic_name": "Binary Trees, Traversals (Pre/In/Post) & Properties",
+          "empirical_accuracy": 0.65,
+          "p_init": 0.2,
+          "p_transit": 0.15,
+          "p_guess": 0.2,
+          "p_slip": 0.1,
+          "mastery_threshold": 0.8,
+          "validation_metrics": {
+            "val_rmse": 0.477,
+            "val_acc": 0.65
+          }
+        },
+        "DSA_04_BST_BALANCED_TREES": {
+          "topic_id": "DSA_04_BST_BALANCED_TREES",
+          "topic_name": "Binary Search Trees & Balanced Trees (AVL, Red-Black)",
+          "empirical_accuracy": 0.65,
+          "p_init": 0.2,
+          "p_transit": 0.15,
+          "p_guess": 0.2,
+          "p_slip": 0.1,
+          "mastery_threshold": 0.8,
+          "validation_metrics": {
+            "val_rmse": 0.477,
+            "val_acc": 0.65
+          }
+        },
+        "DSA_05_HEAPS_PRIORITY": {
+          "topic_id": "DSA_05_HEAPS_PRIORITY",
+          "topic_name": "Binary Heaps, Priority Queues & Heap Sort",
+          "empirical_accuracy": 0.65,
+          "p_init": 0.2,
+          "p_transit": 0.15,
+          "p_guess": 0.2,
+          "p_slip": 0.1,
+          "mastery_threshold": 0.8,
+          "validation_metrics": {
+            "val_rmse": 0.477,
+            "val_acc": 0.65
+          }
+        },
+        "DSA_06_HASHING": {
+          "topic_id": "DSA_06_HASHING",
+          "topic_name": "Hash Tables, Hash Functions & Collision Resolution",
+          "empirical_accuracy": 0.65,
+          "p_init": 0.2,
+          "p_transit": 0.15,
+          "p_guess": 0.2,
+          "p_slip": 0.1,
+          "mastery_threshold": 0.8,
+          "validation_metrics": {
+            "val_rmse": 0.477,
+            "val_acc": 0.65
+          }
+        },
+        "DSA_07_GRAPHS": {
+          "topic_id": "DSA_07_GRAPHS",
+          "topic_name": "Graph Representations, BFS, DFS & Topological Sort",
+          "empirical_accuracy": 0.65,
+          "p_init": 0.2,
+          "p_transit": 0.15,
+          "p_guess": 0.2,
+          "p_slip": 0.1,
+          "mastery_threshold": 0.8,
+          "validation_metrics": {
+            "val_rmse": 0.477,
+            "val_acc": 0.65
+          }
+        },
+        "DSA_08_SORTING_SEARCHING": {
+          "topic_id": "DSA_08_SORTING_SEARCHING",
+          "topic_name": "Sorting Algorithms (Merge, Quick) & Binary Search",
+          "empirical_accuracy": 0.65,
+          "p_init": 0.2,
+          "p_transit": 0.15,
+          "p_guess": 0.2,
+          "p_slip": 0.1,
+          "mastery_threshold": 0.8,
+          "validation_metrics": {
+            "val_rmse": 0.477,
+            "val_acc": 0.65
+          }
+        },
+        "DSA_09_DYNAMIC_PROGRAMMING": {
+          "topic_id": "DSA_09_DYNAMIC_PROGRAMMING",
+          "topic_name": "Dynamic Programming (Memoization, Tabulation, Optimal Substructure)",
+          "empirical_accuracy": 0.65,
+          "p_init": 0.2,
+          "p_transit": 0.15,
+          "p_guess": 0.2,
+          "p_slip": 0.1,
+          "mastery_threshold": 0.8,
+          "validation_metrics": {
+            "val_rmse": 0.477,
+            "val_acc": 0.65
+          }
+        },
+        "DSA_10_GREEDY_DIVIDE": {
+          "topic_id": "DSA_10_GREEDY_DIVIDE",
+          "topic_name": "Greedy Strategies & Divide-and-Conquer Paradigm",
+          "empirical_accuracy": 0.65,
+          "p_init": 0.2,
+          "p_transit": 0.15,
+          "p_guess": 0.2,
+          "p_slip": 0.1,
+          "mastery_threshold": 0.8,
+          "validation_metrics": {
+            "val_rmse": 0.477,
+            "val_acc": 0.65
+          }
+        }
+      }
+    }
+  }
+}

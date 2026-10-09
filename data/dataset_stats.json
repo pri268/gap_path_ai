@@ -1,0 +1,156 @@
+{
+  "metadata": {
+    "dataset_name": "GapPath AI Synthetic Computer Networks Benchmark",
+    "sample_size": 10000,
+    "is_synthetic": true,
+    "synthetic_notice": "ALL 10,000 ROWS ARE SYNTHETICALLY GENERATED FOR BENCHMARK CALIBRATION, ITEM DISCRIMINATION, AND STATISTICAL TESTING. DO NOT TREAT AS REAL STUDENT DATA.",
+    "generated_timestamp": "2026-10-09T16:00:00Z"
+  },
+  "aggregate_metrics": {
+    "total_records": 10000,
+    "mean_score": 5.63,
+    "median_score": 6,
+    "std_deviation": 2.52,
+    "min_score": 0,
+    "max_score": 10,
+    "prereq_cascade_incidents": 24793,
+    "prereq_cascade_rate_pct": 24.79
+  },
+  "score_distribution": {
+    "0": 174,
+    "1": 379,
+    "2": 672,
+    "3": 989,
+    "4": 1220,
+    "5": 1297,
+    "6": 1283,
+    "7": 1332,
+    "8": 1181,
+    "9": 910,
+    "10": 563
+  },
+  "department_benchmarks": {
+    "CSE": {
+      "count": 2535,
+      "mean_score": 5.59,
+      "mean_percentage": 55.9,
+      "pass_rate_6_plus": 51.6
+    },
+    "IT": {
+      "count": 2465,
+      "mean_score": 5.66,
+      "mean_percentage": 56.6,
+      "pass_rate_6_plus": 53.3
+    },
+    "ECE": {
+      "count": 2456,
+      "mean_score": 5.69,
+      "mean_percentage": 56.9,
+      "pass_rate_6_plus": 53.8
+    },
+    "AIML": {
+      "count": 2544,
+      "mean_score": 5.6,
+      "mean_percentage": 56.0,
+      "pass_rate_6_plus": 52.2
+    }
+  },
+  "concept_difficulty_ranking": [
+    {
+      "concept_id": "CN_07_TCP_CONGESTION",
+      "concept_name": "TCP Congestion Control (AIMD & Slow Start)",
+      "category": "Transport Layer",
+      "tier": 4,
+      "synthetic_error_count": 6498,
+      "synthetic_error_rate_pct": 65.0,
+      "synthetic_success_rate_pct": 35.0
+    },
+    {
+      "concept_id": "CN_05_ROUTING_ALGO",
+      "concept_name": "Routing Algorithms (Dijkstra vs Distance Vector)",
+      "category": "Network Layer",
+      "tier": 3,
+      "synthetic_error_count": 5181,
+      "synthetic_error_rate_pct": 51.8,
+      "synthetic_success_rate_pct": 48.2
+    },
+    {
+      "concept_id": "CN_10_NETWORK_SECURITY",
+      "concept_name": "Network Security & TLS Cryptography",
+      "category": "Network Security",
+      "tier": 5,
+      "synthetic_error_count": 5070,
+      "synthetic_error_rate_pct": 50.7,
+      "synthetic_success_rate_pct": 49.3
+    },
+    {
+      "concept_id": "CN_04_SUBNETTING_IP",
+      "concept_name": "IPv4 Addressing & CIDR Subnetting",
+      "category": "Network Layer",
+      "tier": 2,
+      "synthetic_error_count": 4865,
+      "synthetic_error_rate_pct": 48.6,
+      "synthetic_success_rate_pct": 51.3
+    },
+    {
+      "concept_id": "CN_03_FLOW_CONTROL",
+      "concept_name": "Sliding Window Flow Control",
+      "category": "Data Link Layer",
+      "tier": 2,
+      "synthetic_error_count": 4570,
+      "synthetic_error_rate_pct": 45.7,
+      "synthetic_success_rate_pct": 54.3
+    },
+    {
+      "concept_id": "CN_06_TCP_UDP_TRANSPORT",
+      "concept_name": "Transport Protocols & TCP Handshake",
+      "category": "Transport Layer",
+      "tier": 3,
+      "synthetic_error_count": 3919,
+      "synthetic_error_rate_pct": 39.2,
+      "synthetic_success_rate_pct": 60.8
+    },
+    {
+      "concept_id": "CN_08_DNS_SYSTEM",
+      "concept_name": "Domain Name System (DNS Architecture)",
+      "category": "Application Layer",
+      "tier": 4,
+      "synthetic_error_count": 3881,
+      "synthetic_error_rate_pct": 38.8,
+      "synthetic_success_rate_pct": 61.2
+    },
+    {
+      "concept_id": "CN_02_FRAMING_CRC",
+      "concept_name": "Data Link Framing & CRC Error Detection",
+      "category": "Data Link Layer",
+      "tier": 2,
+      "synthetic_error_count": 3873,
+      "synthetic_error_rate_pct": 38.7,
+      "synthetic_success_rate_pct": 61.3
+    },
+    {
+      "concept_id": "CN_09_HTTP_APPLICATION",
+      "concept_name": "HTTP/HTTPS & Web Protocols",
+      "category": "Application Layer",
+      "tier": 4,
+      "synthetic_error_count": 3539,
+      "synthetic_error_rate_pct": 35.4,
+      "synthetic_success_rate_pct": 64.6
+    },
+    {
+      "concept_id": "CN_01_OSI_LAYERS",
+      "concept_name": "OSI & TCP/IP Architecture",
+      "category": "Architecture & Fundamentals",
+      "tier": 1,
+      "synthetic_error_count": 2259,
+      "synthetic_error_rate_pct": 22.6,
+      "synthetic_success_rate_pct": 77.4
+    }
+  ],
+  "score_bands": {
+    "advanced_9_to_10": 1473,
+    "proficient_7_to_8": 2513,
+    "developing_5_to_6": 2580,
+    "foundational_support_0_to_4": 3434
+  }
+}

@@ -1,0 +1,2 @@
+# GapPath AI uses standard Python 3.9+ libraries (http.server, socketserver, urllib, json).
+# Add optional production packages here if needed (e.g. gunicorn, google-genai).

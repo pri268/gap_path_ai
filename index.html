@@ -1,0 +1,1990 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GapPath AI — College Computer Networks Diagnostic & Remediation Engine</title>
+  
+  <!-- Modern Typography: Google Fonts Outfit, Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/print.css">
+</head>
+<body>
+
+  <!-- App Header -->
+  <header class="app-header">
+    <div class="app-container">
+      <div class="header-content">
+        <div class="brand-wrapper">
+          <div class="brand-icon" style="background: none; box-shadow: none; width: auto; height: auto;">
+            <svg class="gappath-logo-icon" width="40" height="40" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="GapPath AI Logo Icon">
+              <defs>
+                <linearGradient id="gpIconGradHeader" x1="0" y1="38" x2="38" y2="0" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#0284C7" />
+                  <stop offset="100%" stop-color="#0D9488" />
+                </linearGradient>
+              </defs>
+              <rect width="38" height="38" rx="9" fill="url(#gpIconGradHeader)" />
+              <path d="M9 28 C 13 28, 14 20, 19 20 C 24 20, 25 10, 29 10" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+              <circle cx="9" cy="28" r="3" fill="#FFFFFF" />
+              <circle cx="19" cy="20" r="3.2" fill="#FFFFFF" />
+              <circle cx="29" cy="10" r="3.6" fill="#38BDF8" stroke="#FFFFFF" stroke-width="1.6" />
+            </svg>
+          </div>
+          <div>
+            <div class="brand-title">GapPath <span class="brand-ai-badge">AI</span></div>
+            <div class="brand-subtitle">College Learning & Diagnostic Platform · B.Tech Curriculum</div>
+          </div>
+        </div>
+        
+        <div class="header-meta">
+          <!-- User Profile & Sign Out (Active when logged in) -->
+          <div class="header-user-profile" id="header-user-profile" style="display: none;">
+            <div class="user-avatar-tag" id="header-user-name">User Name</div>
+            <span class="user-badge-role" id="header-user-role">Student</span>
+            <span class="badge badge-secondary" id="header-user-dept">CSE</span>
+            <button class="btn-signout" onclick="handleLogout()" title="Sign Out of Session">🚪 Sign Out</button>
+          </div>
+
+          <span class="storage-badge" title="Isolated single-browser persistence with 6 synthetic benchmark profiles">
+            🟢 Local Demo Mode (Browser Persistence)
+          </span>
+          <button class="btn btn-sm btn-secondary" onclick="printStudentReport()" title="Print or Save PDF of Diagnostic Report">
+            🖨️ Print Report
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="app-container">
+
+    <!-- ========================================================
+         VIEW 0: THREE ROLE-BASED LOGIN PORTALS (WHEN NOT AUTHENTICATED)
+         ======================================================== -->
+    <section id="login-portal-screen" class="login-portal-wrapper">
+      <div class="login-portal-card">
+        
+        <!-- 3 Role Selector Tabs -->
+        <div class="role-selector-tabs" aria-label="Portal Role Selection">
+          <button type="button" class="role-tab-btn active-role-tab" id="role-tab-btn-student" onclick="setLoginPortalRole('student')">
+            🎓 Student Portal
+          </button>
+          <button type="button" class="role-tab-btn" id="role-tab-btn-instructor" onclick="setLoginPortalRole('instructor')">
+            👨‍🏫 Faculty / Instructor
+          </button>
+          <button type="button" class="role-tab-btn" id="role-tab-btn-hod" onclick="setLoginPortalRole('hod')">
+            🏛️ Department HOD
+          </button>
+        </div>
+
+        <!-- Portal Header -->
+        <div class="login-portal-header">
+          <h2 id="login-portal-title">Student Diagnostic Portal</h2>
+          <p id="login-portal-desc">Sign in with your registered college email and credentials to begin your diagnostic assessment.</p>
+        </div>
+
+        <!-- Error Alert -->
+        <div id="login-error-alert" class="login-error-alert"></div>
+
+        <!-- Login Form -->
+        <form id="login-form">
+          <div class="form-group">
+            <label class="form-label" for="login-email-input">College Email Address</label>
+            <input type="email" id="login-email-input" class="form-control" placeholder="e.g. aarav.p@college.edu" required autocomplete="username">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="login-password-input">Password</label>
+            <input type="password" id="login-password-input" class="form-control" placeholder="Enter your password" required autocomplete="current-password">
+            <div class="password-hint" id="login-password-hint">
+              Initial Temporary Password: Your 10-digit registered phone number.
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px; padding: 12px;">
+            Sign In to Portal →
+          </button>
+        </form>
+
+        <!-- Evaluator Demo Account Quick-Fill Chips -->
+        <div class="evaluator-demo-box">
+          <div class="evaluator-demo-title">⚡ Evaluator 1-Click Demo Accounts:</div>
+          <div class="demo-chips-grid" id="demo-accounts-chips">
+            <!-- Populated dynamically based on selected role -->
+          </div>
+        </div>
+
+        <!-- Security Disclosure -->
+        <div class="auth-security-notice">
+          🔒 <strong>Prototype Authentication Notice:</strong> Authentication is simulated using preconfigured synthetic demo accounts with client-side credential verification. In production, authentication and authorization are strictly enforced server-side using secure password hashes (Argon2/bcrypt) and JWT/Session tokens. Synthetic 10k dataset is never used as credentials.
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ========================================================
+         MAIN APPLICATION PORTAL (WHEN AUTHENTICATED)
+         ======================================================== -->
+    <div id="app-portal-container" style="display: none;">
+
+      <!-- Role-Based Navigation Tabs -->
+      <nav class="nav-tabs-wrapper" aria-label="Portal Navigation">
+        <!-- Student Tabs -->
+        <button class="nav-tab-btn nav-active" id="nav-tab-stu-dashboard" onclick="switchTab('tab-stu-dashboard')">
+          📝 My Tests
+        </button>
+        <button class="nav-tab-btn" id="nav-tab-my-progress" onclick="switchTab('tab-my-progress')">
+          📈 My Progress
+        </button>
+        <button class="nav-tab-btn" id="nav-tab-student" onclick="switchTab('tab-student')">
+          📝 10-Concept Diagnostic Assessment
+        </button>
+        <button class="nav-tab-btn" id="nav-tab-results" onclick="switchTab('tab-results')">
+          🗺️ Concept Status & Diagnosis
+        </button>
+        <button class="nav-tab-btn" id="nav-tab-practice" onclick="switchTab('tab-practice')">
+          🎯 Targeted Remediation & Retest
+        </button>
+        <button class="nav-tab-btn" id="nav-tab-tutor" onclick="switchTab('tab-tutor')">
+          🤖 AI Tutor & Learning
+        </button>
+
+        <!-- Faculty Tab -->
+        <button class="nav-tab-btn" id="nav-tab-instructor" onclick="switchTab('tab-instructor')">
+          👨‍🏫 Course Instructor Portal
+        </button>
+
+        <!-- Department HOD Tab -->
+        <button class="nav-tab-btn" id="nav-tab-hod" onclick="switchTab('tab-hod')">
+          🏛️ Department HOD Portal
+        </button>
+
+        <!-- Hidden from student and faculty navigation -->
+        <button class="nav-tab-btn" id="nav-tab-dataset" onclick="switchTab('tab-dataset')" style="display: none;">
+          📊 Synthetic Benchmarks
+        </button>
+      </nav>
+
+
+      <!-- ========================================================
+           VIEW 1.0: STUDENT PERSONAL DASHBOARD
+           ======================================================== -->
+      <section id="tab-stu-dashboard" class="view-panel">
+        <!-- Welcome & My Tests Header -->
+        <div class="my-tests-header-banner mb-4">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+            <div>
+              <span class="badge badge-primary mb-1">Student Portal</span>
+              <h2 style="margin: 0; color: #FFFFFF;" id="stu-my-tests-title">My Tests</h2>
+              <p class="text-muted" style="margin: 4px 0 0 0; font-size: 14px;">
+                Welcome, <strong id="stu-dash-name" class="text-cyan">Aarav Patel</strong> · Course: <strong id="stu-dash-course" class="text-cyan">CS301 - Computer Networks</strong>
+              </p>
+              <!-- Hidden compatibility elements to support existing DOM lookups without screen clutter -->
+              <div style="display: none;">
+                <span id="stu-dash-id">22CS1048</span>
+                <span id="stu-dash-email">aarav.p@college.edu</span>
+                <span id="stu-dash-dept">Computer Science & Engineering</span>
+                <span id="stu-dash-year">3rd Year / 5th Sem</span>
+                <div id="stu-dash-assigned-faculty"></div>
+                <button id="stu-start-quiz-btn" onclick="startStudentDiagnostic(false)"></button>
+                <div id="stu-dash-gap-video-nudge"></div>
+                <div id="stu-stat-attempts">0</div>
+                <div id="stu-stat-latest-score">N/A</div>
+                <div id="stu-stat-primary-gap">None</div>
+                <div id="stu-stat-retest-status">Pending Retest</div>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span class="badge badge-secondary" id="stu-dash-timezone-badge" title="Institution Configured Timezone">
+                🌐 Asia/Kolkata (IST · UTC+05:30)
+              </span>
+              <button class="btn btn-sm btn-outline-primary" onclick="switchTab('tab-tutor')">
+                🤖 Open AI Tutor
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- In-Flight Active Quiz Alert Banner (if attempt active) -->
+        <div id="stu-active-quiz-banner" style="display: none;"></div>
+
+        <!-- Loading State for Student Dashboard -->
+        <div id="stu-dashboard-loading" class="dashboard-loading-box mb-4" style="display: none;">
+          <div class="spinner-pulse"></div>
+          <h4 style="margin: 0 0 4px 0; color: #FFFFFF;">Loading Your Tests & Learning Dashboard...</h4>
+          <span class="text-xs text-muted">Retrieving scheduled assessments and verified student progress</span>
+        </div>
+
+        <!-- Error State for Student Dashboard -->
+        <div id="stu-dashboard-error" class="card mb-4" style="display: none; border: 1px solid var(--rose-danger); background: rgba(239, 68, 68, 0.08);">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+            <div>
+              <strong style="color: #FDA4AF; font-size: 15px;">⚠️ Unable to Load Dashboard</strong>
+              <p id="stu-dashboard-error-text" class="text-xs text-muted" style="margin: 4px 0 0 0;"></p>
+            </div>
+            <button class="btn btn-sm btn-outline-danger" onclick="authEngine.renderCurrentPortal()">
+              ↻ Retry Loading
+            </button>
+          </div>
+        </div>
+
+        <!-- Student Quick Progress Glance Card -->
+        <div class="card mb-4" id="stu-dash-quick-progress-card" style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(56, 189, 248, 0.25);">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+            <div style="display: flex; align-items: center; gap: 14px;">
+              <div style="font-size: 32px;">📈</div>
+              <div>
+                <strong style="color: #FFFFFF; font-size: 15px;">My Learning Progress Overview</strong>
+                <div class="text-xs text-muted" id="stu-dash-prog-summary-text">
+                  Loading verified student progress...
+                </div>
+              </div>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button class="btn btn-sm btn-outline-primary" onclick="switchTab('tab-my-progress')">
+                View Complete My Progress →
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Student Dashboard Section Bar (Requirement 2) -->
+        <div class="dashboard-subnav-bar dark-mode-subnav mb-4" role="tablist" aria-label="Student Dashboard Sections">
+          <button type="button" class="dashboard-subnav-btn active" id="stu-sec-btn-ongoing" role="tab" aria-selected="true" onclick="window.dashboardEngineInstance.switchStudentSection('ongoing')">
+            ▶️ Ongoing Tests
+          </button>
+          <button type="button" class="dashboard-subnav-btn" id="stu-sec-btn-upcoming" role="tab" aria-selected="false" onclick="window.dashboardEngineInstance.switchStudentSection('upcoming')">
+            📅 Upcoming Tests
+          </button>
+          <button type="button" class="dashboard-subnav-btn" id="stu-sec-btn-completed" role="tab" aria-selected="false" onclick="window.dashboardEngineInstance.switchStudentSection('completed')">
+            ✅ Completed Tests
+          </button>
+          <button type="button" class="dashboard-subnav-btn" id="stu-sec-btn-topics" role="tab" aria-selected="false" onclick="window.dashboardEngineInstance.switchStudentSection('topics')">
+            📚 Topics to Study
+          </button>
+          <button type="button" class="dashboard-subnav-btn" id="stu-sec-btn-activity" role="tab" aria-selected="false" onclick="window.dashboardEngineInstance.switchStudentSection('activity')">
+            📈 My Activity
+          </button>
+        </div>
+
+        <!-- SECTION 1: ONGOING TESTS -->
+        <div class="dashboard-subnav-view active" id="stu-sec-ongoing" role="tabpanel" aria-labelledby="stu-sec-btn-ongoing">
+          <div class="card mb-4" id="stu-scheduled-tests-section">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+              <div>
+                <h3 style="margin: 0;">Ongoing & Available Tests</h3>
+                <p class="text-xs text-muted" style="margin-top: 4px;">
+                  Assessments currently open in your test window. Launch or resume your test with live countdown.
+                </p>
+              </div>
+              <span class="badge badge-secondary text-xs" id="stu-assigned-count-badge">Active Schedule</span>
+            </div>
+
+            <div id="stu-scheduled-tests-grid" class="scheduled-tests-grid">
+              <!-- Rendered dynamically by dashboards.js -->
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 2: UPCOMING TESTS -->
+        <div class="dashboard-subnav-view" id="stu-sec-upcoming" role="tabpanel" aria-labelledby="stu-sec-btn-upcoming" style="display: none;">
+          <div class="card mb-4">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+              <div>
+                <h3 style="margin: 0;">Upcoming Tests</h3>
+                <p class="text-xs text-muted" style="margin-top: 4px;">
+                  Scheduled assessments with future availability windows assigned to your course cohort.
+                </p>
+              </div>
+              <span class="badge badge-secondary text-xs">Future Windows</span>
+            </div>
+
+            <div id="stu-upcoming-tests-grid" class="scheduled-tests-grid">
+              <!-- Rendered dynamically by dashboards.js -->
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 3: COMPLETED TESTS -->
+        <div class="dashboard-subnav-view" id="stu-sec-completed" role="tabpanel" aria-labelledby="stu-sec-btn-completed" style="display: none;">
+          <div class="card mb-4">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+              <div>
+                <h3 style="margin: 0;">Completed Assessments</h3>
+                <p class="text-xs text-muted" style="margin-top: 4px;">
+                  Review your submitted tests, validated scores, and concept diagnosis reports.
+                </p>
+              </div>
+              <span class="badge badge-success text-xs">Submitted Tests</span>
+            </div>
+
+            <div id="stu-completed-tests-container">
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Assessment / Report ID</th>
+                      <th>Submitted Date</th>
+                      <th>Score & Total</th>
+                      <th>Accuracy</th>
+                      <th>Mastery Status</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="stu-reports-table-body">
+                    <!-- Rendered dynamically by dashboards.js -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 4: TOPICS TO STUDY -->
+        <div class="dashboard-subnav-view" id="stu-sec-topics" role="tabpanel" aria-labelledby="stu-sec-btn-topics" style="display: none;">
+          <div class="card mb-4">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+              <div>
+                <h3 style="margin: 0;">Topics to Study</h3>
+                <p class="text-xs text-muted" style="margin-top: 4px;">
+                  Curriculum topics requiring reinforcement based on your assessment results, with instant AI Tutor assistance.
+                </p>
+              </div>
+              <button class="btn btn-sm btn-outline-primary" onclick="switchTab('tab-tutor')">
+                🤖 Open AI Tutor Studio
+              </button>
+            </div>
+
+            <div id="stu-topics-to-study-list" style="display: flex; flex-direction: column; gap: 12px;">
+              <!-- Rendered dynamically by dashboards.js -->
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 5: MY ACTIVITY -->
+        <div class="dashboard-subnav-view" id="stu-sec-activity" role="tabpanel" aria-labelledby="stu-sec-btn-activity" style="display: none;">
+          <div class="card mb-4" id="stu-learning-history-section">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+              <div>
+                <h3 style="margin: 0;">My Learning Activity</h3>
+                <p class="text-xs text-muted" style="margin-top: 4px;">
+                  Chronological progression of your practice sessions, retests, and learning milestones.
+                </p>
+              </div>
+              <button class="btn btn-sm btn-outline-secondary" onclick="switchTab('tab-my-progress')">
+                📈 View My Progress →
+              </button>
+            </div>
+
+            <div class="dashboard-metrics-grid mb-3">
+              <div class="dashboard-stat-card">
+                <span class="dashboard-stat-label">Total Diagnostic Attempts</span>
+                <div class="dashboard-stat-val text-cyan" id="stu-lh-stat-attempts">0</div>
+              </div>
+              <div class="dashboard-stat-card">
+                <span class="dashboard-stat-label">Completed Sessions</span>
+                <div class="dashboard-stat-val text-emerald" id="stu-lh-stat-sessions">0</div>
+              </div>
+              <div class="dashboard-stat-card">
+                <span class="dashboard-stat-label">Concepts Studied</span>
+                <div class="dashboard-stat-val text-cyan" id="stu-lh-stat-concepts">0 / 10</div>
+              </div>
+              <div class="dashboard-stat-card">
+                <span class="dashboard-stat-label">Retests Completed</span>
+                <div class="dashboard-stat-val text-amber" id="stu-lh-stat-retests">0</div>
+              </div>
+              <div class="dashboard-stat-card">
+                <span class="dashboard-stat-label">Retest Accuracy</span>
+                <div class="dashboard-stat-val text-emerald" id="stu-lh-stat-avg-score">N/A</div>
+              </div>
+            </div>
+
+            <!-- Progress Visualization Chart -->
+            <div id="stu-learning-progress-chart" class="mb-3"></div>
+
+            <!-- Recent Sessions Table -->
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Date & Time</th>
+                    <th>Concept</th>
+                    <th>Score</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="stu-learning-sessions-table-body"></tbody>
+              </table>
+            </div>
+            <div id="stu-continue-actions-buttons" style="display: none;"></div>
+          </div>
+        </div>
+        <!-- Embedded Ask GapPath AI Chat Widget (Usable Directly on Student Dashboard) -->
+        <div class="card mb-4" id="stu-dash-ai-chat-section" style="background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(148, 163, 184, 0.2);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 24px;">🤖</span>
+              <div>
+                <h3 style="margin: 0; font-size: 16px;">Ask GapPath AI Tutor</h3>
+                <span class="text-xs text-muted">Get immediate concept clarification, worked examples, and exam advice</span>
+              </div>
+            </div>
+            <button class="btn btn-xs btn-outline-primary" onclick="switchTab('tab-tutor')">
+              Open Full AI Tutor Studio →
+            </button>
+          </div>
+
+          <div id="stu-dash-chat-messages" style="max-height: 220px; overflow-y: auto; background: rgba(9, 13, 22, 0.7); border: 1px solid rgba(148, 163, 184, 0.15); border-radius: 8px; padding: 12px; margin-bottom: 10px;">
+            <div class="text-xs text-muted" style="line-height: 1.5;">
+              👋 Welcome! Ask any question about your curriculum topics. Type below to begin or select a quick topic prompt.
+            </div>
+          </div>
+
+          <form onsubmit="event.preventDefault(); window.dashboardEngineInstance.handleDashboardChatSubmit();" style="display: flex; gap: 10px;">
+            <input type="text" id="stu-dash-chat-input" class="form-control" placeholder="Ask a question about Computer Networks, OS, DBMS, or DSA..." style="flex: 1;">
+            <button type="submit" class="btn btn-primary" id="stu-dash-chat-send-btn">Ask Tutor ↗</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- ========================================================
+           VIEW 1.05: MY PROGRESS (STUDENT REAL ACTIVITY ONLY)
+           ======================================================== -->
+      <section id="tab-my-progress" class="view-panel" style="display: none;">
+        <!-- Header Banner -->
+        <div class="card mb-4" style="background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.9) 100%); border: 1px solid rgba(148, 163, 184, 0.2);">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                <span class="badge badge-primary">Personal Learning Analytics</span>
+                <span class="actual-data-badge">🔒 Strictly Private to Your Account</span>
+              </div>
+              <h2 style="margin: 0 0 4px 0; color: #FFFFFF;" id="prog-student-title">My Progress</h2>
+              <p class="text-muted" style="margin: 0; font-size: 14px;">
+                Weekly accuracy and topic progress based only on your real activity.
+              </p>
+            </div>
+            <div>
+              <button class="btn btn-sm btn-secondary" onclick="switchTab('tab-stu-dashboard')">
+                ← Back to My Tests
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hidden compatibility elements for automated tests -->
+        <div style="display: none;">
+          <span id="prog-stat-completed">0</span>
+          <span id="prog-stat-completed-sub"></span>
+          <span id="prog-stat-upcoming">0</span>
+          <span id="prog-stat-upcoming-sub"></span>
+          <span id="prog-stat-accuracy">0%</span>
+          <span id="prog-stat-accuracy-sub"></span>
+          <span id="prog-stat-recent-score">—</span>
+          <span id="prog-stat-recent-date"></span>
+          <div id="prog-score-trend-chart"></div>
+          <div id="prog-topic-breakdown-list"></div>
+          <div id="prog-weak-topics-list"></div>
+          <div id="prog-recommended-resources-list"></div>
+          <table id="prog-history-table"><tbody id="prog-history-table-body"></tbody></table>
+        </div>
+
+        <!-- Empty State Container (if zero attempts) -->
+        <div id="prog-empty-state" class="card text-center py-5 mb-4" style="display: none; background: rgba(15, 23, 42, 0.5); border: 1px dashed rgba(148, 163, 184, 0.25);">
+          <div style="font-size: 40px; margin-bottom: 12px;">📈</div>
+          <h3 style="margin-bottom: 8px; color: #FFFFFF;">No Activity Recorded Yet</h3>
+          <p class="text-muted" style="max-width: 480px; margin: 0 auto 16px auto; font-size: 14px;">
+            Your personal progress tracking will appear here once you take an assigned test or diagnostic assessment.
+          </p>
+          <button class="btn btn-primary" onclick="switchTab('tab-stu-dashboard')">
+            Go to My Tests →
+          </button>
+        </div>
+
+        <!-- Main Progress Content (Visible when attempts exist) -->
+        <div id="prog-content-container">
+          <!-- 1. Simple Weekly Progress Line Graph (Requirement 3) -->
+          <div class="card mb-4" style="background: #0F172A; border: 1px solid rgba(148, 163, 184, 0.25);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
+              <div>
+                <h3 style="margin: 0; color: #FFFFFF;">Weekly Accuracy Over Time</h3>
+                <p class="text-xs text-muted" style="margin: 4px 0 0 0;">
+                  Hover or click any point to view the test name, date, and accuracy.
+                </p>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px; font-size: 12px;">
+                <span style="display: inline-flex; align-items: center; gap: 6px;">
+                  <span style="width: 10px; height: 10px; background: #38BDF8; border-radius: 50%; display: inline-block;"></span>
+                  <strong style="color: #E2E8F0;">Test Accuracy (%)</strong>
+                </span>
+              </div>
+            </div>
+            
+            <!-- SVG Weekly Line Graph Container with interactive hover tooltips -->
+            <div id="prog-weekly-graph-container" style="width: 100%; min-height: 250px; position: relative;">
+              <!-- Rendered dynamically by dashboards.js -->
+            </div>
+          </div>
+
+          <!-- 2. Plain-Language Summary of Topics Finished & Still to Finish (Requirement 3) -->
+          <div class="card mb-4" style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(148, 163, 184, 0.2);">
+            <div style="margin-bottom: 16px;">
+              <h3 style="margin: 0 0 4px 0; color: #FFFFFF;">Topics Summary</h3>
+              <p class="text-xs text-muted" style="margin: 0;">
+                Plain-language breakdown of topics you have finished versus topics still to finish.
+              </p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px;">
+              <!-- Finished Topics -->
+              <div class="card p-3" style="background: rgba(16, 185, 129, 0.06); border: 1px solid rgba(16, 185, 129, 0.25);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                  <strong style="color: #10B981; font-size: 14px;">✅ Topics Finished</strong>
+                  <span class="badge badge-success text-xs" id="prog-topics-finished-count">0 Finished</span>
+                </div>
+                <div id="prog-topics-finished-list" style="display: flex; flex-direction: column; gap: 8px;">
+                  <!-- Rendered dynamically by dashboards.js -->
+                </div>
+              </div>
+
+              <!-- Topics Still to Finish -->
+              <div class="card p-3" style="background: rgba(245, 158, 11, 0.06); border: 1px solid rgba(245, 158, 11, 0.25);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                  <strong style="color: #F59E0B; font-size: 14px;">⏳ Topics Still to Finish</strong>
+                  <span class="badge badge-warning text-xs" id="prog-topics-todo-count">0 To Finish</span>
+                </div>
+                <div id="prog-topics-todo-list" style="display: flex; flex-direction: column; gap: 8px;">
+                  <!-- Rendered dynamically by dashboards.js -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ========================================================
+           VIEW 1.1: 10-CONCEPT DIAGNOSTIC ASSESSMENT QUIZ
+           ======================================================== -->
+      <section id="tab-student" class="view-panel" style="display: none;">
+        <!-- Student Registration & Department Routing Mapping -->
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 12px;">
+            <h2>10-Concept Diagnostic Assessment</h2>
+            <button class="btn btn-sm btn-secondary" onclick="switchTab('tab-stu-dashboard')">
+              ← Return to Dashboard
+            </button>
+          </div>
+          <p class="text-muted mb-4">
+            Balanced assessment: Exactly one scenario item randomly selected from each of the 10 Computer Networks concept areas. Order and options are shuffled for academic variety.
+          </p>
+
+          <div class="student-form-grid" style="display: none;">
+            <div class="form-group">
+              <label class="form-label" for="student-id">Student ID / Roll Number</label>
+              <input type="text" id="student-id" class="form-control" readonly>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="student-name">Full Name</label>
+              <input type="text" id="student-name" class="form-control" readonly>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="student-email">College Email Address</label>
+              <input type="email" id="student-email" class="form-control" readonly>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="student-department">Academic Department</label>
+              <input type="text" id="student-department" class="form-control" readonly>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="student-year">Cohort / Semester</label>
+              <input type="text" id="student-year" class="form-control" readonly>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="student-course">Assigned Course</label>
+              <input type="text" id="student-course" class="form-control" readonly>
+            </div>
+          </div>
+
+          <!-- Real-Time Institutional Report Routing Notice (Hidden from quiz flow) -->
+          <div id="student-routing-badge" style="display: none;"></div>
+        </div>
+
+        <!-- Diagnostic Quiz Stepper & Question Container -->
+        <div class="question-card-inner">
+          <div class="quiz-stepper-header">
+            <div>
+              <h3>Adaptive 10-Area Assessment</h3>
+              <span class="text-xs text-muted">Your active attempt is saved continuously. Refreshing will NOT change your questions.</span>
+            </div>
+            <div class="quiz-nav-dots-wrapper" id="quiz-nav-dots">
+              <!-- Nav dots 1 to 10 rendered here -->
+            </div>
+          </div>
+
+          <div id="diagnostic-question-card">
+            <!-- Question content rendered dynamically by app.js -->
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ========================================================
+           VIEW 2: CONCEPT STATUS MAP & EXPLAINABLE DIAGNOSIS
+           ======================================================== -->
+      <section id="tab-results" class="view-panel" style="display: none;">
+        <!-- Print-Only Institutional Document Header -->
+        <div class="print-only-header">
+          <div class="print-header-institution">College of Engineering & Technology</div>
+          <div class="print-header-sub">Department of Computer Science & Allied Engineering · Academic Year 2026-2027</div>
+          <div class="print-header-doc">GapPath AI Official Student Diagnostic & Remediation Transcript</div>
+        </div>
+
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; margin-bottom: 20px;">
+            <div>
+              <h2>Diagnostic Evidence & Concept Status Report</h2>
+              <span class="text-muted">Report ID: <code class="report-code" id="res-report-id">GAP-2026-CSE-9814</code></span>
+            </div>
+            <div style="display: flex; gap: 10px;">
+              <button class="btn btn-sm btn-primary" id="btn-start-remediation" onclick="openTargetedLesson('CN_04_SUBNETTING_IP')">
+                Start Targeted Remediation →
+              </button>
+              <button class="btn btn-sm btn-secondary" onclick="printStudentReport()">
+                🖨️ Print Official Report
+              </button>
+            </div>
+          </div>
+
+          <!-- Institutional Routing Certification Box -->
+          <div id="res-routing-cert"></div>
+
+          <!-- Cautious Diagnostic Policy Banner -->
+          <div id="res-caution-notice"></div>
+
+          <!-- 4 Core Metric Cards: Correct, Wrong, Unanswered, Total (Requirement 4) -->
+          <div class="results-hero-grid mb-3">
+            <div class="res-stat-card">
+              <span class="res-stat-label">Total Questions</span>
+              <div class="res-stat-num text-cyan" id="res-total-value">10</div>
+              <span class="res-stat-sub text-muted">Test Scope</span>
+            </div>
+            <div class="res-stat-card">
+              <span class="res-stat-label">Correct Answers</span>
+              <div class="res-stat-num text-emerald" id="res-correct-value">8</div>
+              <span class="res-stat-sub text-emerald">Validated Correct</span>
+            </div>
+            <div class="res-stat-card">
+              <span class="res-stat-label">Wrong Answers</span>
+              <div class="res-stat-num text-rose" id="res-wrong-value">2</div>
+              <span class="res-stat-sub text-muted">Needs Review</span>
+            </div>
+            <div class="res-stat-card">
+              <span class="res-stat-label">Unanswered</span>
+              <div class="res-stat-num text-amber" id="res-unanswered-value">0</div>
+              <span class="res-stat-sub text-muted">Left Blank</span>
+            </div>
+          </div>
+
+          <!-- Overall Accuracy Banner (Requirement 4: correct ÷ attempted × 100) -->
+          <div class="card mb-4" style="background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(56, 189, 248, 0.35); padding: 14px 18px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+              <div>
+                <span class="text-xs text-muted" style="letter-spacing: 0.5px; font-weight: 600;">TEST ACCURACY (CORRECT ÷ ATTEMPTED × 100)</span>
+                <div style="font-size: 20px; font-weight: 700; color: #FFFFFF; margin: 4px 0;" id="res-accuracy-summary">
+                  8 of 10 attempted — 80% accuracy
+                </div>
+                <div class="text-xs text-muted">
+                  Calculated strictly from attempted questions: <strong class="text-cyan" id="res-accuracy-breakdown">8 correct of 10 attempted</strong>. Kept separate from model mastery estimates.
+                </div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <span class="badge badge-primary" id="res-score-value">8 / 10</span>
+                <span class="badge badge-secondary" id="res-pct-value">80% Positive Signals</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Primary Diagnosed Gap Card -->
+          <div class="card mb-4" style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(239, 68, 68, 0.25);">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+              <div>
+                <span class="badge badge-danger text-xs mb-1">Primary Diagnosed Gap</span>
+                <div style="font-size: 18px; font-weight: 700; color: #F87171;" id="res-primary-gap">IPv4 Subnetting & CIDR</div>
+                <div class="text-xs text-muted mt-1">Recommended foundational concept to bridge before progressing to advanced topics.</div>
+              </div>
+              <button class="btn btn-sm btn-outline-warning" onclick="switchTab('tab-tutor')">
+                🤖 Clarify with AI Tutor
+              </button>
+            </div>
+          </div>
+
+          <!-- Interactive Concept Status Map (DAG) -->
+          <h3 class="mb-2">Hierarchical Concept Status Map</h3>
+          <p class="text-xs text-muted mb-4">
+            Click any concept node to inspect the diagnostic item, student's response choice, observed misconception, and prerequisite connections.
+          </p>
+          <div id="concept-map-container">
+            <!-- Rendered by concept-map.js -->
+          </div>
+
+          <!-- Detailed Item-by-Item Evidence Table -->
+          <h3 class="mt-4 mb-2">Item-by-Item Diagnostic Trace & Pedagogical Evidence</h3>
+          <div class="table-responsive" id="results-evidence-table">
+            <!-- Rendered by app.js -->
+          </div>
+
+          <!-- Print-Only Sign-off Block -->
+          <div class="print-signoff-section">
+            <div class="sign-box">
+              <div class="sign-line"></div>
+              <div class="sign-title">Course Instructor Endorsement</div>
+              <div class="sign-sub">Verified & Attached to Course Records</div>
+            </div>
+            <div class="sign-box">
+              <div class="sign-line"></div>
+              <div class="sign-title">Head of Department (HOD) Endorsement</div>
+              <div class="sign-sub">Recorded in Department Assessment Audit</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ========================================================
+           VIEW 3: TARGETED MICRO-LESSON & 3-QUESTION PRACTICE RETEST
+           ======================================================== -->
+      <section id="tab-practice" class="view-panel" style="display: none;">
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+            <div>
+              <h2>Targeted Concept Remediation & Retest</h2>
+              <div class="text-cyan font-bold" id="remediation-concept-title">Remediation Target: IPv4 Subnetting & CIDR</div>
+            </div>
+            <button class="btn btn-sm btn-secondary" onclick="switchTab('tab-results')">
+              ← Return to Concept Map
+            </button>
+          </div>
+
+          <!-- Micro-Lesson Container -->
+          <div id="micro-lesson-content">
+            <!-- Rendered dynamically by practice-engine.js -->
+          </div>
+
+          <!-- 3-Question Practice Retest -->
+          <div class="mt-4">
+            <h3 class="mb-2">Targeted 3-Question Practice Retest</h3>
+            <p class="text-muted text-xs mb-4">
+              Complete all three practice questions to assess concept recovery. Feedback and updated mastery indicators will be saved to your faculty record.
+            </p>
+
+            <div id="practice-retest-items">
+              <!-- 3 practice items rendered dynamically -->
+            </div>
+
+            <div class="mt-4 text-center">
+              <button class="btn btn-primary" onclick="window.practiceEngineInstance.submitPracticeRetest()">
+                Submit Practice Retest & Verify Remediation ✓
+              </button>
+            </div>
+
+            <!-- Retest Results Panel -->
+            <div id="retest-results-panel" class="retest-results-card" style="display: none;">
+              <h3>Retest Assessment Complete</h3>
+              <div style="font-size: 32px; font-weight: 800; color: #FFFFFF; margin: 10px 0;" id="retest-score-value">3 / 3</div>
+              <div class="mb-3"><span id="retest-status-badge" class="badge badge-success">Secure Signal (Gap Remediated)</span></div>
+              <p id="retest-summary-msg" class="text-muted" style="max-width: 600px; margin: 0 auto;"></p>
+              <div class="mt-4">
+                <button class="btn btn-outline-primary" onclick="switchTab('tab-results')">
+                  View Updated Report & Print Transcript →
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ========================================================
+           VIEW 3.5: AI TUTOR & LEARNING (REQUIREMENT 1)
+           ======================================================== -->
+      <section id="tab-tutor" class="view-panel" style="display: none;">
+        
+        <!-- Mode Switcher Tabs (Structured 4-Step vs Freeform Q&A) -->
+        <div class="tutor-mode-switcher-bar mb-4">
+          <button type="button" class="tutor-mode-tab-btn active-mode-btn" id="tutor-mode-tab-learn" onclick="window.tutorEngineInstance.setMode('learning')">
+            📚 AI Tutor & Learning (4-Step Concept Mastery & Retest)
+          </button>
+          <button type="button" class="tutor-mode-tab-btn" id="tutor-mode-tab-chat" onclick="window.tutorEngineInstance.setMode('chat')">
+            💬 Freeform AI Chatbot (Q&A, Analogies & Revision)
+          </button>
+        </div>
+
+        <!-- 1. Dedicated 4-Step Learning Workflow Container -->
+        <div id="tutor-section-learning">
+          <div id="tutor-step-container">
+            <!-- Step 1 (Choose), Step 2 (Learn), Step 3 (Retest), Step 4 (Results) rendered dynamically by tutor-engine.js -->
+          </div>
+        </div>
+
+        <!-- 2. Freeform AI Chatbot Container -->
+        <div id="tutor-section-chat" style="display: none;">
+          <div class="card tutor-main-container">
+            <!-- Tutor Header -->
+            <div class="tutor-header-row">
+              <div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                  <span style="font-size: 28px;">🤖</span>
+                  <div>
+                    <h2 style="margin: 0;">GapPath AI Personal Tutor</h2>
+                    <div class="text-muted" style="font-size: 13px;">
+                      Undergraduate Computer Networks Tutor · Dedicated to <span id="tutor-header-student-name" class="text-cyan font-bold">Student</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span class="badge badge-success" id="tutor-ai-status-badge">✨ Pedagogical AI Active</span>
+                <button class="btn btn-sm btn-outline-warning" onclick="window.tutorEngineInstance.clearConversation()" title="Start Fresh Conversation">
+                  🔄 Clear Conversation
+                </button>
+                <button class="btn btn-sm btn-secondary" onclick="switchTab('tab-stu-dashboard')">
+                  ← Return to Dashboard
+                </button>
+              </div>
+            </div>
+
+            <!-- Diagnosed Learning Gap Alert Notice -->
+            <div id="tutor-gap-alert-box" style="display: none; margin-top: 14px;"></div>
+
+            <!-- Tutor Chat Viewport -->
+            <div id="tutor-chat-viewport" class="tutor-chat-viewport">
+              <div id="tutor-chat-messages" class="tutor-messages-scroll">
+                <!-- Rendered dynamically by tutor-engine.js -->
+              </div>
+
+              <!-- Typing Indicator -->
+              <div id="tutor-typing-indicator" class="tutor-typing-indicator" style="display: none;">
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <span style="margin-left: 8px; font-size: 12px; color: #94A3B8;">GapPath AI Tutor is formulating an explanation...</span>
+              </div>
+            </div>
+
+            <!-- Suggested Prompt Chips -->
+            <div class="tutor-quick-chips-wrapper">
+              <span class="chips-label">Suggested Prompts:</span>
+              <div class="chips-scroll">
+                <button type="button" class="tutor-prompt-chip" onclick="window.tutorEngineInstance.sendPresetPrompt('Can you provide a simpler explanation for a beginner?')">
+                  💡 Simpler Explanation
+                </button>
+                <button type="button" class="tutor-prompt-chip" onclick="window.tutorEngineInstance.sendPresetPrompt('Can you give a clear real-world example of this concept?')">
+                  🔍 Real-World Example
+                </button>
+                <button type="button" class="tutor-prompt-chip" onclick="window.tutorEngineInstance.sendPresetPrompt('Can you explain this concept using a simple analogy?')">
+                  🌉 Analogy
+                </button>
+                <button type="button" class="tutor-prompt-chip" onclick="window.tutorEngineInstance.sendPresetPrompt('Can you provide a concise summary of the key takeaways?')">
+                  📑 Concise Summary
+                </button>
+                <button type="button" class="tutor-prompt-chip" onclick="window.tutorEngineInstance.sendPresetPrompt('Give me a practice question to test my understanding')">
+                  📝 Practice Question
+                </button>
+                <button type="button" class="tutor-prompt-chip" onclick="window.tutorEngineInstance.sendPresetPrompt('What is the difference between TCP and UDP?')">
+                  ⚖️ TCP vs UDP
+                </button>
+                <button type="button" class="tutor-prompt-chip" onclick="window.tutorEngineInstance.sendPresetPrompt('Explain subnetting like I am a beginner with a worked calculation')">
+                  🔢 Subnetting Calculation
+                </button>
+              </div>
+            </div>
+
+            <!-- Chat Input Controls -->
+            <form id="tutor-chat-form" onsubmit="event.preventDefault(); window.tutorEngineInstance.handleStudentSubmit();" class="tutor-input-form">
+              <div class="tutor-input-wrapper">
+                <input type="text" id="tutor-chat-input" class="form-control tutor-input-box" 
+                       placeholder="Ask any question about Computer Networks (e.g. 'Why do we need 3-way handshake?', 'How does CRC work?')..." 
+                       autocomplete="off" required>
+                <button type="submit" id="tutor-send-btn" class="btn btn-primary tutor-send-btn">
+                  Send ✈️
+                </button>
+              </div>
+              <div class="tutor-disclaimer-text">
+                🔒 <strong>Privacy Guarantee:</strong> Only your authenticated account can access this session. Private student records are never transmitted to external APIs. Responses combine the B.Tech curriculum knowledge base with authentic YouTube learning recommendations.
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ========================================================
+           VIEW 4: COURSE INSTRUCTOR PORTAL
+           ======================================================== -->
+      <section id="tab-instructor" class="view-panel" style="display: none;">
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
+            <div>
+              <h2>Course Instructor Portal</h2>
+              <div class="text-muted">Assigned Faculty View · Strict Course Scope</div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px;" id="instructor-switcher-box">
+              <label class="form-label" style="margin: 0;" for="instructor-identity-select">Active Instructor Identity:</label>
+              <select id="instructor-identity-select" class="form-control" style="width: auto;">
+                <option value="Prof. Rajesh Sharma" selected>Prof. Rajesh Sharma (CSE · CS301)</option>
+                <option value="Prof. Priya Murthy">Prof. Priya Murthy (IT · IT302)</option>
+                <option value="Prof. S. R. Kulkarni">Prof. S. R. Kulkarni (ECE · EC304)</option>
+                <option value="Prof. Neha Gupta">Prof. Neha Gupta (AIML · AI305)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Instructor Active Profile Info -->
+          <div class="meta-card mb-4">
+            <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+              <div>
+                <span class="meta-label">Course Instructor</span>
+                <strong id="instructor-active-name">Prof. Rajesh Sharma</strong> · <span id="instructor-active-dept">Computer Science & Engineering</span>
+                <div class="text-cyan font-bold" id="instructor-active-course">CS301 - Computer Networks</div>
+              </div>
+              <div id="instructor-routing-rule-notice" style="max-width: 500px; font-size: 12px; color: #94A3B8;"></div>
+            </div>
+          </div>
+
+          <!-- Actual Records vs Synthetic Demonstration Notice Banner -->
+          <div class="synthetic-demo-banner mb-4">
+            <div>
+              <span class="actual-data-badge">✓ Authorized Live Student Assessments</span>
+              <strong style="margin-left: 8px; color: #FFFFFF;">Live Course Performance Scope</strong>
+              <div class="text-xs text-muted" style="margin-top: 3px;">
+                Scoped strictly to students enrolled in your assigned course. Synthetic benchmark records are kept separate. Private student AI chats are strictly protected.
+              </div>
+            </div>
+            <span class="badge badge-secondary text-xs">Zero AI Logs Exposed</span>
+          </div>
+
+          <!-- ========================================================
+               FACULTY DASHBOARD: TITLE-BAR TAB NAVIGATION
+               ======================================================== -->
+          <div class="dashboard-subnav-bar mb-4" role="tablist" aria-label="Course Instructor Navigation">
+            <button type="button" class="dashboard-subnav-btn active" id="fac-subtab-btn-overview" role="tab" aria-selected="true" aria-controls="fac-view-overview" onclick="window.dashboardEngineInstance.switchFacultyTab('overview')">
+              📊 Overview
+            </button>
+            <button type="button" class="dashboard-subnav-btn" id="fac-subtab-btn-tests-schedule" role="tab" aria-selected="false" aria-controls="fac-view-tests-schedule" onclick="window.dashboardEngineInstance.switchFacultyTab('tests-schedule')">
+              📋 Tests and Schedule
+            </button>
+            <button type="button" class="dashboard-subnav-btn" id="fac-subtab-btn-progress" role="tab" aria-selected="false" aria-controls="fac-view-progress" onclick="window.dashboardEngineInstance.switchFacultyTab('progress')">
+              📈 Progress and Class Performance
+            </button>
+            <button type="button" class="dashboard-subnav-btn" id="fac-subtab-btn-topics-support" role="tab" aria-selected="false" aria-controls="fac-view-topics-support" onclick="window.dashboardEngineInstance.switchFacultyTab('topics-support')">
+              🎯 Topics Needing Support
+            </button>
+            <button type="button" class="dashboard-subnav-btn" id="fac-subtab-btn-students-inspect" role="tab" aria-selected="false" aria-controls="fac-view-students-inspect" onclick="window.dashboardEngineInstance.switchFacultyTab('students-inspect')">
+              👥 Students Needing Help / Inspect All
+            </button>
+          </div>
+
+          <!-- TAB 1: OVERVIEW -->
+          <div class="dashboard-subnav-view active" id="fac-view-overview" role="tabpanel" aria-labelledby="fac-subtab-btn-overview">
+            <div class="card mb-4 faculty-dashboard-section" id="faculty-section-overview">
+              <div class="section-badge-header mb-3">
+                <span class="badge badge-primary text-xs">Overview</span>
+                <h3 style="margin: 4px 0 2px 0;">Course Assessment & Student Activity Overview</h3>
+                <p class="text-xs text-muted" style="margin: 0;">
+                  High-level summary of configured assessments and student session volumes. Test configurations and student attempt volumes are clearly segregated.
+                </p>
+              </div>
+
+              <!-- Legacy stat container for automated regression test suites -->
+              <div style="display: none;">
+                <span id="inst-stat-total">0</span>
+                <span id="inst-stat-top-gap">None</span>
+                <span id="inst-stat-retest">0%</span>
+              </div>
+
+              <!-- Group A & B: Clearly Labeled Test Counts vs Student Attempt Counts -->
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 20px;">
+                <div class="card p-3" style="background: #F8FAFC; border: 1px solid var(--border-card);">
+                  <span class="text-xs text-muted font-bold">📋 TESTS SCHEDULED</span>
+                  <div style="font-size: 24px; font-weight: 700; color: var(--text-primary); margin-top: 4px;" id="inst-test-stat-scheduled">0</div>
+                  <small class="text-xs text-muted">Configured assessments</small>
+                </div>
+                <div class="card p-3" style="background: #F8FAFC; border: 1px solid var(--border-card);">
+                  <span class="text-xs text-emerald font-bold">🟢 ACTIVE TESTS</span>
+                  <div style="font-size: 24px; font-weight: 700; color: #059669; margin-top: 4px;" id="inst-test-stat-active">0</div>
+                  <small class="text-xs text-muted">Currently in test window</small>
+                </div>
+                <div class="card p-3" style="background: #F8FAFC; border: 1px solid var(--border-card);">
+                  <span class="text-xs text-cyan font-bold">🔒 UPCOMING TESTS</span>
+                  <div style="font-size: 24px; font-weight: 700; color: #0284C7; margin-top: 4px;" id="inst-test-stat-upcoming">0</div>
+                  <small class="text-xs text-muted">Future window scheduled</small>
+                </div>
+                <div class="card p-3" style="background: #F8FAFC; border: 1px solid var(--border-card);">
+                  <span class="text-xs text-muted font-bold">⏹️ CLOSED TESTS</span>
+                  <div style="font-size: 24px; font-weight: 700; color: #64748B; margin-top: 4px;" id="inst-test-stat-closed">0</div>
+                  <small class="text-xs text-muted">Window concluded</small>
+                </div>
+                <div class="card p-3" style="background: #F8FAFC; border: 1px solid var(--border-card);">
+                  <span class="text-xs font-bold" style="color: #7C3AED;">👥 STUDENT ATTEMPTS</span>
+                  <div style="font-size: 24px; font-weight: 700; color: #7C3AED; margin-top: 4px;" id="inst-test-stat-attempts">0</div>
+                  <small class="text-xs text-muted">Initiated sessions</small>
+                </div>
+                <div class="card p-3" style="background: #F8FAFC; border: 1px solid var(--border-card);">
+                  <span class="text-xs text-emerald font-bold">✓ STUDENT COMPLETIONS</span>
+                  <div style="font-size: 24px; font-weight: 700; color: #0D9488; margin-top: 4px;" id="inst-test-stat-completed">0</div>
+                  <small class="text-xs text-muted">Submitted & scored</small>
+                </div>
+              </div>
+
+              <!-- Quick Navigation Banner -->
+              <div style="display: flex; justify-content: space-between; align-items: center; background: #F1F5F9; border-radius: 8px; padding: 14px 18px; flex-wrap: wrap; gap: 12px;">
+                <div>
+                  <strong style="color: var(--text-primary); font-size: 14px;">Quick Actions & Navigation:</strong>
+                  <div class="text-xs text-muted" style="margin-top: 2px;">Select any tab above or use these direct shortcuts to manage tests, review class progress, or view flagged students.</div>
+                </div>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                  <button type="button" class="btn btn-sm btn-primary" onclick="window.dashboardEngineInstance.switchFacultyTab('tests-schedule')">
+                    📋 Tests & Schedule →
+                  </button>
+                  <button type="button" class="btn btn-sm btn-secondary" onclick="window.dashboardEngineInstance.switchFacultyTab('progress')">
+                    📈 Class Progress →
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline-primary" onclick="window.dashboardEngineInstance.switchFacultyTab('students-inspect')">
+                    👥 Flagged Students →
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 2: TESTS AND SCHEDULE -->
+          <div class="dashboard-subnav-view" id="fac-view-tests-schedule" role="tabpanel" aria-labelledby="fac-subtab-btn-tests-schedule" style="display: none;">
+            <div class="card mb-4 faculty-dashboard-section" id="faculty-section-tests">
+              <div class="section-badge-header mb-3">
+                <span class="badge badge-primary text-xs">Tests & Schedule</span>
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 4px;">
+                  <div>
+                    <h3 style="margin: 0;">Tests and Assessment Scheduling</h3>
+                    <p class="text-xs text-muted" style="margin: 2px 0 0 0;">
+                      Configure diagnostic assessment availability windows, target cohort sections, time limits, and mastery thresholds.
+                    </p>
+                  </div>
+                  <!-- Easy-to-find Schedule Test Action -->
+                  <button type="button" class="btn btn-primary" onclick="window.dashboardEngineInstance.openScheduleTestModal()">
+                    ➕ Schedule New Test
+                  </button>
+                </div>
+              </div>
+
+              <!-- Scheduled Tests Management Table -->
+              <div id="instructor-test-scheduling-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+                  <h4 style="margin: 0; font-size: 14px;">Course Scheduled Assessments</h4>
+                  <span class="text-xs text-muted">Availability Window in IST (UTC+05:30)</span>
+                </div>
+                <div class="table-responsive">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Test ID & Title</th>
+                        <th>Selected Topics</th>
+                        <th>Questions / Difficulty</th>
+                        <th>Availability Window (IST)</th>
+                        <th>Time Limit</th>
+                        <th>Mastery Target</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="instructor-scheduled-tests-tbody">
+                      <!-- Rendered by dashboards.js -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 3: PROGRESS AND CLASS PERFORMANCE -->
+          <div class="dashboard-subnav-view" id="fac-view-progress" role="tabpanel" aria-labelledby="fac-subtab-btn-progress" style="display: none;">
+            <div class="card mb-4 faculty-dashboard-section" id="faculty-section-progress">
+              <div class="section-badge-header mb-3">
+                <span class="badge badge-primary text-xs">Class Performance</span>
+                <h3 style="margin: 4px 0 2px 0;">Progress & Class Performance</h3>
+                <p class="text-xs text-muted" style="margin: 0;">
+                  Live class completion rates, mean score / accuracy, and a combined performance and completion trend graph over time.
+                </p>
+              </div>
+
+              <!-- Class Performance Metrics -->
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 20px;">
+                <div class="card p-3" style="background: #F8FAFC; border: 1px solid var(--border-card);">
+                  <span class="text-xs text-muted font-bold">CLASS COMPLETION RATE</span>
+                  <div style="font-size: 24px; font-weight: 700; color: #059669; margin-top: 4px;" id="inst-prog-stat-completion">0%</div>
+                  <small class="text-xs text-muted" id="inst-prog-stat-completion-sub">0 of 0 enrolled completed</small>
+                </div>
+                <div class="card p-3" style="background: #F8FAFC; border: 1px solid var(--border-card);">
+                  <span class="text-xs text-muted font-bold">AVERAGE SCORE / ACCURACY</span>
+                  <div style="font-size: 24px; font-weight: 700; color: #0284C7; margin-top: 4px;" id="inst-prog-stat-accuracy">0%</div>
+                  <small class="text-xs text-muted" id="inst-stat-avg">Mean: 0.0 / 10</small>
+                </div>
+                <div class="card p-3" style="background: #F8FAFC; border: 1px solid var(--border-card);">
+                  <span class="text-xs text-muted font-bold">TOTAL QUESTIONS ANSWERED</span>
+                  <div style="font-size: 24px; font-weight: 700; color: var(--text-primary); margin-top: 4px;" id="inst-prog-stat-items">0</div>
+                  <small class="text-xs text-muted" id="inst-prog-stat-correct-items">0 correct</small>
+                </div>
+                <div class="card p-3" style="background: #F8FAFC; border: 1px solid var(--border-card);">
+                  <span class="text-xs text-muted font-bold">ASSIGNED COURSE COHORT</span>
+                  <div style="font-size: 18px; font-weight: 700; color: var(--text-primary); margin-top: 4px;" id="inst-prog-stat-course-label">CS301</div>
+                  <small class="text-xs text-muted">Computer Science & Engineering</small>
+                </div>
+              </div>
+
+              <!-- Combined Progress Graph Over Time with Clear Labels, Legend, and Tooltips -->
+              <div class="card p-4 mb-4" style="background: #FFFFFF; border: 1px solid var(--border-card);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+                  <div>
+                    <h4 style="margin: 0; font-size: 15px; font-weight: 600;">Combined Class Progress & Completion Graph Over Time</h4>
+                    <p class="text-xs text-muted" style="margin: 2px 0 0 0;">Chronological performance trend comparing average accuracy (%) and student completion rates (%) across course assessments.</p>
+                  </div>
+                  <div class="chart-legend-box" style="display: flex; gap: 16px; font-size: 12px;">
+                    <span style="display: inline-flex; align-items: center; gap: 6px;">
+                      <span style="width: 12px; height: 12px; background: #0284C7; border-radius: 50%; display: inline-block;"></span>
+                      <strong>Class Accuracy (%)</strong>
+                    </span>
+                    <span style="display: inline-flex; align-items: center; gap: 6px;">
+                      <span style="width: 12px; height: 12px; background: #10B981; border-radius: 2px; display: inline-block;"></span>
+                      <strong>Class Completion (%)</strong>
+                    </span>
+                  </div>
+                </div>
+                <div id="instructor-combined-chart" style="width: 100%; min-height: 240px; position: relative;">
+                  <!-- Rendered dynamically by dashboards.js with SVG and hover tooltips -->
+                </div>
+              </div>
+
+              <!-- Detailed Topic Progress & Estimated Mastery -->
+              <div id="instructor-course-progress-section">
+                <h4 style="font-size: 14px; margin-bottom: 10px;">Topic Mastery & Class Accuracy Breakdown</h4>
+                <div id="instructor-course-progress-content">
+                  <!-- Rendered by dashboards.js -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 4: TOPICS NEEDING SUPPORT -->
+          <div class="dashboard-subnav-view" id="fac-view-topics-support" role="tabpanel" aria-labelledby="fac-subtab-btn-topics-support" style="display: none;">
+            <div class="card mb-4 faculty-dashboard-section" id="faculty-section-topics">
+              <div class="section-badge-header mb-3">
+                <span class="badge badge-warning text-xs">Curriculum Areas</span>
+                <h3 style="margin: 4px 0 2px 0;">Topics Needing Support</h3>
+                <p class="text-xs text-muted" style="margin: 0;">
+                  Curriculum areas exhibiting the highest student error rates and repeated difficulties, with transparent pedagogical reasons for each flag and available learning resources.
+                </p>
+              </div>
+              <div id="instructor-topics-support-section">
+                <div id="instructor-vulnerability-matrix">
+                  <!-- Rendered by dashboards.js -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 5: STUDENTS NEEDING HELP / INSPECT ALL -->
+          <div class="dashboard-subnav-view" id="fac-view-students-inspect" role="tabpanel" aria-labelledby="fac-subtab-btn-students-inspect" style="display: none;">
+            <div class="card mb-4 faculty-dashboard-section" id="faculty-section-schedule-help">
+              <div class="section-badge-header mb-3">
+                <span class="badge badge-primary text-xs">Student Oversight</span>
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 4px;">
+                  <div>
+                    <h3 style="margin: 0;">Students Needing Help & Assessment Inspection</h3>
+                    <p class="text-xs text-muted" style="margin: 2px 0 0 0;">
+                      Review students recommended for faculty intervention and inspect all completed and in-progress assessment records with filters.
+                    </p>
+                  </div>
+                  <!-- Quick actions -->
+                  <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button type="button" class="btn btn-primary" onclick="window.dashboardEngineInstance.openScheduleTestModal()">
+                      ➕ Schedule New Test
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="window.dashboardEngineInstance.openInspectAllModal()">
+                      🔍 Open Modal Inspector
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Transparent Support Criteria Box -->
+              <div class="alert alert-info mb-4" style="background: #F0F9FF; border: 1px solid #BAE6FD; border-radius: 8px; padding: 12px 16px; font-size: 13px; color: #0369A1;">
+                <strong>📋 Transparent Support Criteria:</strong> A student is flagged for faculty intervention if they have scored below <strong>60% accuracy</strong> on course assessments, have <strong>2 or more unaddressed concept gaps</strong>, or have an <strong>uncompleted remediation retest</strong>. Criteria is computed purely from verified assessment results.
+              </div>
+
+              <!-- Students Needing Support Table -->
+              <div class="card p-3 mb-4" style="background: #FFFFFF; border: 1px solid var(--border-card);">
+                <h4 style="margin: 0 0 10px 0; font-size: 14px; color: #DC2626;">⚠️ Students Recommended for Faculty Intervention</h4>
+                <div class="table-responsive">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Student</th>
+                        <th>Class & Section</th>
+                        <th>Overall Accuracy</th>
+                        <th>Flagged Weak Topics</th>
+                        <th>Support Status</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody id="instructor-students-help-tbody">
+                      <!-- Rendered by dashboards.js -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Completed & In-Progress Submissions Overview with Course, Class, and Status Filters -->
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+                <h4 style="margin: 0; font-size: 14px;">All Course Assessments (Completed & In-Progress)</h4>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+                  <input type="text" id="instructor-search-input" class="form-control" style="width: 180px;" placeholder="Search student or ID..." oninput="window.dashboardEngineInstance.filterInstructorTable()">
+                  
+                  <!-- Course Filter -->
+                  <select id="instructor-course-filter" class="form-control" style="width: 140px;" onchange="window.dashboardEngineInstance.filterInstructorTable()">
+                    <option value="ALL">All Courses</option>
+                    <option value="CS301" selected>CS301</option>
+                  </select>
+
+                  <!-- Class/Cohort Filter -->
+                  <select id="instructor-sem-filter" class="form-control" style="width: 150px;" onchange="window.dashboardEngineInstance.filterInstructorTable()">
+                    <option value="ALL">All Classes/Cohorts</option>
+                    <option value="Section A">Section A</option>
+                    <option value="Section B">Section B</option>
+                    <option value="5th Sem">5th Semester</option>
+                    <option value="6th Sem">6th Semester</option>
+                  </select>
+
+                  <!-- Status Filter -->
+                  <select id="instructor-status-filter" class="form-control" style="width: 135px;" onchange="window.dashboardEngineInstance.filterInstructorTable()">
+                    <option value="ALL">All Statuses</option>
+                    <option value="Completed">Completed</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Needs Retest">Needs Retest</option>
+                  </select>
+
+                  <!-- Gap Filter -->
+                  <select id="instructor-gap-filter" class="form-control" style="width: 160px;" onchange="window.dashboardEngineInstance.filterInstructorTable()">
+                    <option value="ALL">All Concept Gaps</option>
+                    <option value="CN_01_OSI_LAYERS">CN_01: OSI Architecture</option>
+                    <option value="CN_02_FRAMING_CRC">CN_02: Framing & CRC</option>
+                    <option value="CN_03_FLOW_CONTROL">CN_03: Flow Control</option>
+                    <option value="CN_04_SUBNETTING_IP">CN_04: Subnetting & CIDR</option>
+                    <option value="CN_05_ROUTING_ALGO">CN_05: Routing Algorithms</option>
+                    <option value="CN_06_TCP_UDP_TRANSPORT">CN_06: TCP / UDP Transport</option>
+                    <option value="CN_07_TCP_CONGESTION">CN_07: TCP Congestion</option>
+                    <option value="CN_08_DNS_SYSTEM">CN_08: DNS System</option>
+                    <option value="CN_09_HTTP_APPLICATION">CN_09: HTTP Protocols</option>
+                    <option value="CN_10_NETWORK_SECURITY">CN_10: Network Security</option>
+                  </select>
+
+                  <button class="btn btn-sm btn-outline-secondary" onclick="window.dashboardEngineInstance.exportInstructorCSV()">
+                    📥 Export CSV
+                  </button>
+                </div>
+              </div>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Student</th>
+                      <th>Course & Class</th>
+                      <th>Assessment / Test</th>
+                      <th>Status</th>
+                      <th>Score / Accuracy</th>
+                      <th>Topics Needing Review</th>
+                      <th>Date</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="instructor-table-body">
+                    <!-- Rendered by dashboards.js -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ========================================================
+           VIEW 5: DEPARTMENT HOD PORTAL (CHRONOLOGICAL ACADEMIC YEARS)
+           ======================================================== -->
+      <section id="tab-hod" class="view-panel" style="display: none;">
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
+            <div>
+              <h2>Department Head (HOD) Portal</h2>
+              <div class="text-muted">Department-Level Oversight & Academic Year Performance</div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px;" id="hod-switcher-box">
+              <label class="form-label" style="margin: 0;" for="hod-department-select">Active HOD Jurisdiction:</label>
+              <select id="hod-department-select" class="form-control" style="width: auto;">
+                <option value="CSE" selected>Dr. Ananya Sen (HOD - CSE)</option>
+                <option value="IT">Dr. Vikram Malhotra (HOD - IT)</option>
+                <option value="ECE">Dr. Meenakshi Sundaram (HOD - ECE)</option>
+                <option value="AIML">Dr. Arvind Swaminathan (HOD - AIML)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- HOD Jurisdiction Profile Banner -->
+          <div class="meta-card mb-4">
+            <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+              <div>
+                <span class="meta-label">Department Head</span>
+                <strong id="hod-active-name">Dr. Ananya Sen</strong> · <span id="hod-active-dept">Department of Computer Science & Engineering</span>
+              </div>
+              <div id="hod-routing-notice" style="max-width: 550px; font-size: 12px; color: #94A3B8;"></div>
+            </div>
+          </div>
+
+          <!-- Actual Records vs Synthetic Demonstration Notice Banner -->
+          <div class="synthetic-demo-banner mb-4">
+            <div>
+              <span class="actual-data-badge">✓ Department-Wide Live Assessment Records</span>
+              <strong style="margin-left: 8px; color: #FFFFFF;">Institutional Quality Assurance Scope</strong>
+              <div class="text-xs text-muted" style="margin-top: 3px;">
+                Aggregates actual student performance across all departmental course sections. Synthetic benchmark models are held separately. Student AI conversations remain strictly private.
+              </div>
+            </div>
+            <span class="badge badge-secondary text-xs">Zero AI Logs Exposed</span>
+          </div>
+
+          <!-- ========================================================
+               HOD DASHBOARD: TITLE-BAR TAB NAVIGATION
+               ======================================================== -->
+          <div class="dashboard-subnav-bar mb-4" role="tablist" aria-label="HOD Dashboard Sub-Navigation">
+            <button type="button" class="dashboard-subnav-btn active" id="hod-subtab-btn-overview" role="tab" aria-selected="true" aria-controls="hod-view-overview" onclick="window.dashboardEngineInstance.switchHODTab('overview')">
+              📊 Overview
+            </button>
+            <button type="button" class="dashboard-subnav-btn" id="hod-subtab-btn-years" role="tab" aria-selected="false" aria-controls="hod-view-years" onclick="window.dashboardEngineInstance.switchHODTab('years')">
+              📅 Academic Years
+            </button>
+            <button type="button" class="dashboard-subnav-btn" id="hod-subtab-btn-progress" role="tab" aria-selected="false" aria-controls="hod-view-progress" onclick="window.dashboardEngineInstance.switchHODTab('progress')">
+              📈 Progress and Class Performance
+            </button>
+            <button type="button" class="dashboard-subnav-btn" id="hod-subtab-btn-topics" role="tab" aria-selected="false" aria-controls="hod-view-topics" onclick="window.dashboardEngineInstance.switchHODTab('topics')">
+              🎯 Topics Needing Support
+            </button>
+            <button type="button" class="dashboard-subnav-btn" id="hod-subtab-btn-roster" role="tab" aria-selected="false" aria-controls="hod-view-roster" onclick="window.dashboardEngineInstance.switchHODTab('roster')">
+              👥 Students Needing Help / Inspect All
+            </button>
+          </div>
+
+          <!-- TAB 1: OVERVIEW -->
+          <div class="dashboard-subnav-view active" id="hod-view-overview" role="tabpanel" aria-labelledby="hod-subtab-btn-overview">
+            <div class="dashboard-metrics-grid mb-4">
+              <div class="dashboard-stat-card">
+                <span class="dashboard-stat-label">Department Submissions</span>
+                <div class="dashboard-stat-val" id="hod-stat-total">0</div>
+              </div>
+              <div class="dashboard-stat-card">
+                <span class="dashboard-stat-label">Department Mean Score</span>
+                <div class="dashboard-stat-val text-cyan" id="hod-stat-avg">0.0 / 10</div>
+              </div>
+              <div class="dashboard-stat-card">
+                <span class="dashboard-stat-label">Prerequisite Cascade Incidents</span>
+                <div class="dashboard-stat-val text-amber" id="hod-stat-cascades">0</div>
+              </div>
+              <div class="dashboard-stat-card">
+                <span class="dashboard-stat-label">Core Department Course</span>
+                <div class="dashboard-stat-val text-primary" id="hod-stat-course">CS301</div>
+              </div>
+            </div>
+
+            <!-- Department Quick Navigation Summary Banner -->
+            <div style="display: flex; justify-content: space-between; align-items: center; background: #F1F5F9; border-radius: 8px; padding: 14px 18px; flex-wrap: wrap; gap: 12px; margin-bottom: 20px;">
+              <div>
+                <strong style="color: var(--text-primary); font-size: 14px;">Departmental Academic Health Overview:</strong>
+                <div class="text-xs text-muted" style="margin-top: 2px;">Inspect cohort performance across chronological academic years or review department-wide mastery trends.</div>
+              </div>
+              <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button type="button" class="btn btn-sm btn-primary" onclick="window.dashboardEngineInstance.switchHODTab('years')">
+                  📅 Academic Years →
+                </button>
+                <button type="button" class="btn btn-sm btn-secondary" onclick="window.dashboardEngineInstance.switchHODTab('progress')">
+                  📈 Progress Graph →
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-primary" onclick="window.dashboardEngineInstance.switchHODTab('roster')">
+                  👥 Student Roster →
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 2: ACADEMIC YEARS -->
+          <div class="dashboard-subnav-view" id="hod-view-years" role="tabpanel" aria-labelledby="hod-subtab-btn-years" style="display: none;">
+            <div class="card mb-4" id="hod-academic-years-section" style="background: #FFFFFF; border: 1px solid var(--border-card);">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px;">
+                <div>
+                  <span class="badge badge-primary text-xs mb-1">Academic Year Cohorts</span>
+                  <h3 style="margin: 0;">Academic Year Grouping & Course Performance</h3>
+                  <p class="text-xs text-muted" style="margin: 2px 0 0 0;">
+                    Classes and sections grouped chronologically by academic year. Select an academic year to inspect enrolled courses, test completion, and students needing support.
+                  </p>
+                </div>
+                <span class="badge badge-secondary text-xs">Chronological Order</span>
+              </div>
+
+              <!-- Chronologically Sorted Academic Year Selector Tabs -->
+              <div class="hod-year-tabs-container mb-3" id="hod-year-pills" style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <!-- Rendered dynamically by dashboards.js (1st Year, 2nd Year, 3rd Year, 4th Year) -->
+              </div>
+
+              <!-- Selected Year Display: Courses, Classes, Tests Scheduled & Taken, Completion, Progress -->
+              <div id="hod-selected-year-display">
+                <!-- Rendered dynamically by dashboards.js -->
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 3: PROGRESS AND CLASS PERFORMANCE -->
+          <div class="dashboard-subnav-view" id="hod-view-progress" role="tabpanel" aria-labelledby="hod-subtab-btn-progress" style="display: none;">
+            <div class="card p-4 mb-4" style="background: #FFFFFF; border: 1px solid var(--border-card);">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+                <div>
+                  <h4 style="margin: 0; font-size: 15px; font-weight: 600;">Department Combined Performance & Completion Trend Graph</h4>
+                  <p class="text-xs text-muted" style="margin: 2px 0 0 0;">Department-wide trend comparing student average score (%) and assessment completion rates (%) over time.</p>
+                </div>
+                <div class="chart-legend-box" style="display: flex; gap: 16px; font-size: 12px;">
+                  <span style="display: inline-flex; align-items: center; gap: 6px;">
+                    <span style="width: 12px; height: 12px; background: #0284C7; border-radius: 50%; display: inline-block;"></span>
+                    <strong>Dept Performance (%)</strong>
+                  </span>
+                  <span style="display: inline-flex; align-items: center; gap: 6px;">
+                    <span style="width: 12px; height: 12px; background: #10B981; border-radius: 2px; display: inline-block;"></span>
+                    <strong>Dept Completion (%)</strong>
+                  </span>
+                </div>
+              </div>
+              <div id="hod-combined-chart" style="width: 100%; min-height: 240px; position: relative;">
+                <!-- Rendered dynamically by dashboards.js with SVG and tooltips -->
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 4: TOPICS NEEDING SUPPORT -->
+          <div class="dashboard-subnav-view" id="hod-view-topics" role="tabpanel" aria-labelledby="hod-subtab-btn-topics" style="display: none;">
+            <div class="card p-4 mb-4" style="background: #FFFFFF; border: 1px solid var(--border-card);">
+              <h3 class="mb-2">Department Concept Vulnerability Heatmap</h3>
+              <p class="text-xs text-muted mb-3">
+                Percentage of students in this department exhibiting a possible concept gap across curriculum topics, highlighting areas requiring instructional reinforcement.
+              </p>
+              <div class="vuln-matrix-container mb-2" id="hod-vulnerability-matrix">
+                <!-- Rendered by dashboards.js -->
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 5: STUDENTS NEEDING HELP / INSPECT ALL (DEPARTMENT ROSTER) -->
+          <div class="dashboard-subnav-view" id="hod-view-roster" role="tabpanel" aria-labelledby="hod-subtab-btn-roster" style="display: none;">
+            <div class="card p-4 mb-4" style="background: #FFFFFF; border: 1px solid var(--border-card);">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+                <div>
+                  <h3 style="margin: 0;">Department Student Diagnostic Roster</h3>
+                  <p class="text-xs text-muted" style="margin: 2px 0 0 0;">Inspect verified student assessment submissions across all departmental cohorts and courses.</p>
+                </div>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                  <input type="text" id="hod-search-input" class="form-control" style="width: 220px;" placeholder="Search student or ID...">
+                  <select id="hod-sem-filter" class="form-control" style="width: 170px;">
+                    <option value="ALL">All Cohorts</option>
+                    <option value="5th Sem">5th Semester</option>
+                    <option value="6th Sem">6th Semester</option>
+                    <option value="7th Sem">7th Semester</option>
+                  </select>
+                  <button class="btn btn-sm btn-secondary" onclick="window.dashboardEngineInstance.exportHODCSV()">
+                    📥 Export Department Audit CSV
+                  </button>
+                </div>
+              </div>
+
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Report ID</th>
+                      <th>Student</th>
+                      <th>Course</th>
+                      <th>Score</th>
+                      <th>Primary Gap</th>
+                      <th>Remediation Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="hod-table-body">
+                    <!-- Rendered by dashboards.js -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ========================================================
+           VIEW 6: SYNTHETIC BENCHMARK INSIGHTS (N=10,000)
+           ======================================================== -->
+      <section id="tab-dataset" class="view-panel" style="display: none;">
+        <div class="card">
+          <!-- Prominent Synthetic Disclaimer Banner -->
+          <div class="synthetic-banner-alert">
+            <span style="font-size: 32px;">📊</span>
+            <div>
+              <strong style="color: #DDD6FE; font-size: 15px;">ACADEMIC BENCHMARK DISCLOSURE (N=10,000):</strong>
+              <p style="font-size: 13px; color: #C4B5FD; margin-top: 4px;">
+                This dataset comprises 10,000 synthetically generated student diagnostic records used exclusively for psychometric calibration, item discrimination estimation, and cascade error distribution analysis. 
+                <strong>These records are synthetic models and DO NOT represent real human students or clinically validated labels.</strong>
+              </p>
+            </div>
+          </div>
+
+          <h2>Synthetic CN Benchmark Analytics (N=10,000)</h2>
+          <p class="text-muted mb-4">
+            Aggregated psychometric baseline generated from <code>data/computer_networks_diagnostic_10000.csv</code> and summarized in <code>data/dataset_stats.json</code>.
+          </p>
+
+          <!-- Benchmark Metrics -->
+          <div class="dashboard-metrics-grid">
+            <div class="dashboard-stat-card">
+              <span class="dashboard-stat-label">Total Synthetic Records</span>
+              <div class="dashboard-stat-val" id="syn-total-records">10,000</div>
+            </div>
+            <div class="dashboard-stat-card">
+              <span class="dashboard-stat-label">Cohort Benchmark Mean</span>
+              <div class="dashboard-stat-val text-cyan" id="syn-mean-score">5.63 / 10</div>
+            </div>
+            <div class="dashboard-stat-card">
+              <span class="dashboard-stat-label">Standard Deviation</span>
+              <div class="dashboard-stat-val text-muted" id="syn-std-dev">± 2.52</div>
+            </div>
+            <div class="dashboard-stat-card">
+              <span class="dashboard-stat-label">Prereq Cascade Rate</span>
+              <div class="dashboard-stat-val text-amber" id="syn-cascade-rate">24.79%</div>
+            </div>
+          </div>
+
+          <!-- Score Distribution Histogram -->
+          <h3 class="mb-2">Synthetic Diagnostic Score Distribution (0 to 10)</h3>
+          <p class="text-xs text-muted mb-3">Frequency distribution across all 10,000 simulated undergraduate attempts.</p>
+          <div id="syn-score-histogram"></div>
+
+          <!-- Concept Difficulty Ranking -->
+          <h3 class="mt-4 mb-2">Concept Difficulty Ranking & Failure Rates</h3>
+          <p class="text-xs text-muted mb-3">Ranked from highest error rate to lowest error rate in the synthetic baseline.</p>
+          <div id="syn-concept-difficulty"></div>
+
+          <!-- Department Benchmark Cards -->
+          <h3 class="mt-4 mb-2">Department Calibration Baselines</h3>
+          <div id="syn-dept-benchmarks" class="mb-4"></div>
+
+          <!-- Synthetic Dataset Sample Explorer -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 12px;">
+            <div>
+              <h3 style="margin: 0;">Synthetic Dataset Explorer</h3>
+              <span class="text-xs text-muted" id="syn-page-indicator">Showing records from computer_networks_diagnostic_10000.csv</span>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button class="btn btn-xs btn-secondary" onclick="window.datasetInsightsInstance.prevPage()">← Previous</button>
+              <button class="btn btn-xs btn-secondary" onclick="window.datasetInsightsInstance.nextPage()">Next →</button>
+              <a href="data/computer_networks_diagnostic_10000.csv" download class="btn btn-xs btn-primary">
+                💾 Download Full 10,000 CSV
+              </a>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Record ID</th>
+                  <th>Student ID</th>
+                  <th>Dept</th>
+                  <th>Course</th>
+                  <th>Score</th>
+                  <th>Primary Gap</th>
+                  <th>Retest</th>
+                  <th>Timestamp</th>
+                </tr>
+              </thead>
+              <tbody id="syn-table-body">
+                <!-- Rendered by dataset-insights.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================================
+           VIEW 7: SCHEDULED TEST & LEARNING WORKFLOW
+           ======================================================== -->
+      <section id="tab-scheduled-test" class="view-panel" style="display: none;">
+        <div id="scheduled-test-container">
+          <!-- Rendered dynamically by scheduled-test-engine.js -->
+        </div>
+      </section>
+
+    </div><!-- End of app-portal-container -->
+
+  </main>
+
+  <!-- ========================================================
+       MODAL 1: CONCEPT STATUS NODE DETAIL INSPECTOR
+       ======================================================== -->
+  <div class="modal-overlay" id="node-detail-modal" onclick="if(event.target===this) closeNodeDetailModal()">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="node-modal-title">Concept Diagnostic Evidence</h3>
+        <button class="modal-close-btn" onclick="closeNodeDetailModal()">&times;</button>
+      </div>
+      <div class="modal-body" id="node-modal-body">
+        <!-- Rendered by concept-map.js -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeNodeDetailModal()">Close</button>
+        <button class="btn btn-primary" id="node-modal-lesson-btn">Open Micro-Lesson & Retest →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       MODAL 2: STUDENT PROGRESS SUMMARY MODAL (LIGHT THEME)
+       ======================================================== -->
+  <div class="modal-overlay" id="student-record-modal" onclick="if(event.target===this) closeStudentRecordModal()">
+    <div class="modal-box student-progress-modal-box" style="max-width: 960px;">
+      <div class="modal-header student-progress-header">
+        <div>
+          <h3 id="record-modal-title" style="margin: 0; color: #0F172A; font-size: 18px; font-weight: 700;">Student Progress Summary</h3>
+          <span id="record-modal-subtitle" class="text-xs text-muted" style="margin-top: 3px; display: block;">Clear overview of assessment results, strengths, and recommended next action</span>
+        </div>
+        <button class="modal-close-btn" onclick="closeStudentRecordModal()" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="modal-body student-progress-body" id="record-modal-body">
+        <!-- Rendered by dashboards.js -->
+      </div>
+      <div class="modal-footer" id="record-modal-footer" style="background: #FFFFFF; border-top: 1px solid #E2E8F0; padding: 14px 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+        <span class="text-xs text-muted" id="record-modal-footer-note">Faculty Progress Portal · Scoped to assigned students</span>
+        <div style="display: flex; gap: 10px;">
+          <button class="btn btn-sm sp-btn-secondary" onclick="closeStudentRecordModal()">Close</button>
+          <button class="btn btn-sm sp-btn-primary" onclick="window.print()">🖨️ Print Summary</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       MODAL 3: LEARNING SESSION DETAIL INSPECTOR (REQUIREMENT 3.C)
+       ======================================================== -->
+  <div class="modal-overlay" id="learning-session-modal" onclick="if(event.target===this) closeLearningSessionModal()">
+    <div class="modal-box" style="max-width: 900px;">
+      <div class="modal-header">
+        <h3 id="session-modal-title">Learning Session Details</h3>
+        <button class="modal-close-btn" onclick="closeLearningSessionModal()">&times;</button>
+      </div>
+      <div class="modal-body" id="session-modal-body">
+        <!-- Rendered by dashboards.js -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeLearningSessionModal()">Close</button>
+        <button class="btn btn-primary" id="session-modal-study-btn">Study Concept in AI Tutor →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       MODAL 4: TEACHER TEST SETUP & SCHEDULING MODAL
+       ======================================================== -->
+  <div class="modal-overlay" id="schedule-test-modal" onclick="if(event.target===this) closeScheduleTestModal()">
+    <div class="modal-box" style="max-width: 820px;">
+      <div class="modal-header">
+        <div>
+          <h3 id="sched-modal-title">Schedule New Course Test</h3>
+          <span class="text-xs text-muted">Configure topics, question volume, timing, and mastery target</span>
+        </div>
+        <button class="modal-close-btn" onclick="closeScheduleTestModal()">&times;</button>
+      </div>
+      <div class="modal-body" id="sched-modal-body">
+        <div id="sched-form-error-alert" class="alert alert-danger mb-3" style="display: none; padding: 10px 14px; border-radius: 6px; font-size: 13px; background: rgba(239, 68, 68, 0.15); border: 1px solid var(--rose-danger); color: #FECDD3;"></div>
+        <form id="schedule-test-form" onsubmit="event.preventDefault(); window.dashboardEngineInstance.submitScheduleForm();">
+          
+          <div class="student-form-grid mb-3">
+            <div class="form-group" style="grid-column: span 2;">
+              <label class="form-label" for="sched-input-title">Test Title *</label>
+              <input type="text" id="sched-input-title" class="form-control" placeholder="e.g. Unit Test 1: Network & Transport Protocols" required>
+            </div>
+          </div>
+
+          <!-- Course & Class / Cohort Assignment -->
+          <div class="student-form-grid mb-3">
+            <div class="form-group">
+              <label class="form-label" for="sched-input-course">Course Code & Name *</label>
+              <select id="sched-input-course" class="form-control" onchange="window.dashboardEngineInstance.handleCourseChange(this.value)">
+                <option value="CS301" selected>CS301 - Computer Networks (CSE)</option>
+                <option value="IT302">IT302 - Data Communication & Networking (IT)</option>
+                <option value="EC304">EC304 - Computer Communication Networks (ECE)</option>
+                <option value="AI305">AI305 - Network Architecture for AI Systems (AIML)</option>
+                <option value="ALL">ALL - All Enrolled Department Courses</option>
+              </select>
+              <small class="text-muted">Target academic course for student assignment.</small>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="sched-input-section">Class Section / Cohort *</label>
+              <select id="sched-input-section" class="form-control">
+                <option value="ALL" selected>All Sections (Entire Cohort)</option>
+                <option value="Section A">Section A</option>
+                <option value="Section B">Section B</option>
+              </select>
+              <small class="text-muted">Limit test to specific section or entire cohort.</small>
+            </div>
+          </div>
+
+          <div class="student-form-grid mb-3">
+            <div class="form-group">
+              <label class="form-label" for="sched-input-semester">Target Semester</label>
+              <select id="sched-input-semester" class="form-control">
+                <option value="ALL" selected>All Semesters</option>
+                <option value="5">5th Semester (3rd Year)</option>
+                <option value="6">6th Semester (3rd Year)</option>
+              </select>
+              <small class="text-muted">Scope test to specific semester cohort.</small>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="sched-input-subject">Academic Subject (4 Subjects Available) *</label>
+              <select id="sched-input-subject" class="form-control" onchange="window.dashboardEngineInstance.handleSubjectChange(this.value)">
+                <option value="CN" selected>Computer Networks (CN · 2,500 Questions)</option>
+                <option value="OS">Operating Systems (OS · 2,500 Questions)</option>
+                <option value="DBMS">Database Management Systems (DBMS · 2,500 Questions)</option>
+                <option value="DSA">Data Structures and Algorithms (DSA · 2,500 Questions)</option>
+              </select>
+              <small class="text-muted">Choose course subject to dynamically load syllabus topics from the 10,000-question dataset.</small>
+            </div>
+          </div>
+
+          <!-- Topics Selection Checkboxes -->
+          <div class="form-group mb-3">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+              <label class="form-label" id="sched-topics-label" style="margin: 0;">Select Subject Topics (At least 1 required) *</label>
+              <div style="display: flex; gap: 8px;">
+                <button type="button" class="btn btn-xs btn-outline-secondary" onclick="window.dashboardEngineInstance.toggleAllScheduleTopics(true)">Select All</button>
+                <button type="button" class="btn btn-xs btn-outline-secondary" onclick="window.dashboardEngineInstance.toggleAllScheduleTopics(false)">Clear</button>
+              </div>
+            </div>
+            <div class="sched-topics-grid" id="sched-topics-checkboxes">
+              <!-- Populated dynamically with the 10 topics -->
+            </div>
+          </div>
+
+          <div class="student-form-grid mb-3">
+            <div class="form-group">
+              <label class="form-label" for="sched-input-count">Question Count *</label>
+              <input type="number" id="sched-input-count" class="form-control" min="1" max="20" value="5" required oninput="window.dashboardEngineInstance.checkScheduleFormAvailability()">
+              <small class="text-muted">Questions selected randomly per student with shuffled options.</small>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="sched-input-difficulty">Difficulty Scope</label>
+              <select id="sched-input-difficulty" class="form-control" onchange="window.dashboardEngineInstance.checkScheduleFormAvailability()">
+                <option value="All" selected>All Curriculum Tiers (Balanced)</option>
+                <option value="Foundational">Foundational Concepts (Tiers 1-2)</option>
+                <option value="Advanced">Advanced Concepts (Tiers 3-4)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Live Question Availability & Answer Key Validation Box -->
+          <div id="sched-availability-notice" class="mb-3" style="padding: 10px 14px; border-radius: 6px; font-size: 13px;">
+            <!-- Dynamically updated by checkScheduleFormAvailability -->
+          </div>
+
+          <div class="student-form-grid mb-3">
+            <div class="form-group">
+              <label class="form-label" for="sched-input-start">Scheduled Start Date & Time *</label>
+              <input type="datetime-local" id="sched-input-start" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="sched-input-end">Availability Window End Time *</label>
+              <input type="datetime-local" id="sched-input-end" class="form-control" required>
+              <small class="text-muted">Students can only start tests within this window.</small>
+            </div>
+          </div>
+
+          <div class="student-form-grid mb-3">
+            <div class="form-group">
+              <label class="form-label" for="sched-input-time-limit">Test Taking Time Limit (Minutes) *</label>
+              <input type="number" id="sched-input-time-limit" class="form-control" min="2" max="180" value="15" required>
+              <small class="text-muted">Live countdown with 1-min warning and auto-submit on expiry.</small>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="sched-input-threshold">Mastery Pass Threshold (%) *</label>
+              <input type="number" id="sched-input-threshold" class="form-control" min="50" max="100" value="80" required>
+              <small class="text-muted">Default 80%. Retest required if student scores below threshold.</small>
+            </div>
+          </div>
+
+          <!-- Institution Timezone Clear Notice -->
+          <div class="meta-card mb-3" style="font-size: 12px; background: rgba(30, 41, 59, 0.5);">
+            🌐 <strong>Configured Institutional Timezone:</strong> <code class="text-cyan">Asia/Kolkata (IST · UTC+05:30)</code>. All scheduled start/end times and student countdowns operate in this reference timezone.
+          </div>
+
+          <div class="modal-footer" style="padding: 14px 0 0 0; border-top: 1px solid rgba(148, 163, 184, 0.15); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+            <button type="button" class="btn btn-secondary" onclick="closeScheduleTestModal()">Cancel</button>
+            <div style="display: flex; gap: 10px;">
+              <button type="button" class="btn btn-outline-primary" id="sched-modal-review-btn" onclick="window.dashboardEngineInstance.reviewScheduledTest()">
+                🔍 Review Details →
+              </button>
+              <button type="submit" class="btn btn-success" id="sched-modal-save-btn">
+                💾 Save & Publish Test
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       MODAL 5: REVIEW TEST DETAILS BEFORE PUBLISHING
+       ======================================================== -->
+  <div class="modal-overlay" id="review-test-schedule-modal" onclick="if(event.target===this) closeReviewTestModal()">
+    <div class="modal-box" style="max-width: 750px;">
+      <div class="modal-header">
+        <div>
+          <h3>Review Test Schedule Before Publishing</h3>
+          <span class="text-xs text-muted">Confirm assessment timing and validated question configuration</span>
+        </div>
+        <button class="modal-close-btn" onclick="closeReviewTestModal()">&times;</button>
+      </div>
+      <div class="modal-body" id="review-test-modal-body">
+        <!-- Rendered dynamically by dashboards.js -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeReviewTestModal(); openScheduleTestModal();">
+          ← Back to Edit
+        </button>
+        <button type="button" class="btn btn-success" onclick="window.dashboardEngineInstance.confirmPublishScheduledTest()">
+          🚀 Confirm & Publish Test to Students
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       MODAL 6: INSPECT ALL ASSESSMENTS (FACULTY SCOPED)
+       ======================================================== -->
+  <div class="modal-overlay" id="faculty-inspect-all-modal" onclick="if(event.target===this) window.dashboardEngineInstance.closeInspectAllModal()">
+    <div class="modal-box" style="max-width: 1050px; width: 95%;">
+      <div class="modal-header">
+        <div>
+          <h3 style="margin: 0;">🔍 Inspect All Assessments</h3>
+          <span class="text-xs text-muted">Completed & in-progress assessments strictly limited to your assigned students and courses.</span>
+        </div>
+        <button class="modal-close-btn" onclick="window.dashboardEngineInstance.closeInspectAllModal()">&times;</button>
+      </div>
+
+      <!-- Filter and Sort Controls -->
+      <div class="card p-3 mb-3" style="background: #F8FAFC; border: 1px solid var(--border-card);">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px;">
+          <div>
+            <label class="form-label text-xs" for="inspect-filter-course">Course</label>
+            <select id="inspect-filter-course" class="form-control" onchange="window.dashboardEngineInstance.renderInspectAllTable()">
+              <option value="ALL">All Assigned Courses</option>
+              <option value="CS301" selected>CS301 - Computer Networks</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-label text-xs" for="inspect-filter-class">Class / Section</label>
+            <select id="inspect-filter-class" name="inspect-filter-section" class="form-control" onchange="window.dashboardEngineInstance.renderInspectAllTable()">
+              <option value="ALL">All Sections</option>
+              <option value="Section A">Section A (5th Sem)</option>
+              <option value="Section B">Section B (6th Sem)</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-label text-xs" for="inspect-filter-status">Assessment Status</label>
+            <select id="inspect-filter-status" class="form-control" onchange="window.dashboardEngineInstance.renderInspectAllTable()">
+              <option value="ALL">All Statuses</option>
+              <option value="Completed">Completed</option>
+              <option value="In Progress">In Progress</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-label text-xs" for="inspect-sort-by">Sort By</label>
+            <select id="inspect-sort-by" class="form-control" onchange="window.dashboardEngineInstance.renderInspectAllTable()">
+              <option value="date_desc">Date: Newest First</option>
+              <option value="date_asc">Date: Oldest First</option>
+              <option value="score_desc">Score: High to Low</option>
+              <option value="score_asc">Score: Low to High</option>
+              <option value="name_asc">Student Name: A-Z</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-label text-xs" for="inspect-search-input">Search</label>
+            <input type="text" id="inspect-search-input" class="form-control" placeholder="Search student or ID..." oninput="window.dashboardEngineInstance.renderInspectAllTable()">
+          </div>
+        </div>
+      </div>
+
+      <!-- Inspect All Table Body -->
+      <div class="table-responsive" style="max-height: 480px; overflow-y: auto;">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Student</th>
+              <th>Course / Class</th>
+              <th>Assessment / Test</th>
+              <th>Status</th>
+              <th>Score / Accuracy</th>
+              <th>Topics Needing Review</th>
+              <th>Date</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="inspect-all-table-body">
+            <!-- Rendered by dashboards.js -->
+          </tbody>
+        </table>
+      </div>
+
+      <div class="modal-footer" style="padding-top: 14px; margin-top: 10px; border-top: 1px solid var(--border-card);">
+        <button type="button" class="btn btn-secondary" onclick="window.dashboardEngineInstance.closeInspectAllModal()">
+          Close View
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/quiz-generator.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/diagnosis-engine.js"></script>
+  <script src="js/concept-map.js"></script>
+  <script src="js/practice-engine.js"></script>
+  <script src="js/tutor-engine.js"></script>
+  <script src="js/bkt-engine.js"></script>
+  <script src="js/scheduled-test-engine.js"></script>
+  <script src="js/dashboards.js"></script>
+  <script src="js/dataset-insights.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

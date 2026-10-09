@@ -1,0 +1,143 @@
+/* ==========================================================================
+   GAPPath AI - Printable Student Report Styles (@media print)
+   ========================================================================== */
+
+@media print {
+  /* Hide non-printable interface chrome */
+  body {
+    background-color: #FFFFFF !important;
+    color: #111827 !important;
+    font-size: 11pt !important;
+    line-height: 1.4 !important;
+  }
+
+  .app-header,
+  .nav-tabs-wrapper,
+  .preset-selector-bar,
+  .quiz-controls-row,
+  .btn,
+  .modal-overlay,
+  #tab-student,
+  #tab-practice,
+  #tab-instructor,
+  #tab-hod,
+  #tab-dataset,
+  .storage-badge,
+  .map-legend-bar {
+    display: none !important;
+  }
+
+  #tab-results {
+    display: block !important;
+  }
+
+  .app-container {
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Formal Institutional Header */
+  .print-only-header {
+    display: block !important;
+    border-bottom: 2px solid #111827;
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .print-header-institution {
+    font-size: 14pt;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #111827;
+  }
+
+  .print-header-sub {
+    font-size: 10pt;
+    color: #4B5563;
+    margin-top: 2px;
+  }
+
+  .print-header-doc {
+    font-size: 13pt;
+    font-weight: 700;
+    color: #1E3A8A;
+    margin-top: 8px;
+    text-transform: uppercase;
+  }
+
+  /* Card and table print adjustments */
+  .card, .res-stat-card, .routing-cert-box, .caution-banner, .concept-map-wrapper {
+    background: #FFFFFF !important;
+    border: 1px solid #D1D5DB !important;
+    box-shadow: none !important;
+    color: #111827 !important;
+    break-inside: avoid;
+  }
+
+  .res-stat-num {
+    color: #111827 !important;
+  }
+
+  .table {
+    color: #111827 !important;
+    border: 1px solid #D1D5DB !important;
+  }
+
+  .table th {
+    background: #F3F4F6 !important;
+    color: #111827 !important;
+    border: 1px solid #D1D5DB !important;
+  }
+
+  .table td {
+    color: #111827 !important;
+    border: 1px solid #E5E7EB !important;
+  }
+
+  .badge {
+    border: 1px solid #9CA3AF !important;
+    color: #111827 !important;
+    background: transparent !important;
+  }
+
+  /* Formal Sign-off Section */
+  .print-signoff-section {
+    display: flex !important;
+    justify-content: space-between;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px dashed #9CA3AF;
+    break-inside: avoid;
+  }
+
+  .sign-box {
+    width: 45%;
+    text-align: center;
+  }
+
+  .sign-line {
+    border-bottom: 1px solid #111827;
+    height: 40px;
+    margin-bottom: 8px;
+  }
+
+  .sign-title {
+    font-size: 9pt;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .sign-sub {
+    font-size: 8pt;
+    color: #6B7280;
+  }
+}
+
+/* In-screen default: hide print-only elements */
+.print-only-header,
+.print-signoff-section {
+  display: none;
+}

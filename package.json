@@ -1,0 +1,24 @@
+{
+  "name": "gappath-ai-college-cn-prototype",
+  "version": "2.4.0",
+  "description": "GapPath AI - College-Level Diagnostic Learning & Remediation Prototype for Computer Networks (B.Tech Undergraduate Curriculum)",
+  "main": "index.html",
+  "scripts": {
+    "start": "python scripts/server.py",
+    "serve": "npx serve -l 3000 .",
+    "test": "python scripts/test_prototype.py",
+    "generate-data": "python scripts/generate_data.py"
+  },
+  "keywords": [
+    "gappath-ai",
+    "computer-networks",
+    "diagnostic-assessment",
+    "concept-map",
+    "prerequisite-graph",
+    "remediation",
+    "btech-education",
+    "hackathon"
+  ],
+  "author": "GapPath AI Team",
+  "license": "MIT"
+}

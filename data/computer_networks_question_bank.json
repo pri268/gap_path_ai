@@ -1,0 +1,2566 @@
+{
+  "metadata": {
+    "course": "Computer Networks (CN)",
+    "target_audience": "Undergraduate B.Tech Computer Science & Allied Engineering",
+    "curriculum": "Standard AICTE / ABET Undergrad CN Syllabus",
+    "diagnostic_concepts_count": 10,
+    "questions_per_concept_pool": 3,
+    "total_diagnostic_pool_items": 30,
+    "practice_items_per_concept": 3,
+    "total_practice_items": 30,
+    "version": "2.5.0-multistudent-pools",
+    "cautious_language_policy": "One-question diagnostic signals are labeled as 'positive answer signal' or 'likely gap'; robust mastery requires multi-item verification."
+  },
+  "concepts": [
+    {
+      "id": "CN_01_OSI_LAYERS",
+      "name": "OSI & TCP/IP Architecture",
+      "tier": 1,
+      "category": "Architecture & Fundamentals",
+      "prerequisites": [],
+      "diagnostic_pool": [
+        {
+          "id": "DQ_01_A",
+          "text": "During packet transmission, a host encapsulates user data before sending it out on the wire. If a router examines the destination IP address to make a forwarding decision, at which OSI layer does this routing inspection take place, and what Protocol Data Unit (PDU) is being processed?",
+          "options": [
+            {
+              "key": "A",
+              "text": "Network Layer (Layer 3); Packet",
+              "is_correct": true,
+              "rationale": "Correct positive signal: Routers operate at Layer 3 (Network Layer) and process Packets containing IP headers for forwarding."
+            },
+            {
+              "key": "B",
+              "text": "Data Link Layer (Layer 2); Frame",
+              "is_correct": false,
+              "rationale": "Misconception: Layer 2 processes Frames using MAC addresses, not IP destination routing."
+            },
+            {
+              "key": "C",
+              "text": "Transport Layer (Layer 4); Segment",
+              "is_correct": false,
+              "rationale": "Misconception: Layer 4 inspects port numbers for process-to-process multiplexing, not IP routing."
+            },
+            {
+              "key": "D",
+              "text": "Physical Layer (Layer 1); Bit Stream",
+              "is_correct": false,
+              "rationale": "Misconception: Layer 1 deals with electrical/optical signaling of raw bits, without packet header parsing."
+            }
+          ],
+          "correct_option": "A",
+          "concept_tested": "CN_01_OSI_LAYERS",
+          "explanation": "Routers operate at OSI Layer 3 (Network Layer) and inspect the destination IP address inside the Network Layer PDU, which is known as a Packet (or Datagram). Switches inspect Layer 2 Frames using MAC addresses, while Transport Layer devices deal with Segments using TCP/UDP port numbers."
+        },
+        {
+          "id": "DQ_01_B",
+          "text": "Two distinct web applications (a browser and a music streamer) are running concurrently on the same host with a single IP address. Which architectural layer and header field ensures that incoming packets are delivered to the correct application process?",
+          "options": [
+            {
+              "key": "A",
+              "text": "Transport Layer (Layer 4); Destination Port Number",
+              "is_correct": true,
+              "rationale": "Correct positive signal: Transport layer uses 16-bit port numbers for process-to-process multiplexing and demultiplexing on a single IP host."
+            },
+            {
+              "key": "B",
+              "text": "Network Layer (Layer 3); Destination IP Address",
+              "is_correct": false,
+              "rationale": "Misconception: Destination IP identifies the host interface on the internetwork, not the individual application process."
+            },
+            {
+              "key": "C",
+              "text": "Data Link Layer (Layer 2); Destination MAC Address",
+              "is_correct": false,
+              "rationale": "Misconception: MAC address delivers frames to the physical NIC on the local LAN."
+            },
+            {
+              "key": "D",
+              "text": "Physical Layer (Layer 1); Channel Frequency Sub-carrier",
+              "is_correct": false,
+              "rationale": "Misconception: Physical layer handles signal modulation, not software process multiplexing."
+            }
+          ],
+          "correct_option": "A",
+          "concept_tested": "CN_01_OSI_LAYERS",
+          "explanation": "Process-to-process communication is the primary responsibility of the Transport Layer (OSI Layer 4). It achieves this by assigning 16-bit Port Numbers (e.g., HTTP 80, HTTPS 443, ephemeral client ports) to demultiplex traffic to specific operating system sockets."
+        },
+        {
+          "id": "DQ_01_C",
+          "text": "When a client computer transmits an HTTP GET request to a remote server, what is the exact chronological sequence of header encapsulation as the data travels down the sender's protocol stack?",
+          "options": [
+            {
+              "key": "A",
+              "text": "Application Data -> TCP Header -> IP Header -> Ethernet Frame Header -> Physical Bits",
+              "is_correct": true,
+              "rationale": "Correct positive signal: Top-down encapsulation adds Layer 4 (TCP), then Layer 3 (IP), then Layer 2 (Ethernet MAC) headers."
+            },
+            {
+              "key": "B",
+              "text": "Application Data -> IP Header -> TCP Header -> Ethernet Frame Header -> Physical Bits",
+              "is_correct": false,
+              "rationale": "Misconception: Inverted Layer 3 and Layer 4 encapsulation; IP wraps around TCP, not vice-versa."
+            },
+            {
+              "key": "C",
+              "text": "Application Data -> Ethernet Frame Header -> IP Header -> TCP Header -> Physical Bits",
+              "is_correct": false,
+              "rationale": "Misconception: Layer 2 Ethernet framing is the outermost wrapper on the local wire, not the innermost."
+            },
+            {
+              "key": "D",
+              "text": "Application Data -> TCP Header -> Ethernet Frame Header -> IP Header -> Physical Bits",
+              "is_correct": false,
+              "rationale": "Misconception: IP header must be inside the Ethernet frame payload so intermediate routers can extract it."
+            }
+          ],
+          "correct_option": "A",
+          "concept_tested": "CN_01_OSI_LAYERS",
+          "explanation": "Protocol encapsulation moves strictly downwards from Layer 7 to Layer 1. The Application message receives a Transport Layer (TCP) header to form a Segment, which receives a Network Layer (IP) header to form a Packet, which receives a Data Link (Ethernet) header and trailer to form a Frame, converted to bits at Layer 1."
+        }
+      ],
+      "lesson": {
+        "title": "OSI and TCP/IP Reference Architectures",
+        "body": "Network communication relies on standardized encapsulation. Layer 3 (Network) handles logical addressing and packet routing across networks, whereas Layer 2 (Data Link) manages hop-to-hop frame delivery using physical MAC addresses. Layer 4 (Transport) multiplexes processes using 16-bit port numbers.",
+        "axiom": "Network communication relies on standardized encapsulation. Layer 3 (Network) handles logical addressing and packet rout...",
+        "diagram": "[Protocol Architecture Diagram: OSI and TCP/IP Reference Architectures]\n+------------------------------------------------+\n| Layer Operation: Routers forward packets at Layer 3 based on d |\n+------------------------------------------------+",
+        "trap": "Confusing Layer 2 MAC forwarding with Layer 3 IP routing, or assuming switches rewrite IP packet headers.",
+        "rules": [
+          "Routers forward packets at Layer 3 based on destination IP; switches forward frames at Layer 2 based on destination MAC.",
+          "Transport Layer uses port numbers (e.g. 80, 443, 22) to deliver segments to specific processes.",
+          "Each layer adds its own Protocol Data Unit (PDU) header during encapsulation."
+        ],
+        "key_points": [
+          "Routers forward packets at Layer 3 based on destination IP; switches forward frames at Layer 2 based on destination MAC.",
+          "Transport Layer uses port numbers (e.g. 80, 443, 22) to deliver segments to specific processes.",
+          "Each layer adds its own Protocol Data Unit (PDU) header during encapsulation."
+        ]
+      },
+      "practice_questions": [
+        {
+          "id": "PQ_01_1",
+          "text": "A Layer 2 Ethernet switch receives an Ethernet frame. Which header field does the switch examine to forward the frame to the correct output port?",
+          "options": [
+            {
+              "key": "A",
+              "text": "Destination MAC Address",
+              "is_correct": true
+            },
+            {
+              "key": "B",
+              "text": "Destination IP Address",
+              "is_correct": false
+            },
+            {
+              "key": "C",
+              "text": "Destination TCP Port",
+              "is_correct": false
+            },
+            {
+              "key": "D",
+              "text": "EtherType field",
+              "is_correct": false
+            }
+          ],
+          "correct_option": "A",
+          "explanation": "Layer 2 switches maintain a MAC address table (CAM table) and forward frames based strictly on the Destination MAC Address."
+        },
+        {
+          "id": "PQ_01_2",
+          "text": "When an application process creates a message, what header does the Transport Layer encapsulate around this payload?",
+          "options": [
+            {
+              "key": "A",
+              "text": "Source and Destination Port Numbers",
+              "is_correct": true
+            },
+            {
+              "key": "B",
+              "text": "Source and Destination IP Addresses",
+              "is_correct": false
+            },
+            {
+              "key": "C",
+              "text": "CRC Frame Check Sequence",
+              "is_correct": false
+            },
+            {
+              "key": "D",
+              "text": "Preamble and SFD bits",
+              "is_correct": false
+            }
+          ],
+          "correct_option": "A",
+          "explanation": "The Transport Layer (TCP/UDP) prepends port numbers to facilitate process-to-process multiplexing."
+        },
+        {
+          "id": "PQ_01_3",
+          "text": "As a packet travels across multiple intermediate routers from host A to host B, what happens to the Layer 2 and Layer 3 headers?",
+          "options": [
+            {
+              "key": "A",
+              "text": "Layer 2 Frame header changes at each hop; Layer 3 IP header stays constant (without NAT)",
+              "is_correct": true
+            },
+            {
+              "key": "B",
+              "text": "Layer 3 IP header changes at each hop; Layer 2 Frame header stays constant",
+              "is_correct": false
+            },
+            {
+              "key": "C",
+              "text": "Both Layer 2 and Layer 3 headers remain identical across all hops",
+              "is_correct": false
+            },
+            {
+              "key": "D",
+              "text": "Both Layer 2 and Layer 3 headers are stripped and not re-encapsulated",
+              "is_correct": false
+            }
+          ],
+          "correct_option": "A",
+          "explanation": "Each router decapsulates the incoming Layer 2 frame, looks up the IP route in the routing table, and encapsulates the packet into a new Layer 2 frame for the next physical link."
+        }
+      ],
+      "diagnostic_question": {
+        "id": "DQ_01_A",
+        "text": "During packet transmission, a host encapsulates user data before sending it out on the wire. If a router examines the destination IP address to make a forwarding decision, at which OSI layer does this routing inspection take place, and what Protocol Data Unit (PDU) is being processed?",
+        "options": [
+          {
+            "key": "A",
+            "text": "Network Layer (Layer 3); Packet",
+            "is_correct": true,
+            "rationale": "Correct positive signal: Routers operate at Layer 3 (Network Layer) and process Packets containing IP headers for forwarding."
+          },
+          {
+            "key": "B",
+            "text": "Data Link Layer (Layer 2); Frame",
+            "is_correct": false,
+            "rationale": "Misconception: Layer 2 processes Frames using MAC addresses, not IP destination routing."
+          },
+          {
+            "key": "C",
+            "text": "Transport Layer (Layer 4); Segment",
+            "is_correct": false,
+            "rationale": "Misconception: Layer 4 inspects port numbers for process-to-process multiplexing, not IP routing."
+          },
+          {
+            "key": "D",
+            "text": "Physical Layer (Layer 1); Bit Stream",
+            "is_correct": false,
+            "rationale": "Misconception: Layer 1 deals with electrical/optical signaling of raw bits, without packet header parsing."
+          }
+        ],
+        "correct_option": "A",
+        "concept_tested": "CN_01_OSI_LAYERS",
+        "explanation": "Routers operate at OSI Layer 3 (Network Layer) and inspect the destination IP address inside the Network Layer PDU, which is known as a Packet (or Datagram). Switches inspect Layer 2 Frames using MAC addresses, while Transport Layer devices deal with Segments using TCP/UDP port numbers."
+      },
+      "notes": {
+        "summary": "Network communication relies on standardized encapsulation. Layer 3 (Network) handles logical addressing and packet routing across networks, whereas Layer 2 (Data Link) manages hop-to-hop frame delivery using physical MAC addresses. Layer 4 (Transport) multiplexes processes using 16-bit port numbers.",
+        "key_points": [
+          "Routers forward packets at Layer 3 based on destination IP; switches forward frames at Layer 2 based on destination MAC.",
+          "Transport Layer uses port numbers (e.g. 80, 443, 22) to deliver segments to specific processes.",
+          "Each layer adds its own Protocol Data Unit (PDU) header during encapsulation."
+        ],
+        "pitfalls": "Confusing Layer 2 MAC forwarding with Layer 3 IP routing, or assuming switches rewrite IP packet headers."
+      }
+    },
+    {
+      "id": "CN_02_FRAMING_CRC",
+      "name": "Data Link Framing & CRC Error Detection",
+      "tier": 2,
+      "category": "Data Link Layer",
+      "prerequisites": [
+        "CN_01_OSI_LAYERS"
+      ],
+      "diagnostic_pool": [
+        {
+          "id": "DQ_02_A",
+          "text": "A sender transmits data with bit sequence D = 10100100 using a CRC generator polynomial G(x) = x^3 + 1 (binary generator 1001). How many check bits (FCS) must be appended to D, and what operation is performed using modulo-2 arithmetic to compute these check bits?",
+          "options": [
+            {
+              "key": "A",
+              "text": "Append 3 zeros and divide by 1001 using modulo-2 XOR division",
+              "is_correct": true,
+              "rationale": "Correct positive signal: For a generator polynomial of degree r=3, r=3 zeros are appended to the data bits, and remainder is obtained via modulo-2 polynomial division (XOR)."
+            },
+            {
+              "key": "B",
+              "text": "Append 4 zeros and perform standard arithmetic integer division",
+              "is_correct": false,
+              "rationale": "Misconception: Degree is 3 (x^3), so 3 zeros are appended, and arithmetic is modulo-2 without integer borrows/carries."
+            },
+            {
+              "key": "C",
+              "text": "Append 1 parity bit computed by summing all bit values modulo-2",
+              "is_correct": false,
+              "rationale": "Misconception: Confused CRC with simple even/odd parity bit."
+            },
+            {
+              "key": "D",
+              "text": "Append 3 ones and perform 1's complement arithmetic addition",
+              "is_correct": false,
+              "rationale": "Misconception: Confused CRC check bits with Internet Checksum."
+            }
+          ],
+          "correct_option": "A",
+          "concept_tested": "CN_02_FRAMING_CRC",
+          "explanation": "In CRC, if the generator polynomial G(x) has degree r (here x^3 + 1 has degree r = 3, binary 1001), exactly r = 3 zero bits are appended to the raw data bits. Then, modulo-2 polynomial long division (using bitwise XOR without carries or borrows) is performed to calculate the 3-bit remainder, which becomes the Frame Check Sequence (FCS)."
+        },
+        {
+          "id": "DQ_02_B",
+          "text": "In bit-oriented Data Link framing (HDLC), flag bytes 01111110 mark frame boundaries. What rule does the bit stuffing mechanism execute at the sender to ensure this flag pattern never accidentally appears inside the user payload?",
+          "options": [
+            {
+              "key": "A",
+              "text": "Automatically injects a '0' bit after every five consecutive '1' bits in the data stream",
+              "is_correct": true,
+              "rationale": "Correct positive signal: Bit stuffing inserts a '0' after five consecutive '1's so that a sequence of six '1's (flag byte) never occurs inside data."
+            },
+            {
+              "key": "B",
+              "text": "Replaces every occurrence of byte 01111110 with an escape character (ESC)",
+              "is_correct": false,
+              "rationale": "Misconception: Byte stuffing (character stuffing) uses ESC characters, whereas bit-oriented framing uses bit stuffing."
+            },
+            {
+              "key": "C",
+              "text": "Inserts a '1' bit after every four consecutive '0' bits",
+              "is_correct": false,
+              "rationale": "Misconception: Flags contain consecutive ones, so stuffing prevents 6 consecutive ones, not zeros."
+            },
+            {
+              "key": "D",
+              "text": "Inverts all data bits if five consecutive '1' bits are detected",
+              "is_correct": false,
+              "rationale": "Misconception: Inversion would corrupt the data; bit stuffing inserts a removable 0 bit instead."
+            }
+          ],
+          "correct_option": "A",
+          "concept_tested": "CN_02_FRAMING_CRC",
+          "explanation": "HDLC framing delimits frames using flag pattern 01111110 (six 1s). Whenever the sender detects five consecutive '1' bits in the user data, it unconditionally stuffs a '0' bit. The receiver automatically strips any '0' bit following five consecutive '1' bits."
+        },
+        {
+          "id": "DQ_02_C",
+          "text": "Why is Cyclic Redundancy Check (CRC) widely preferred over the Internet 1's Complement Checksum at Layer 2 for physical link error detection?",
+          "options": [
+            {
+              "key": "A",
+              "text": "CRC detects all single, double, odd-numbered, and burst bit errors up to degree r with simple shift-register hardware",
+              "is_correct": true,
+              "rationale": "Correct positive signal: CRC polynomial division offers superior mathematical detection of burst errors common on physical transmission media."
+            },
+            {
+              "key": "B",
+              "text": "CRC can automatically correct 100% of all corrupted bits without retransmission",
+              "is_correct": false,
+              "rationale": "Misconception: Standard CRC is an error detection code, not forward error correction (FEC)."
+            },
+            {
+              "key": "C",
+              "text": "Checksum requires quadratic O(N^2) processing time compared to O(1) CRC",
+              "is_correct": false,
+              "rationale": "Misconception: Both algorithms are linear O(N), but CRC detects burst errors that cancel out in additive checksums."
+            },
+            {
+              "key": "D",
+              "text": "CRC encrypts the payload to prevent unauthorized eavesdropping on the wire",
+              "is_correct": false,
+              "rationale": "Misconception: CRC provides error detection integrity, not cryptographic confidentiality."
+            }
+          ],
+          "correct_option": "A",
+          "concept_tested": "CN_02_FRAMING_CRC",
+          "explanation": "Physical links frequently experience burst errors (consecutive corrupted bits caused by electrical noise). While additive checksums can fail if swapped bit errors sum to zero, a CRC generator polynomial of degree r mathematically guarantees detection of all burst errors of length <= r and all odd-numbered bit errors."
+        }
+      ],
+      "lesson": {
+        "title": "Data Link Framing and CRC Error Detection",
+        "body": "Cyclic Redundancy Check (CRC) is a polynomial division code using modulo-2 arithmetic (XOR operations) without carries. For a generator polynomial of degree r, exactly r check bits are appended to the frame.",
+        "axiom": "Cyclic Redundancy Check (CRC) is a polynomial division code using modulo-2 arithmetic (XOR operations) without carries. ...",
+        "diagram": "[Protocol Architecture Diagram: Data Link Framing and CRC Error Detection]\n+------------------------------------------------+\n| Layer Operation: Modulo-2 addition and subtraction are identic |\n+------------------------------------------------+",
+        "trap": "Performing standard base-10 arithmetic instead of modulo-2 XOR division, or appending r+1 zeros.",
+        "rules": [
+          "Modulo-2 addition and subtraction are identical to bitwise XOR.",
+          "For generator polynomial of degree r, exactly r zeros are appended before division.",
+          "A zero remainder at the receiver indicates no detectable bit errors."
+        ],
+        "key_points": [
+          "Modulo-2 addition and subtraction are identical to bitwise XOR.",
+          "For generator polynomial of degree r, exactly r zeros are appended before division.",
+          "A zero remainder at the receiver indicates no detectable bit errors."
+        ]
+      },
+      "practice_questions": [
+        {
+          "id": "PQ_02_1",
+          "text": "If a generator polynomial is G(x) = x^4 + x + 1, what is its binary representation and how many check bits will be generated?",
+          "options": [
+            {
+              "key": "A",
+              "text": "10011 with 4 check bits",
+              "is_correct": true
+            },
+            {
+              "key": "B",
+              "text": "1011 with 3 check bits",
+              "is_correct": false
+            },
+            {
+              "key": "C",
+              "text": "10001 with 5 check bits",
+              "is_correct": false
+            },
+            {
+              "key": "D",
+              "text": "11100 with 4 check bits",
+              "is_correct": false
+            }
+          ],
+          "correct_option": "A",
+          "explanation": "x^4 + 0x^3 + 0x^2 + 1x^1 + 1x^0 = 10011 (5 bits). The degree is 4, generating 4 check bits."
+        },
+        {
+          "id": "PQ_02_2",
+          "text": "What is the result of modulo-2 addition between binary numbers 1101 and 1011?",
+          "options": [
+            {
+              "key": "A",
+              "text": "0110",
+              "is_correct": true
+            },
+            {
+              "key": "B",
+              "text": "11000",
+              "is_correct": false
+            },
+            {
+              "key": "C",
+              "text": "1000",
+              "is_correct": false
+            },
+            {
+              "key": "D",
+              "text": "0101",
+              "is_correct": false
+            }
+          ],
+          "correct_option": "A",
+          "explanation": "1 XOR 1 = 0, 1 XOR 0 = 1, 0 XOR 1 = 1, 1 XOR 1 = 0 => 0110."
+        },
+        {
+          "id": "PQ_02_3",
+          "text": "In bit-oriented framing, bit stuffing inserts a '0' after how many consecutive '1's to prevent unintended flag sequences (01111110)?",
+          "options": [
+            {
+              "key": "A",
+              "text": "Five consecutive '1's",
+              "is_correct": true
+            },
+            {
+              "key": "B",
+              "text": "Six consecutive '1's",
+              "is_correct": false
+            },
+            {
+              "key": "C",
+              "text": "Seven consecutive '1's",
+              "is_correct": false
+            },
+            {
+              "key": "D",
+              "text": "Four consecutive '1's",
+              "is_correct": false
+            }
+          ],
+          "correct_option": "A",
+          "explanation": "Bit stuffing automatically inserts a '0' whenever five consecutive '1's are encountered in data, ensuring the 6-one flag sequence (01111110) never occurs in the data stream."
+        }
+      ],
+      "diagnostic_question": {
+        "id": "DQ_02_A",
+        "text": "A sender transmits data with bit sequence D = 10100100 using a CRC generator polynomial G(x) = x^3 + 1 (binary generator 1001). How many check bits (FCS) must be appended to D, and what operation is performed using modulo-2 arithmetic to compute these check bits?",
+        "options": [
+          {
+            "key": "A",
+            "text": "Append 3 zeros and divide by 1001 using modulo-2 XOR division",
+            "is_correct": true,
+            "rationale": "Correct positive signal: For a generator polynomial of degree r=3, r=3 zeros are appended to the data bits, and remainder is obtained via modulo-2 polynomial division (XOR)."
+          },
+          {
+            "key": "B",
+            "text": "Append 4 zeros and perform standard arithmetic integer division",
+            "is_correct": false,
+            "rationale": "Misconception: Degree is 3 (x^3), so 3 zeros are appended, and arithmetic is modulo-2 without integer borrows/carries."
+          },
+          {
+            "key": "C",
+            "text": "Append 1 parity bit computed by summing all bit values modulo-2",
+            "is_correct": false,
+            "rationale": "Misconception: Confused CRC with simple even/odd parity bit."
+          },
+          {
+            "key": "D",
+            "text": "Append 3 ones and perform 1's complement arithmetic addition",
+            "is_correct": false,
+            "rationale": "Misconception: Confused CRC check bits with Internet Checksum."
+          }
+        ],
+        "correct_option": "A",
+        "concept_tested": "CN_02_FRAMING_CRC",
+        "explanation": "In CRC, if the generator polynomial G(x) has degree r (here x^3 + 1 has degree r = 3, binary 1001), exactly r = 3 zero bits are appended to the raw data bits. Then, modulo-2 polynomial long division (using bitwise XOR without carries or borrows) is performed to calculate the 3-bit remainder, which becomes the Frame Check Sequence (FCS)."
+      },
+      "notes": {
+        "summary": "Cyclic Redundancy Check (CRC) is a polynomial division code using modulo-2 arithmetic (XOR operations) without carries. For a generator polynomial of degree r, exactly r check bits are appended to the frame.",
+        "key_points": [
+          "Modulo-2 addition and subtraction are identical to bitwise XOR.",
+          "For generator polynomial of degree r, exactly r zeros are appended before division.",
+          "A zero remainder at the receiver indicates no detectable bit errors."
+        ],
+        "pitfalls": "Performing standard base-10 arithmetic instead of modulo-2 XOR division, or appending r+1 zeros."
+      }
+    },
+    {
+      "id": "CN_03_FLOW_CONTROL",
+      "name": "Sliding Window Flow Control",
+      "tier": 2,
+      "category": "Data Link Layer",
+      "prerequisites": [
+        "CN_02_FRAMING_CRC"
+      ],
+      "diagnostic_pool": [
+        {
+          "id": "DQ_03_A",
+          "text": "In a Selective Repeat sliding window protocol with an n-bit sequence number field, what is the maximum permissible sender window size (Ws) to completely avoid sequence number ambiguity under packet loss and delayed ACKs?",
+          "options": [
+            {
+              "key": "A",
+              "text": "Ws <= 2^(n-1)",
+              "is_correct": true,
+              "rationale": "Correct positive signal: In Selective Repeat, Ws + Wr <= 2^n. Since Ws = Wr, Ws <= 2^(n-1) to prevent overlap between new and retransmitted sequence spaces."
+            },
+            {
+              "key": "B",
+              "text": "Ws <= 2^n - 1",
+              "is_correct": false,
+              "rationale": "Misconception: 2^n - 1 is the window size for Go-Back-N (where Wr = 1), not Selective Repeat."
+            },
+            {
+              "key": "C",
+              "text": "Ws <= 2^n",
+              "is_correct": false,
+              "rationale": "Misconception: If Ws = 2^n, the receiver cannot distinguish between an ACK for the current window and an ACK for the wrapped-around subsequent window."
+            },
+            {
+              "key": "D",
+              "text": "Ws = 1",
+              "is_correct": false,
+              "rationale": "Misconception: Ws = 1 is Stop-and-Wait protocol, which severely underutilizes bandwidth-delay product."
+            }
+          ],
+          "correct_option": "A",
+          "concept_tested": "CN_03_FLOW_CONTROL",
+          "explanation": "In Selective Repeat, both sender and receiver maintain active sliding windows of size W. To prevent overlapping sequence spaces during catastrophic ACK loss, Ws + Wr <= 2^n. Setting Ws = Wr gives Ws <= 2^(n-1). For Go-Back-N, the receiver window Wr = 1, allowing Ws <= 2^n - 1."
+        },
+        {
+          "id": "DQ_03_B",
+          "text": "In Go-Back-N ARQ with a window size of 7, frames 0 through 6 are transmitted. Frame 3 is dropped by noise on the wire, but frames 4, 5, and 6 arrive intact at the receiver. How does the Go-Back-N receiver react upon receiving frames 4, 5, and 6?",
+          "options": [
+            {
+              "key": "A",
+              "text": "Discards frames 4, 5, and 6 and continues sending cumulative ACK for frame 2",
+              "is_correct": true,
+              "rationale": "Correct positive signal: Go-Back-N receiver has window size Wr=1 and cannot buffer out-of-order frames; it discards 4, 5, 6 and repeats ACK 2."
+            },
+            {
+              "key": "B",
+              "text": "Buffers frames 4, 5, and 6 and sends a NACK specifically requesting only frame 3",
+              "is_correct": false,
+              "rationale": "Misconception: Selective Repeat buffers out-of-order frames, not Go-Back-N."
+            },
+            {
+              "key": "C",
+              "text": "Accepts all frames and asks the transport layer to reorder them later",
+              "is_correct": false,
+              "rationale": "Misconception: Data Link layer protocols enforce sequential delivery and do not offload framing order to upper layers."
+            },
+            {
+              "key": "D",
+              "text": "Resets the receiver connection and terminates transmission",
+              "is_correct": false,
+              "rationale": "Misconception: GBN recovers via sender timeout retransmission; it does not terminate the connection."
+            }
+          ],
+          "correct_option": "A",
+          "concept_tested": "CN_03_FLOW_CONTROL",
+          "explanation": "In Go-Back-N, the receiver maintains a window size of exactly 1 (Wr = 1). It only accepts the exact sequentially expected frame. When frame 3 is lost, out-of-order frames 4, 5, and 6 are discarded. The sender's retransmission timer for frame 3 expires, causing the sender to retransmit frames 3, 4, 5, and 6 ('Go-Back-N')."
+        },
+        {
+          "id": "DQ_03_C",
+          "text": "A link has a round-trip propagation time RTT = 40 ms and packet transmission time Tt = 2 ms. What is the minimum sender window size required to attain 100% link utilization without waiting for ACKs in an error-free channel?",
+          "options": [
+            {
+              "key": "A",
+              "text": "21 packets (1 + 2a, where a = Tp / Tt = 20 ms / 2 ms = 10)",
+              "is_correct": true,
+              "rationale": "Correct positive signal: Utilization U = W / (1 + 2a). To achieve U = 1, W = 1 + 2a = 1 + (40 ms / 2 ms) = 21 packets."
+            },
+            {
+              "key": "B",
+              "text": "10 packets",
+              "is_correct": false,
+              "rationale": "Misconception: Used single one-way propagation time a = 10 without accounting for the round-trip delay cycle 1 + 2a."
+            },
+            {
+              "key": "C",
+              "text": "2 packets",
+              "is_correct": false,
+              "rationale": "Misconception: Severe underestimation that results in under 10% channel utilization."
+            },
+            {
+              "key": "D",
+              "text": "40 packets",
+              "is_correct": false,
+              "rationale": "Misconception: Equated window size directly to RTT in milliseconds without dividing by transmission time."
+            }
+          ],
+          "correct_option": "A",
+          "concept_tested": "CN_03_FLOW_CONTROL",
+          "explanation": "Total cycle time required for the first packet to be acknowledged is Tt + RTT = 2 ms + 40 ms = 42 ms. During this cycle, the sender can transmit (Tt + RTT) / Tt = 42 / 2 = 21 packets continuously to keep the pipe 100% full (W = 1 + 2a = 21)."
+        }
+      ],
+      "lesson": {
+        "title": "Flow and Error Control Mechanisms",
+        "body": "Sliding window protocols balance throughput against buffer limits. In Go-Back-N (GBN) with k-bit sequence numbers, sender window is at most 2^k - 1, and receiver accepts only in-order packets. Selective Repeat (SR) uses sender and receiver windows of size 2^(k-1).",
+        "axiom": "Sliding window protocols balance throughput against buffer limits. In Go-Back-N (GBN) with k-bit sequence numbers, sende...",
+        "diagram": "[Protocol Architecture Diagram: Flow and Error Control Mechanisms]\n+------------------------------------------------+\n| Layer Operation: Go-Back-N retransmits all packets starting fr |\n+------------------------------------------------+",
+        "trap": "Using window size 2^k in GBN, which causes ambiguity between new frames and retransmissions.",
+        "rules": [
+          "Go-Back-N retransmits all packets starting from the first unacknowledged frame upon timeout.",
+          "Selective Repeat buffers out-of-order packets and requests only damaged or lost frames.",
+          "Maximum window size for GBN is 2^k - 1; for Selective Repeat it is 2^(k-1)."
+        ],
+        "key_points": [
+          "Go-Back-N retransmits all packets starting from the first unacknowledged frame upon timeout.",
+          "Selective Repeat buffers out-of-order packets and requests only damaged or lost frames.",
+          "Maximum window size for GBN is 2^k - 1; for Selective Repeat it is 2^(k-1)."
+        ]
+      },
+      "practice_questions": [
+        {
+          "id": "PQ_03_1",
+          "text": "In a 4-bit sequence number Go-Back-N protocol, what is the maximum sender window size?",
+          "options": [
+            {
+              "key": "A",
+              "text": "15 (2^4 - 1)",
+              "is_correct": true
+            },
+            {
+              "key": "B",
+              "text": "8 (2^(4-1))",
+              "is_correct": false
+            },
+            {
+              "key": "C",
+              "text": "16 (2^4)",
+              "is_correct": false
+            },
+            {
+              "key": "D",
+              "text": "7",
+              "is_correct": false
+            }
+          ],
+          "correct_option": "A",
+          "explanation": "In Go-Back-N, Ws <= 2^n - 1. With n = 4, 2^4 - 1 = 15."
+        },
+        {
+          "id": "PQ_03_2",
+          "text": "In Go-Back-N, if frames 0, 1, 2, 3, 4 are sent, and frame 2 is lost in transit, which frames must the sender retransmit upon timeout?",
+          "options": [
+            {
+              "key": "A",
+              "text": "Frames 2, 3, and 4",
+              "is_correct": true
+            },
+            {
+              "key": "B",
+              "text": "Only frame 2",
+              "is_correct": false
+            },
+            {
+              "key": "C",
+              "text": "All frames 0 through 4",
+              "is_correct": false
+            },
+            {
+              "key": "D",
+              "text": "Frames 3 and 4 only",
+              "is_correct": false
+            }
+          ],
+          "correct_option": "A",
+          "explanation": "GBN discards out-of-order frames 3 and 4. When the timer for frame 2 expires, the sender retransmits 2, 3, and 4."
+        },
+        {
+          "id": "PQ_03_3",
+          "text": "If transmission delay Tt = 1 ms and round-trip propagation delay RTT = 19 ms, what is the minimum window size required to achieve 100% link utilization?",
+          "options": [
+            {
+              "key": "A",
+              "text": "20 frames",
+              "is_correct": true
+            },
+            {
+              "key": "B",
+              "text": "10 frames",
+              "is_correct": false
+            },
+            {
+              "key": "C",
+              "text": "19 frames",
+              "is_correct": false
+            },
+            {
+              "key": "D",
+              "text": "1 frame",
+              "is_correct": false
+            }
+          ],
+          "correct_option": "A",
+          "explanation": "Total cycle time = Tt + RTT = 1 + 19 = 20 ms. Number of frames transmitted per cycle = 20 ms / 1 ms = 20 frames."
+        }
+      ],
+      "diagnostic_question": {
+        "id": "DQ_03_A",
+        "text": "In a Selective Repeat sliding window protocol with an n-bit sequence number field, what is the maximum permissible sender window size (Ws) to completely avoid sequence number ambiguity under packet loss and delayed ACKs?",
+        "options": [
+          {
+            "key": "A",
+            "text": "Ws <= 2^(n-1)",
+            "is_correct": true,
+            "rationale": "Correct positive signal: In Selective Repeat, Ws + Wr <= 2^n. Since Ws = Wr, Ws <= 2^(n-1) to prevent overlap between new and retransmitted sequence spaces."
+          },
+          {
+            "key": "B",
+            "text": "Ws <= 2^n - 1",
+            "is_correct": false,
+            "rationale": "Misconception: 2^n - 1 is the window size for Go-Back-N (where Wr = 1), not Selective Repeat."
+          },
+          {
+            "key": "C",
+            "text": "Ws <= 2^n",
+            "is_correct": false,
+            "rationale": "Misconception: If Ws = 2^n, the receiver cannot distinguish between an ACK for the current window and an ACK for the wrapped-around subsequent window."
+          },
+          {
+            "key": "D",
+            "text": "Ws = 1",
+            "is_correct": false,
+            "rationale": "Misconception: Ws = 1 is Stop-and-Wait protocol, which severely underutilizes bandwidth-delay product."
+          }
+        ],
+        "correct_option": "A",
+        "concept_tested": "CN_03_FLOW_CONTROL",
+        "explanation": "In Selective Repeat, both sender and receiver maintain active sliding windows of size W. To prevent overlapping sequence spaces during catastrophic ACK loss, Ws + Wr <= 2^n. Setting Ws = Wr gives Ws <= 2^(n-1). For Go-Back-N, the receiver window Wr = 1, allowing Ws <= 2^n - 1."
+      },
+      "notes": {
+        "summary": "Sliding window protocols balance throughput against buffer limits. In Go-Back-N (GBN) with k-bit sequence numbers, sender window is at most 2^k - 1, and receiver accepts only in-order packets. Selective Repeat (SR) uses sender and receiver windows of size 2^(k-1).",
+        "key_points": [
+          "Go-Back-N retransmits all packets starting from the first unacknowledged frame upon timeout.",
+          "Selective Repeat buffers out-of-order packets and requests only damaged or lost frames.",
+          "Maximum window size for GBN is 2^k - 1; for Selective Repeat it is 2^(k-1)."
+        ],
+        "pitfalls": "Using window size 2^k in GBN, which causes ambiguity between new frames and retransmissions."
+      }
+    },
+    {
+      "id": "CN_04_SUBNETTING_IP",
+      "name": "IPv4 Addressing & CIDR Subnetting",
+      "tier": 2,
+      "category": "Network Layer",
+      "prerequisites": [
+        "CN_01_OSI_LAYERS"
+      ],
+      "diagnostic_pool": [
+        {
+          "id": "DQ_04_A",
+          "text": "An organization is assigned the network prefix 192.168.10.0/26. What is the valid range of usable host IP addresses and the directed broadcast address for this subnet?",
+          "options": [
+            {
+              "key": "A",
+              "text": "Usable: 192.168.10.1 to 192.168.10.62; Broadcast: 192.168.10.63",
+              "is_correct": true,
+              "rationale": "Correct positive signal: /26 leaves 32 - 26 = 6 host bits (2^6 = 64 addresses). Block is .0 to .63. Network is .0, Broadcast is .63, usable hosts are .1 to .62."
+            },
+            {
+              "key": "B",
+              "text": "Usable: 192.168.10.0 to 192.168.10.63; Broadcast: 192.168.10.64",
+              "is_correct": false,
+              "rationale": "Misconception: Included Network address (.0) and Broadcast address (.63) in usable hosts, which are reserved."
+            },
+            {
+              "key": "C",
+              "text": "Usable: 192.168.10.1 to 192.168.10.126; Broadcast: 192.168.10.127",
+              "is_correct": false,
+              "rationale": "Misconception: Calculated for a /25 prefix (128 addresses) instead of /26 (64 addresses)."
+            },
+            {
+              "key": "D",
+              "text": "Usable: 192.168.10.1 to 192.168.10.254; Broadcast: 192.168.10.255",
+              "is_correct": false,
+              "rationale": "Misconception: Ignored CIDR /26 entirely and treated as default Class C /24."
+            }
+          ],
+          "correct_option": "A",
+          "concept_tested": "CN_04_SUBNETTING_IP",
+          "explanation": "With a /26 prefix: Subnet mask is 255.255.255.192. Host bits h = 32 - 26 = 6 bits. Total block size = 2^6 = 64. Subnet range is 192.168.10.0 through 192.168.10.63. The first address (.0) is the Network ID; the last address (.63) is the Directed Broadcast Address; usable host IPs are .1 through .62 (2^6 - 2 = 62 usable hosts)."
+        },
+        {
+          "id": "DQ_04_B",
+          "text": "A network engineer needs to split a Class C network (198.51.100.0/24) into at least 6 distinct departmental subnets, each supporting up to 25 host machines. Which CIDR subnet mask should be configured?",
+          "options": [
+            {
+              "key": "A",
+              "text": "/27 (Subnet Mask: 255.255.255.224)",
+              "is_correct": true,
+              "rationale": "Correct positive signal: Borrowing 3 bits gives 2^3 = 8 subnets (>= 6) with 5 host bits = 2^5 - 2 = 30 usable hosts per subnet (>= 25)."
+            },
+            {
+              "key": "B",
+              "text": "/28 (Subnet Mask: 255.255.255.240)",
+              "is_correct": false,
+              "rationale": "Misconception: /28 gives only 14 usable hosts (2^4 - 2), which fails the 25-host requirement."
+            },
+            {
+              "key": "C",
+              "text": "/26 (Subnet Mask: 255.255.255.192)",
+              "is_correct": false,
+              "rationale": "Misconception: /26 yields only 2^2 = 4 subnets, failing the requirement of at least 6 subnets."
+            },
+            {
+              "key": "D",
+              "text": "/25 (Subnet Mask: 255.255.255.128)",
+              "is_correct": false,
+              "rationale": "Misconception: /25 yields only 2 subnets."
+            }
+          ],
+          "correct_option": "A",
+          "concept_tested": "CN_04_SUBNETTING_IP",
+          "explanation": "To create at least 6 subnets from /24, borrow 3 subnet bits: 2^3 = 8 subnets. New prefix = 24 + 3 = /27 (Mask 255.255.255.224). Remaining host bits = 5, providing 2^5 - 2 = 30 usable hosts per subnet, satisfying both constraints."
+        },
+        {
+          "id": "DQ_04_C",
+          "text": "Given the host IP address 172.16.50.130 configured with prefix /25, which subnet network ID does this host belong to, and what is its default gateway's subnet broadcast address?",
+          "options": [
+            {
+              "key": "A",
+              "text": "Subnet Network ID: 172.16.50.128; Broadcast: 172.16.50.255",
+              "is_correct": true,
+              "rationale": "Correct positive signal: /25 splits the 256 octet into block 0 (0-127) and block 1 (128-255). 130 is in block 128-255 with broadcast .255."
+            },
+            {
+              "key": "B",
+              "text": "Subnet Network ID: 172.16.50.0; Broadcast: 172.16.50.127",
+              "is_correct": false,
+              "rationale": "Misconception: 130 is greater than 127 and belongs to the upper half of the /25 space, not the lower half."
+            },
+            {
+              "key": "C",
+              "text": "Subnet Network ID: 172.16.50.64; Broadcast: 172.16.50.191",
+              "is_correct": false,
+              "rationale": "Misconception: Confused /25 block size (128) with /26 block size (64)."
+            },
+            {
+              "key": "D",
+              "text": "Subnet Network ID: 172.16.0.0; Broadcast: 172.16.255.255",
+              "is_correct": false,
+              "rationale": "Misconception: Treated as default Class B /16 network, ignoring CIDR /25 mask."
+            }
+          ],
+          "correct_option": "A",
+          "concept_tested": "CN_04_SUBNETTING_IP",
+          "explanation": "A /25 mask has 1 bit in the fourth octet (128), dividing the 256 addresses into two blocks: [0 - 127] and [128 - 255]. Address 172.16.50.130 falls into the second block. Its subnet network address is 172.16.50.128 and its broadcast address is 172.16.50.255."
+        }
+      ],
+      "lesson": {
+        "title": "IPv4 Subnetting and VLSM Addressing",
+        "body": "An IPv4 address consists of 32 bits divided into network bits and host bits. A /n mask has n network bits and 32-n host bits. The total number of addresses is 2^(32-n), with 2^(32-n) - 2 usable host addresses (excluding network ID and broadcast address).",
+        "axiom": "An IPv4 address consists of 32 bits divided into network bits and host bits. A /n mask has n network bits and 32-n host ...",
+        "diagram": "[Protocol Architecture Diagram: IPv4 Subnetting and VLSM Addressing]\n+------------------------------------------------+\n| Layer Operation: Usable hosts formula = 2^h - 2, where h is th |\n+------------------------------------------------+",
+        "trap": "Forgetting to subtract 2 for network and broadcast addresses, or mixing up CIDR slash notations.",
+        "rules": [
+          "Usable hosts formula = 2^h - 2, where h is the number of remaining host bits.",
+          "Network address has all host bits set to 0; broadcast address has all host bits set to 1.",
+          "Subnet mask must be contiguous high-order 1s followed by contiguous 0s."
+        ],
+        "key_points": [
+          "Usable hosts formula = 2^h - 2, where h is the number of remaining host bits.",
+          "Network address has all host bits set to 0; broadcast address has all host bits set to 1.",
+          "Subnet mask must be contiguous high-order 1s followed by contiguous 0s."
+        ]
+      },
+      "practice_questions": [
+        {
+          "id": "PQ_04_1",
+          "text": "What is the subnet mask for a /28 CIDR network prefix?",
+          "options": [
+            {
+              "key": "A",
+              "text": "255.255.255.240",
+              "is_correct": true
+            },
+            {
+              "key": "B",
+              "text": "255.255.255.224",
+              "is_correct": false
+            },
+            {
+              "key": "C",
+              "text": "255.255.255.248",
+              "is_correct": false
+            },
+            {
+              "key": "D",
+              "text": "255.255.255.192",
+              "is_correct": false
+            }
+          ],
+          "correct_option": "A",
+          "explanation": "28 bits = 8 + 8 + 8 + 4 bits. In the fourth octet: 128 + 64 + 32 + 16 = 240."
+        },
+        {
+          "id": "PQ_04_2",
+          "text": "How many usable host IP addresses are provided by a subnet with mask 255.255.255.224 (/27)?",
+          "options": [
+            {
+              "key": "A",
+              "text": "30 usable hosts",
+              "is_correct": true
+            },
+            {
+              "key": "B",
+              "text": "32 usable hosts",
+              "is_correct": false
+            },
+            {
+              "key": "C",
+              "text": "14 usable hosts",
+              "is_correct": false
+            },
+            {
+              "key": "D",
+              "text": "62 usable hosts",
+              "is_correct": false
+            }
+          ],
+          "correct_option": "A",
+          "explanation": "Host bits h = 32 - 27 = 5 bits. Total = 2^5 = 32. Usable = 32 - 2 = 30."
+        },
+        {
+          "id": "PQ_04_3",
+          "text": "For the IP address 172.16.50.130/25, which subnet network ID does this host belong to?",
+          "options": [
+            {
+              "key": "A",
+              "text": "172.16.50.128",
+              "is_correct": true
+            },
+            {
+              "key": "B",
+              "text": "172.16.50.0",
+              "is_correct": false
+            },
+            {
+              "key": "C",
+              "text": "172.16.50.64",
+              "is_correct": false
+            },
+            {
+              "key": "D",
+              "text": "172.16.50.192",
+              "is_correct": false
+            }
+          ],
+          "correct_option": "A",
+          "explanation": "/25 splits the 256 addresses into two blocks: 0-127 and 128-255. 130 falls into the second block starting at 172.16.50.128."
+        }
+      ],
+      "diagnostic_question": {
+        "id": "DQ_04_A",
+        "text": "An organization is assigned the network prefix 192.168.10.0/26. What is the valid range of usable host IP addresses and the directed broadcast address for this subnet?",
+        "options": [
+          {
+            "key": "A",
+            "text": "Usable: 192.168.10.1 to 192.168.10.62; Broadcast: 192.168.10.63",
+            "is_correct": true,
+            "rationale": "Correct positive signal: /26 leaves 32 - 26 = 6 host bits (2^6 = 64 addresses). Block is .0 to .63. Network is .0, Broadcast is .63, usable hosts are .1 to .62."
+          },
+          {
+            "key": "B",
+            "text": "Usable: 192.168.10.0 to 192.168.10.63; Broadcast: 192.168.10.64",
+            "is_correct": false,
+            "rationale": "Misconception: Included Network address (.0) and Broadcast address (.63) in usable hosts, which are reserved."
+          },
+          {
+            "key": "C",
+            "text": "Usable: 192.168.10.1 to 192.168.10.126; Broadcast: 192.168.10.127",
+            "is_correct": false,
+            "rationale": "Misconception: Calculated for a /25 prefix (128 addresses) instead of /26 (64 addresses)."
+          },
+          {
+            "key": "D",
+            "text": "Usable: 192.168.10.1 to 192.168.10.254; Broadcast: 192.168.10.255",
+            "is_correct": false,
+            "rationale": "Misconception: Ignored CIDR /26 entirely and treated as default Class C /24."
+          }
+        ],
+        "correct_option": "A",
+        "concept_tested": "CN_04_SUBNETTING_IP",
+        "explanation": "With a /26 prefix: Subnet mask is 255.255.255.192. Host bits h = 32 - 26 = 6 bits. Total block size = 2^6 = 64. Subnet range is 192.168.10.0 through 192.168.10.63. The first address (.0) is the Network ID; the last address (.63) is the Directed Broadcast Address; usable host IPs are .1 through .62 (2^6 - 2 = 62 usable hosts)."
+      },
+      "notes": {
+        "summary": "An IPv4 address consists of 32 bits divided into network bits and host bits. A /n mask has n network bits and 32-n host bits. The total number of addresses is 2^(32-n), with 2^(32-n) - 2 usable host addresses (excluding network ID and broadcast address).",
+        "key_points": [
+          "Usable hosts formula = 2^h - 2, where h is the number of remaining host bits.",
+          "Network address has all host bits set to 0; broadcast address has all host bits set to 1.",
+          "Subnet mask must be contiguous high-order 1s followed by contiguous 0s."
+        ],
+        "pitfalls": "Forgetting to subtract 2 for network and broadcast addresses, or mixing up CIDR slash notations."
+      }
+    },
+    {
+      "id": "CN_05_ROUTING_ALGO",
+      "name": "Routing Algorithms (Dijkstra vs Distance Vector)",
+      "tier": 3,
+      "category": "Network Layer",
+      "prerequisites": [
+        "CN_04_SUBNETTING_IP"
+      ],
+      "diagnostic_pool": [
+        {
+          "id": "DQ_05_A",
+          "text": "In Distance Vector routing protocols based on the Bellman-Ford algorithm, what major convergence failure can occur when a link goes down, and what technique is specifically used to mitigate two-node routing loops caused by this phenomenon?",
+          "options": [
+            {
+              "key": "A",
+              "text": "Count-to-Infinity problem; Split Horizon with Poison Reverse",
+              "is_correct": true,
+              "rationale": "Correct positive signal: Distance Vector protocols suffer from Count-to-Infinity due to slow convergence on broken links. Split Horizon with Poison Reverse prevents advertising a route back on the interface through which it was learned."
+            },
+            {
+              "key": "B",
+              "text": "Dijkstra oscillation; Dijkstra shortest path first recalculation",
+              "is_correct": false,
+              "rationale": "Misconception: Dijkstra is used in Link State protocols (OSPF), not Distance Vector protocols."
+            },
+            {
+              "key": "C",
+              "text": "Broadcast storm; Spanning Tree Protocol (STP)",
+              "is_correct": false,
+              "rationale": "Misconception: STP operates at Layer 2 to prevent bridge loops, not Layer 3 routing convergence."
+            },
+            {
+              "key": "D",
+              "text": "BGP autonomous system loop; AS-Path prepending",
+              "is_correct": false,
+              "rationale": "Misconception: AS-Path attribute is used in BGP inter-domain path-vector routing, not basic Bellman-Ford distance vector."
+            }
+          ],
+          "correct_option": "A",
+          "concept_tested": "CN_05_ROUTING_ALGO",
+          "explanation": "Distance Vector routing (Bellman-Ford, e.g., RIP) suffers from the 'Count-to-Infinity' problem because routers exchange vectors without full topology visibility. When a link fails, neighbors incrementally increment metric costs in a loop. 'Split Horizon' stops advertising routes back to the neighbor they were learned from, and 'Poison Reverse' explicitly advertises the metric as infinity (16 in RIP) back to that neighbor."
+        },
+        {
+          "id": "DQ_05_B",
+          "text": "How does Link-State routing (such as OSPF) achieve faster loop-free convergence compared to Distance Vector protocols?",
+          "options": [
+            {
+              "key": "A",
+              "text": "Every node floods Link-State Advertisements (LSAs) so all routers construct an identical topology map and independently run Dijkstra's algorithm",
+              "is_correct": true,
+              "rationale": "Correct positive signal: OSPF routers possess complete global topological maps of the area and calculate optimal loop-free shortest paths using Dijkstra."
+            },
+            {
+              "key": "B",
+              "text": "Routers only ask immediate neighbors for advice whenever a packet needs forwarding",
+              "is_correct": false,
+              "rationale": "Misconception: That describes hop-by-hop distance vector behavior, which has no global map."
+            },
+            {
+              "key": "C",
+              "text": "OSPF sets all link metrics to a fixed value of 1 hop regardless of bandwidth",
+              "is_correct": false,
+              "rationale": "Misconception: RIP uses hop counts; OSPF uses cost based on reference bandwidth / link bandwidth."
+            },
+            {
+              "key": "D",
+              "text": "A centralized primary router computes all routes and pushes them down to client routers",
+              "is_correct": false,
+              "rationale": "Misconception: That describes SDN (Software Defined Networking), not distributed OSPF."
+            }
+          ],
+          "correct_option": "A",
+          "concept_tested": "CN_05_ROUTING_ALGO",
+          "explanation": "In Link-State routing, every router floods local link statuses across the entire area. Consequently, every router builds an identical Link-State Database (LSDB) representing the complete network graph, then executes Dijkstra's Shortest Path First (SPF) algorithm to produce a loop-free routing table."
+        },
+        {
+          "id": "DQ_05_C",
+          "text": "In the global Internet core, Border Gateway Protocol (BGP) acts as an Inter-domain Path Vector protocol. How does BGP fundamentally prevent routing loops across Autonomous Systems (AS)?",
+          "options": [
+            {
+              "key": "A",
+              "text": "Each BGP route advertisement records the sequence of AS numbers (AS-Path); a router drops any route containing its own AS number",
+              "is_correct": true,
+              "rationale": "Correct positive signal: AS-Path serves as explicit loop detection; if a router sees its own ASN in the path, it discards the update."
+            },
+            {
+              "key": "B",
+              "text": "BGP restricts internet routing to a maximum diameter of 15 hops",
+              "is_correct": false,
+              "rationale": "Misconception: 15-hop limit is a RIP constraint, wholly unsuitable for the global Internet."
+            },
+            {
+              "key": "C",
+              "text": "BGP converts all inter-domain paths into encrypted symmetric hashes",
+              "is_correct": false,
+              "rationale": "Misconception: BGP is a routing policy protocol, not an encryption protocol."
+            },
+            {
+              "key": "D",
+              "text": "BGP routers synchronize their system clocks using NTP to prevent stale routes",
+              "is_correct": false,
+              "rationale": "Misconception: Timestamping does not prevent topological cyclic loops in path-vector routing."
+            }
+          ],
+          "correct_option": "A",
+          "concept_tested": "CN_05_ROUTING_ALGO",
+          "explanation": "BGP prepends each Autonomous System Number (ASN) to the AS-Path attribute as routes are advertised across boundaries. When a border router receives an update, it examines the AS-Path. If its own ASN is already present, it detects a loop and immediately discards the advertisement."
+        }
+      ],
+      "lesson": {
+        "title": "Routing Protocols: Distance Vector vs Link State",
+        "body": "Distance Vector (e.g. RIP) relies on Bellman-Ford where routers share periodic distance vectors with direct neighbors, suffering from count-to-infinity. Link State (e.g. OSPF) uses Dijkstra's shortest-path algorithm where routers flood link states to build a global network topology.",
+        "axiom": "Distance Vector (e.g. RIP) relies on Bellman-Ford where routers share periodic distance vectors with direct neighbors, s...",
+        "diagram": "[Protocol Architecture Diagram: Routing Protocols: Distance Vector vs Link State]\n+------------------------------------------------+\n| Layer Operation: Distance Vector: shares entire table with imm |\n+------------------------------------------------+",
+        "trap": "Believing Link State protocols pass routing tables rather than raw link-state advertisements (LSAs).",
+        "rules": [
+          "Distance Vector: shares entire table with immediate neighbors; slow convergence.",
+          "Link State: floods link states to all nodes; fast convergence and no count-to-infinity.",
+          "Split horizon and poison reverse mitigate routing loops in distance vector protocols."
+        ],
+        "key_points": [
+          "Distance Vector: shares entire table with immediate neighbors; slow convergence.",
+          "Link State: floods link states to all nodes; fast convergence and no count-to-infinity.",
+          "Split horizon and poison reverse mitigate routing loops in distance vector protocols."
+        ]
+      },
+      "practice_questions": [
+        {
+          "id": "PQ_05_1",
+          "text": "In RIP (Routing Information Protocol), what metric value is defined as 'Infinity' to indicate an unreachable destination?",
+          "options": [
+            {
+              "key": "A",
+              "text": "16 hops",
+              "is_correct": true
+            },
+            {
+              "key": "B",
+              "text": "255 hops",
+              "is_correct": false
+            },
+            {
+              "key": "C",
+              "text": "15 hops",
+              "is_correct": false
+            },
+            {
+              "key": "D",
+              "text": "100 hops",
+              "is_correct": false
+            }
+          ],
+          "correct_option": "A",
+          "explanation": "RIP limits hop count to 15; a hop count of 16 represents infinity (unreachable)."
+        },
+        {
+          "id": "PQ_05_2",
+          "text": "Which algorithm is executed by each router running OSPF to build its shortest path tree from the link-state database?",
+          "options": [
+            {
+              "key": "A",
+              "text": "Dijkstra's Shortest Path First (SPF)",
+              "is_correct": true
+            },
+            {
+              "key": "B",
+              "text": "Bellman-Ford Algorithm",
+              "is_correct": false
+            },
+            {
+              "key": "C",
+              "text": "Floyd-Warshall All-Pairs Algorithm",
+              "is_correct": false
+            },
+            {
+              "key": "D",
+              "text": "Prim's Minimum Spanning Tree",
+              "is_correct": false
+            }
+          ],
+          "correct_option": "A",
+          "explanation": "OSPF nodes maintain an identical link-state database and run Dijkstra's algorithm to determine the shortest path tree rooted at themselves."
+        },
+        {
+          "id": "PQ_05_3",
+          "text": "Why does BGP (Border Gateway Protocol) utilize an AS-Path attribute rather than simple distance vector metrics?",
+          "options": [
+            {
+              "key": "A",
+              "text": "To detect and eliminate routing loops across Autonomous Systems",
+              "is_correct": true
+            },
+            {
+              "key": "B",
+              "text": "To calculate the fastest round-trip latency across the Internet",
+              "is_correct": false
+            },
+            {
+              "key": "C",
+              "text": "To assign IP addresses dynamically to edge routers",
+              "is_correct": false
+            },
+            {
+              "key": "D",
+              "text": "To compress routing tables down to 8 bits",
+              "is_correct": false
+            }
+          ],
+          "correct_option": "A",
+          "explanation": "If a BGP router sees its own Autonomous System Number (ASN) in the received AS-Path list, it immediately rejects the advertisement, preventing inter-AS loops."
+        }
+      ],
+      "diagnostic_question": {
+        "id": "DQ_05_A",
+        "text": "In Distance Vector routing protocols based on the Bellman-Ford algorithm, what major convergence failure can occur when a link goes down, and what technique is specifically used to mitigate two-node routing loops caused by this phenomenon?",
+        "options": [
+          {
+            "key": "A",
+            "text": "Count-to-Infinity problem; Split Horizon with Poison Reverse",
+            "is_correct": true,
+            "rationale": "Correct positive signal: Distance Vector protocols suffer from Count-to-Infinity due to slow convergence on broken links. Split Horizon with Poison Reverse prevents advertising a route back on the interface through which it was learned."
+          },
+          {
+            "key": "B",
+            "text": "Dijkstra oscillation; Dijkstra shortest path first recalculation",
+            "is_correct": false,
+            "rationale": "Misconception: Dijkstra is used in Link State protocols (OSPF), not Distance Vector protocols."
+          },
+          {
+            "key": "C",
+            "text": "Broadcast storm; Spanning Tree Protocol (STP)",
+            "is_correct": false,
+            "rationale": "Misconception: STP operates at Layer 2 to prevent bridge loops, not Layer 3 routing convergence."
+          },
+          {
+            "key": "D",
+            "text": "BGP autonomous system loop; AS-Path prepending",
+            "is_correct": false,
+            "rationale": "Misconception: AS-Path attribute is used in BGP inter-domain path-vector routing, not basic Bellman-Ford distance vector."
+          }
+        ],
+        "correct_option": "A",
+        "concept_tested": "CN_05_ROUTING_ALGO",
+        "explanation": "Distance Vector routing (Bellman-Ford, e.g., RIP) suffers from the 'Count-to-Infinity' problem because routers exchange vectors without full topology visibility. When a link fails, neighbors incrementally increment metric costs in a loop. 'Split Horizon' stops advertising routes back to the neighbor they were learned from, and 'Poison Reverse' explicitly advertises the metric as infinity (16 in RIP) back to that neighbor."
+      },
+      "notes": {
+        "summary": "Distance Vector (e.g. RIP) relies on Bellman-Ford where routers share periodic distance vectors with direct neighbors, suffering from count-to-infinity. Link State (e.g. OSPF) uses Dijkstra's shortest-path algorithm where routers flood link states to build a global network topology.",
+        "key_points": [
+          "Distance Vector: shares entire table with immediate neighbors; slow convergence.",
+          "Link State: floods link states to all nodes; fast convergence and no count-to-infinity.",
+          "Split horizon and poison reverse mitigate routing loops in distance vector protocols."
+        ],
+        "pitfalls": "Believing Link State protocols pass routing tables rather than raw link-state advertisements (LSAs)."
+      }
+    },
+    {
+      "id": "CN_06_TCP_UDP_TRANSPORT",
+      "name": "Transport Protocols & TCP Handshake",
+      "tier": 3,
+      "category": "Transport Layer",
+      "prerequisites": [
+        "CN_04_SUBNETTING_IP"
+      ],
+      "diagnostic_pool": [
+        {
+          "id": "DQ_06_A",
+          "text": "During the standard TCP 3-Way Handshake between a client and server, what control flags and sequence number rules are exchanged in the second packet (Server to Client)?",
+          "options": [
+            {
+              "key": "A",
+              "text": "SYN=1, ACK=1; Server chooses its initial sequence number ISN_s, and ACK number = ISN_c + 1",
+              "is_correct": true,
+              "rationale": "Correct positive signal: The server responds with SYN+ACK, sets its own random ISN_s, and acknowledges the client's SYN by consuming 1 sequence number (ACK = ISN_c + 1)."
+            },
+            {
+              "key": "B",
+              "text": "ACK=1 only; Server echoes back the client sequence number ISN_c without incrementing",
+              "is_correct": false,
+              "rationale": "Misconception: The server must also synchronize its own sequence space by sending SYN=1, not just ACK."
+            },
+            {
+              "key": "C",
+              "text": "SYN=1 only; Sequence numbers are reset to 0 for both endpoints",
+              "is_correct": false,
+              "rationale": "Misconception: Modern TCP uses pseudo-random Initial Sequence Numbers (ISNs) for security, never hardcoded 0."
+            },
+            {
+              "key": "D",
+              "text": "FIN=1, ACK=1; Server initiates immediate half-close connection state",
+              "is_correct": false,
+              "rationale": "Misconception: FIN is used in connection termination (4-way teardown), not connection establishment."
+            }
+          ],
+          "correct_option": "A",
+          "concept_tested": "CN_06_TCP_UDP_TRANSPORT",
+          "explanation": "TCP establishes a full-duplex connection using a 3-Way Handshake: 1) Client -> Server: SYN=1, Seq=ISN_c. 2) Server -> Client: SYN=1, ACK=1, Seq=ISN_s, AckNum=ISN_c + 1 (the SYN flag consumes 1 sequence number). 3) Client -> Server: ACK=1, Seq=ISN_c + 1, AckNum=ISN_s + 1."
+        },
+        {
+          "id": "DQ_06_B",
+          "text": "When terminating an established TCP connection, why does the host initiating the close transition into the TIME_WAIT state for 2*MSL (Maximum Segment Lifetime) before destroying the socket?",
+          "options": [
+            {
+              "key": "A",
+              "text": "To ensure the final ACK reliably reaches the remote host and prevent lingering duplicate packets from corrupting future connections",
+              "is_correct": true,
+              "rationale": "Correct positive signal: TIME_WAIT allows retransmitting the final ACK if lost, and guarantees all in-flight segments from the old connection die before port reuse."
+            },
+            {
+              "key": "B",
+              "text": "To compute checksum verification on all historical data transferred during the session",
+              "is_correct": false,
+              "rationale": "Misconception: Checksums are computed and verified per segment in real time, not accumulated after closing."
+            },
+            {
+              "key": "C",
+              "text": "Because the operating system kernel cannot deallocate memory without a timer interrupt",
+              "is_correct": false,
+              "rationale": "Misconception: OS memory management is instantaneous; TIME_WAIT is a protocol reliability requirement."
+            },
+            {
+              "key": "D",
+              "text": "To allow the client to download cached images from the server in half-duplex mode",
+              "is_correct": false,
+              "rationale": "Misconception: TIME_WAIT occurs after both data directions are closed."
+            }
+          ],
+          "correct_option": "A",
+          "concept_tested": "CN_06_TCP_UDP_TRANSPORT",
+          "explanation": "TIME_WAIT serves two critical purposes: 1) If the client's final ACK is lost, the server retransmits its FIN; the client must be alive to re-send ACK. 2) 2*MSL (typically 60-120s) guarantees that any delayed duplicate segments from the closed session have expired in the network before a new socket reuses the same port pair."
+        },
+        {
+          "id": "DQ_06_C",
+          "text": "Why do real-time audio and video conferencing applications (such as VoIP and WebRTC) preferentially use UDP rather than TCP for media streaming?",
+          "options": [
+            {
+              "key": "A",
+              "text": "TCP retransmission delays and head-of-line blocking cause unacceptable audio/video jitter, whereas dropping a timely UDP packet is preferable to late delivery",
+              "is_correct": true,
+              "rationale": "Correct positive signal: Real-time interactive communication prioritizes timeliness over 100% loss recovery; TCP retransmission causes freezing and latency lag."
+            },
+            {
+              "key": "B",
+              "text": "UDP encrypts audio streams at the physical hardware layer",
+              "is_correct": false,
+              "rationale": "Misconception: UDP provides no native encryption (SRTP/DTLS is needed on top)."
+            },
+            {
+              "key": "C",
+              "text": "TCP headers are 200 bytes larger than UDP headers",
+              "is_correct": false,
+              "rationale": "Misconception: Standard TCP header is 20 bytes vs UDP 8 bytes; the 12-byte difference is trivial compared to retransmission delay."
+            },
+            {
+              "key": "D",
+              "text": "Routers automatically prioritize UDP packets over TCP packets during congestion",
+              "is_correct": false,
+              "rationale": "Misconception: Standard IP routers treat TCP and UDP packets equally in FIFO queues."
+            }
+          ],
+          "correct_option": "A",
+          "concept_tested": "CN_06_TCP_UDP_TRANSPORT",
+          "explanation": "TCP guarantees reliable in-order delivery. If a voice sample packet is lost, TCP stalls subsequent packets until retransmission completes (Head-of-Line blocking), causing audio lag. In real-time conversation, a 100ms old audio packet is useless; it is better to drop it and play the next live frame via UDP."
+        }
+      ],
+      "lesson": {
+        "title": "Transport Protocols: TCP vs UDP",
+        "body": "TCP is connection-oriented, reliable, byte-stream oriented, and features flow/congestion control via a 3-way handshake. UDP is connectionless, lightweight, and preserves application message boundaries without retransmissions.",
+        "axiom": "TCP is connection-oriented, reliable, byte-stream oriented, and features flow/congestion control via a 3-way handshake. ...",
+        "diagram": "[Protocol Architecture Diagram: Transport Protocols: TCP vs UDP]\n+------------------------------------------------+\n| Layer Operation: TCP uses 3-way handshake (SYN, SYN-ACK, ACK)  |\n+------------------------------------------------+",
+        "trap": "Assuming UDP guarantees packet delivery or thinking TCP is message-oriented rather than stream-oriented.",
+        "rules": [
+          "TCP uses 3-way handshake (SYN, SYN-ACK, ACK) and 4-way teardown (FIN, ACK, FIN, ACK).",
+          "UDP has an 8-byte minimal header suitable for real-time media, DNS queries, and VoIP.",
+          "TCP guarantees in-order delivery via sequence and acknowledgment numbers."
+        ],
+        "key_points": [
+          "TCP uses 3-way handshake (SYN, SYN-ACK, ACK) and 4-way teardown (FIN, ACK, FIN, ACK).",
+          "UDP has an 8-byte minimal header suitable for real-time media, DNS queries, and VoIP.",
+          "TCP guarantees in-order delivery via sequence and acknowledgment numbers."
+        ]
+      },
+      "practice_questions": [
+        {
+          "id": "PQ_06_1",
+          "text": "If a client sends a SYN packet with Initial Sequence Number (ISN) = 5000, what will be the acknowledgment number in the server's SYN-ACK response?",
+          "options": [
+            {
+              "key": "A",
+              "text": "5001",
+              "is_correct": true
+            },
+            {
+              "key": "B",
+              "text": "5000",
+              "is_correct": false
+            },
+            {
+              "key": "C",
+              "text": "5002",
+              "is_correct": false
+            },
+            {
+              "key": "D",
+              "text": "1",
+              "is_correct": false
+            }
+          ],
+          "correct_option": "A",
+          "explanation": "Because the SYN flag logically consumes one sequence number, the server acknowledges it with 5000 + 1 = 5001."
+        },
+        {
+          "id": "PQ_06_2",
+          "text": "Which Transport Layer protocol is connectionless, has minimal 8-byte header overhead, and does not provide built-in retransmissions or flow control?",
+          "options": [
+            {
+              "key": "A",
+              "text": "User Datagram Protocol (UDP)",
+              "is_correct": true
+            },
+            {
+              "key": "B",
+              "text": "Transmission Control Protocol (TCP)",
+              "is_correct": false
+            },
+            {
+              "key": "C",
+              "text": "Stream Control Transmission Protocol (SCTP)",
+              "is_correct": false
+            },
+            {
+              "key": "D",
+              "text": "Internet Control Message Protocol (ICMP)",
+              "is_correct": false
+            }
+          ],
+          "correct_option": "A",
+          "explanation": "UDP provides lightweight, connectionless datagram delivery with only an 8-byte header (Source Port, Dest Port, Length, Checksum)."
+        },
+        {
+          "id": "PQ_06_3",
+          "text": "What TCP control flag is set to abruptly reject an invalid connection attempt or reset an established connection due to an unrecoverable error?",
+          "options": [
+            {
+              "key": "A",
+              "text": "RST (Reset)",
+              "is_correct": true
+            },
+            {
+              "key": "B",
+              "text": "FIN (Finish)",
+              "is_correct": false
+            },
+            {
+              "key": "C",
+              "text": "URG (Urgent)",
+              "is_correct": false
+            },
+            {
+              "key": "D",
+              "text": "PSH (Push)",
+              "is_correct": false
+            }
+          ],
+          "correct_option": "A",
+          "explanation": "The RST (Reset) flag causes immediate abrupt termination of a TCP connection when an invalid segment arrives or a port is closed."
+        }
+      ],
+      "diagnostic_question": {
+        "id": "DQ_06_A",
+        "text": "During the standard TCP 3-Way Handshake between a client and server, what control flags and sequence number rules are exchanged in the second packet (Server to Client)?",
+        "options": [
+          {
+            "key": "A",
+            "text": "SYN=1, ACK=1; Server chooses its initial sequence number ISN_s, and ACK number = ISN_c + 1",
+            "is_correct": true,
+            "rationale": "Correct positive signal: The server responds with SYN+ACK, sets its own random ISN_s, and acknowledges the client's SYN by consuming 1 sequence number (ACK = ISN_c + 1)."
+          },
+          {
+            "key": "B",
+            "text": "ACK=1 only; Server echoes back the client sequence number ISN_c without incrementing",
+            "is_correct": false,
+            "rationale": "Misconception: The server must also synchronize its own sequence space by sending SYN=1, not just ACK."
+          },
+          {
+            "key": "C",
+            "text": "SYN=1 only; Sequence numbers are reset to 0 for both endpoints",
+            "is_correct": false,
+            "rationale": "Misconception: Modern TCP uses pseudo-random Initial Sequence Numbers (ISNs) for security, never hardcoded 0."
+          },
+          {
+            "key": "D",
+            "text": "FIN=1, ACK=1; Server initiates immediate half-close connection state",
+            "is_correct": false,
+            "rationale": "Misconception: FIN is used in connection termination (4-way teardown), not connection establishment."
+          }
+        ],
+        "correct_option": "A",
+        "concept_tested": "CN_06_TCP_UDP_TRANSPORT",
+        "explanation": "TCP establishes a full-duplex connection using a 3-Way Handshake: 1) Client -> Server: SYN=1, Seq=ISN_c. 2) Server -> Client: SYN=1, ACK=1, Seq=ISN_s, AckNum=ISN_c + 1 (the SYN flag consumes 1 sequence number). 3) Client -> Server: ACK=1, Seq=ISN_c + 1, AckNum=ISN_s + 1."
+      },
+      "notes": {
+        "summary": "TCP is connection-oriented, reliable, byte-stream oriented, and features flow/congestion control via a 3-way handshake. UDP is connectionless, lightweight, and preserves application message boundaries without retransmissions.",
+        "key_points": [
+          "TCP uses 3-way handshake (SYN, SYN-ACK, ACK) and 4-way teardown (FIN, ACK, FIN, ACK).",
+          "UDP has an 8-byte minimal header suitable for real-time media, DNS queries, and VoIP.",
+          "TCP guarantees in-order delivery via sequence and acknowledgment numbers."
+        ],
+        "pitfalls": "Assuming UDP guarantees packet delivery or thinking TCP is message-oriented rather than stream-oriented."
+      }
+    },
+    {
+      "id": "CN_07_TCP_CONGESTION",
+      "name": "TCP Congestion Control (AIMD & Slow Start)",
+      "tier": 4,
+      "category": "Transport Layer",
+      "prerequisites": [
+        "CN_06_TCP_UDP_TRANSPORT",
+        "CN_03_FLOW_CONTROL"
+      ],
+      "diagnostic_pool": [
+        {
+          "id": "DQ_07_A",
+          "text": "A TCP Tahoe/Reno connection has a slow start threshold ssthresh = 16 MSS. During the Slow Start phase, the Congestion Window (cwnd) reaches 16 MSS. What algorithm governs cwnd growth thereafter, and how does cwnd increment upon each received ACK?",
+          "options": [
+            {
+              "key": "A",
+              "text": "Congestion Avoidance (AIMD); cwnd increases by approximately 1 MSS per RTT (or 1/cwnd per ACK)",
+              "is_correct": true,
+              "rationale": "Correct positive signal: When cwnd >= ssthresh, TCP switches from exponential Slow Start to linear Congestion Avoidance, adding 1 MSS per RTT."
+            },
+            {
+              "key": "B",
+              "text": "Slow Start; cwnd continues doubling exponentially every RTT indefinitely",
+              "is_correct": false,
+              "rationale": "Misconception: Slow start ends when cwnd reaches ssthresh to prevent inducing network buffer overflow."
+            },
+            {
+              "key": "C",
+              "text": "Flow Control; cwnd is fixed permanently to the receiver's rwnd buffer size",
+              "is_correct": false,
+              "rationale": "Misconception: Flow control (rwnd) protects receiver buffers; congestion control (cwnd) dynamically probes network bottleneck capacity."
+            },
+            {
+              "key": "D",
+              "text": "Fast Recovery; cwnd immediately resets to 1 MSS without any loss signal",
+              "is_correct": false,
+              "rationale": "Misconception: Fast Recovery is triggered by 3 duplicate ACKs, not by reaching ssthresh."
+            }
+          ],
+          "correct_option": "A",
+          "concept_tested": "CN_07_TCP_CONGESTION",
+          "explanation": "When cwnd < ssthresh, TCP is in Slow Start (cwnd doubles every RTT: +1 MSS per ACK). When cwnd >= ssthresh, TCP enters Congestion Avoidance (AIMD: Additive Increase / Multiplicative Decrease), where cwnd grows linearly by 1 MSS per RTT (i.e., cwnd = cwnd + 1/cwnd for each ACK) to gently probe available bandwidth without congesting intermediate routers."
+        },
+        {
+          "id": "DQ_07_B",
+          "text": "In TCP Reno, the sender receives 3 duplicate ACKs (4 identical ACKs total) while cwnd = 24 MSS. How does TCP Reno handle this event, and how does its behavior differ from legacy TCP Tahoe?",
+          "options": [
+            {
+              "key": "A",
+              "text": "Reno performs Fast Retransmit, sets ssthresh = 12 MSS, cwnd = 15 MSS (ssthresh + 3), and enters Fast Recovery; Tahoe resets cwnd to 1 MSS",
+              "is_correct": true,
+              "rationale": "Correct positive signal: 3 duplicate ACKs signify that subsequent packets reached the receiver; Reno avoids collapsing cwnd to 1 MSS."
+            },
+            {
+              "key": "B",
+              "text": "Reno immediately resets cwnd to 0 and reopens the connection with a new 3-way handshake",
+              "is_correct": false,
+              "rationale": "Misconception: Neither version closes connections on packet loss; they retransmit lost segments."
+            },
+            {
+              "key": "C",
+              "text": "Reno ignores duplicate ACKs and waits for the retransmission timeout timer to expire",
+              "is_correct": false,
+              "rationale": "Misconception: Fast Retransmit was invented precisely to avoid waiting for slow RTO timer expiration."
+            },
+            {
+              "key": "D",
+              "text": "Reno doubles cwnd to 48 MSS to push through congested routers",
+              "is_correct": false,
+              "rationale": "Misconception: Increasing transmission during loss would catastrophically worsen network congestion."
+            }
+          ],
+          "correct_option": "A",
+          "concept_tested": "CN_07_TCP_CONGESTION",
+          "explanation": "Receiving 3 duplicate ACKs proves that packets sent after the missing segment successfully reached the receiver (clocking out duplicate ACKs). Unlike Tahoe, which resets cwnd to 1 MSS on any loss, TCP Reno executes Fast Recovery: ssthresh = cwnd / 2 = 12 MSS, cwnd = ssthresh + 3 MSS = 15 MSS, retransmits the single missing segment, and stays in congestion avoidance."
+        },
+        {
+          "id": "DQ_07_C",
+          "text": "A sender's Congestion Window cwnd is 48 KB, and the receiver advertises an available buffer space (Receive Window rwnd) of 16 KB. What is the maximum volume of in-flight unacknowledged data the sender is authorized to transmit?",
+          "options": [
+            {
+              "key": "A",
+              "text": "16 KB (Effective Window = min(cwnd, rwnd))",
+              "is_correct": true,
+              "rationale": "Correct positive signal: To satisfy both network capacity and receiver memory capacity, the sender must transmit min(cwnd, rwnd) = min(48, 16) = 16 KB."
+            },
+            {
+              "key": "B",
+              "text": "48 KB (bounded only by cwnd)",
+              "is_correct": false,
+              "rationale": "Misconception: Sending 48 KB would overflow the receiver's 16 KB buffer, causing buffer overflow packet drops."
+            },
+            {
+              "key": "C",
+              "text": "64 KB (sum of cwnd and rwnd)",
+              "is_correct": false,
+              "rationale": "Misconception: cwnd and rwnd represent competing upper bounds and can never be added together."
+            },
+            {
+              "key": "D",
+              "text": "32 KB (average of cwnd and rwnd)",
+              "is_correct": false,
+              "rationale": "Misconception: The effective window is strictly the minimum function, not an average."
+            }
+          ],
+          "correct_option": "A",
+          "concept_tested": "CN_07_TCP_CONGESTION",
+          "explanation": "Flow control protects the receiver from being overrun (rwnd), while congestion control protects the subnet from buffer collapse (cwnd). The TCP sender must honor both constraints: Effective Window = min(cwnd, rwnd) = min(48 KB, 16 KB) = 16 KB."
+        }
+      ],
+      "lesson": {
+        "title": "TCP Congestion Control Mechanisms",
+        "body": "TCP uses Slow Start (exponential window growth), Congestion Avoidance (Additive Increase: +1 MSS per RTT), and Fast Retransmit / Fast Recovery upon receiving 3 duplicate ACKs (Multiplicative Decrease).",
+        "axiom": "TCP uses Slow Start (exponential window growth), Congestion Avoidance (Additive Increase: +1 MSS per RTT), and Fast Retr...",
+        "diagram": "[Protocol Architecture Diagram: TCP Congestion Control Mechanisms]\n+------------------------------------------------+\n| Layer Operation: In Slow Start, congestion window (cwnd) doubl |\n+------------------------------------------------+",
+        "trap": "Confusing flow control (receiver buffer management via rwnd) with congestion control (network pipe capacity via cwnd).",
+        "rules": [
+          "In Slow Start, congestion window (cwnd) doubles every RTT until ssthresh is reached.",
+          "In Congestion Avoidance, cwnd increases linearly by 1 MSS per RTT.",
+          "On timeout, cwnd resets to 1 MSS and ssthresh is set to cwnd/2; on 3 dup ACKs, Fast Recovery applies."
+        ],
+        "key_points": [
+          "In Slow Start, congestion window (cwnd) doubles every RTT until ssthresh is reached.",
+          "In Congestion Avoidance, cwnd increases linearly by 1 MSS per RTT.",
+          "On timeout, cwnd resets to 1 MSS and ssthresh is set to cwnd/2; on 3 dup ACKs, Fast Recovery applies."
+        ]
+      },
+      "practice_questions": [
+        {
+          "id": "PQ_07_1",
+          "text": "In TCP Reno, what event causes the sender to enter Fast Retransmit and Fast Recovery without waiting for a retransmission timer expiration?",
+          "options": [
+            {
+              "key": "A",
+              "text": "Arrival of 3 Duplicate ACKs for the same segment",
+              "is_correct": true
+            },
+            {
+              "key": "B",
+              "text": "Arrival of a single NACK packet",
+              "is_correct": false
+            },
+            {
+              "key": "C",
+              "text": "TCP receiver advertising rwnd = 0",
+              "is_correct": false
+            },
+            {
+              "key": "D",
+              "text": "Timeout of the Retransmission Timer (RTO)",
+              "is_correct": false
+            }
+          ],
+          "correct_option": "A",
+          "explanation": "Receiving 3 duplicate ACKs (4 identical ACKs total) signals isolated packet loss while subsequent packets got through, triggering Fast Retransmit."
+        },
+        {
+          "id": "PQ_07_2",
+          "text": "If a TCP connection experiences a timeout when its cwnd is 32 MSS, what will be the new values of ssthresh and cwnd under TCP Tahoe?",
+          "options": [
+            {
+              "key": "A",
+              "text": "ssthresh = 16 MSS, cwnd = 1 MSS",
+              "is_correct": true
+            },
+            {
+              "key": "B",
+              "text": "ssthresh = 32 MSS, cwnd = 16 MSS",
+              "is_correct": false
+            },
+            {
+              "key": "C",
+              "text": "ssthresh = 16 MSS, cwnd = 16 MSS",
+              "is_correct": false
+            },
+            {
+              "key": "D",
+              "text": "ssthresh = 8 MSS, cwnd = 2 MSS",
+              "is_correct": false
+            }
+          ],
+          "correct_option": "A",
+          "explanation": "Upon timeout in TCP Tahoe: ssthresh is set to half the current cwnd (32 / 2 = 16 MSS), and cwnd resets back to 1 MSS."
+        },
+        {
+          "id": "PQ_07_3",
+          "text": "If a sender's Congestion Window cwnd = 40 KB and the receiver's advertised Receive Window rwnd = 24 KB, what is the maximum amount of unacknowledged data the sender can transmit?",
+          "options": [
+            {
+              "key": "A",
+              "text": "24 KB (min of cwnd and rwnd)",
+              "is_correct": true
+            },
+            {
+              "key": "B",
+              "text": "40 KB",
+              "is_correct": false
+            },
+            {
+              "key": "C",
+              "text": "64 KB (sum of cwnd and rwnd)",
+              "is_correct": false
+            },
+            {
+              "key": "D",
+              "text": "16 KB",
+              "is_correct": false
+            }
+          ],
+          "correct_option": "A",
+          "explanation": "The maximum allowable in-flight unacknowledged data is bounded by min(cwnd, rwnd) = min(40, 24) = 24 KB."
+        }
+      ],
+      "diagnostic_question": {
+        "id": "DQ_07_A",
+        "text": "A TCP Tahoe/Reno connection has a slow start threshold ssthresh = 16 MSS. During the Slow Start phase, the Congestion Window (cwnd) reaches 16 MSS. What algorithm governs cwnd growth thereafter, and how does cwnd increment upon each received ACK?",
+        "options": [
+          {
+            "key": "A",
+            "text": "Congestion Avoidance (AIMD); cwnd increases by approximately 1 MSS per RTT (or 1/cwnd per ACK)",
+            "is_correct": true,
+            "rationale": "Correct positive signal: When cwnd >= ssthresh, TCP switches from exponential Slow Start to linear Congestion Avoidance, adding 1 MSS per RTT."
+          },
+          {
+            "key": "B",
+            "text": "Slow Start; cwnd continues doubling exponentially every RTT indefinitely",
+            "is_correct": false,
+            "rationale": "Misconception: Slow start ends when cwnd reaches ssthresh to prevent inducing network buffer overflow."
+          },
+          {
+            "key": "C",
+            "text": "Flow Control; cwnd is fixed permanently to the receiver's rwnd buffer size",
+            "is_correct": false,
+            "rationale": "Misconception: Flow control (rwnd) protects receiver buffers; congestion control (cwnd) dynamically probes network bottleneck capacity."
+          },
+          {
+            "key": "D",
+            "text": "Fast Recovery; cwnd immediately resets to 1 MSS without any loss signal",
+            "is_correct": false,
+            "rationale": "Misconception: Fast Recovery is triggered by 3 duplicate ACKs, not by reaching ssthresh."
+          }
+        ],
+        "correct_option": "A",
+        "concept_tested": "CN_07_TCP_CONGESTION",
+        "explanation": "When cwnd < ssthresh, TCP is in Slow Start (cwnd doubles every RTT: +1 MSS per ACK). When cwnd >= ssthresh, TCP enters Congestion Avoidance (AIMD: Additive Increase / Multiplicative Decrease), where cwnd grows linearly by 1 MSS per RTT (i.e., cwnd = cwnd + 1/cwnd for each ACK) to gently probe available bandwidth without congesting intermediate routers."
+      },
+      "notes": {
+        "summary": "TCP uses Slow Start (exponential window growth), Congestion Avoidance (Additive Increase: +1 MSS per RTT), and Fast Retransmit / Fast Recovery upon receiving 3 duplicate ACKs (Multiplicative Decrease).",
+        "key_points": [
+          "In Slow Start, congestion window (cwnd) doubles every RTT until ssthresh is reached.",
+          "In Congestion Avoidance, cwnd increases linearly by 1 MSS per RTT.",
+          "On timeout, cwnd resets to 1 MSS and ssthresh is set to cwnd/2; on 3 dup ACKs, Fast Recovery applies."
+        ],
+        "pitfalls": "Confusing flow control (receiver buffer management via rwnd) with congestion control (network pipe capacity via cwnd)."
+      }
+    },
+    {
+      "id": "CN_08_DNS_SYSTEM",
+      "name": "Domain Name System (DNS Architecture)",
+      "tier": 4,
+      "category": "Application Layer",
+      "prerequisites": [
+        "CN_06_TCP_UDP_TRANSPORT"
+      ],
+      "diagnostic_pool": [
+        {
+          "id": "DQ_08_A",
+          "text": "When a local DNS recursive resolver looks up the IP address for 'engineering.college.edu' without any cached entries, what is the correct hierarchical order of name server queries performed?",
+          "options": [
+            {
+              "key": "A",
+              "text": "Root DNS Server -> .edu Top-Level Domain (TLD) Server -> college.edu Authoritative DNS Server",
+              "is_correct": true,
+              "rationale": "Correct positive signal: DNS resolution follows the hierarchical tree: Root server provides TLD (.edu) referral; TLD server provides Authoritative (college.edu) referral."
+            },
+            {
+              "key": "B",
+              "text": "college.edu Authoritative Server -> .edu TLD Server -> Root Server",
+              "is_correct": false,
+              "rationale": "Misconception: Inverted hierarchy; the resolver does not know the authoritative server's address until TLD referral."
+            },
+            {
+              "key": "C",
+              "text": "Root DNS Server resolves the full host IP directly without intermediate referrals",
+              "is_correct": false,
+              "rationale": "Misconception: Root servers do not hold individual domain host records; they hold NS pointers to TLD servers."
+            },
+            {
+              "key": "D",
+              "text": "Local host broadcasts an ARP request across the Internet to discover the engineering IP",
+              "is_correct": false,
+              "rationale": "Misconception: ARP resolves IP to MAC on local Ethernet links only, cannot cross routers or resolve domain names."
+            }
+          ],
+          "correct_option": "A",
+          "concept_tested": "CN_08_DNS_SYSTEM",
+          "explanation": "DNS is a distributed hierarchical database. In an iterative resolution flow by a local recursive resolver: 1) Query Root Server (returns NS referral for .edu TLD). 2) Query .edu TLD Server (returns NS referral for authoritative server of college.edu). 3) Query Authoritative Server for college.edu (returns the A/AAAA record mapping engineering.college.edu to its IP address)."
+        },
+        {
+          "id": "DQ_08_B",
+          "text": "What is the structural difference between a Recursive DNS Query and an Iterative DNS Query?",
+          "options": [
+            {
+              "key": "A",
+              "text": "In recursive queries, the contacted server must return the final answer; in iterative queries, the server returns the best referral to the next server down the tree",
+              "is_correct": true,
+              "rationale": "Correct positive signal: Clients send recursive queries to local resolvers; local resolvers perform iterative queries across Root, TLD, and Authoritative servers."
+            },
+            {
+              "key": "B",
+              "text": "Recursive queries use TCP while iterative queries use UDP",
+              "is_correct": false,
+              "rationale": "Misconception: Both typically use UDP port 53 for standard lookups."
+            },
+            {
+              "key": "C",
+              "text": "Iterative queries repeat the same question 10 times to prevent packet loss",
+              "is_correct": false,
+              "rationale": "Misconception: Iterative resolution refers to following referrals step-by-step, not retransmitting."
+            },
+            {
+              "key": "D",
+              "text": "Recursive queries can only resolve IPv4 (A) records, while iterative resolves IPv6 (AAAA)",
+              "is_correct": false,
+              "rationale": "Misconception: Both query modes support all standard DNS resource record types."
+            }
+          ],
+          "correct_option": "A",
+          "concept_tested": "CN_08_DNS_SYSTEM",
+          "explanation": "A client (stub resolver) asks its local recursive resolver: 'Find this answer for me' (Recursive query). The local resolver queries the root, TLD, and authoritative servers with Iterative queries: 'If you don't know the exact answer, tell me who to ask next' (Referrals)."
+        },
+        {
+          "id": "DQ_08_C",
+          "text": "A network administrator maps 'portal.college.edu' to 'web-cluster-01.aws.college.edu', and maps 'web-cluster-01.aws.college.edu' to '198.51.100.42'. What specific DNS Resource Record types are utilized for these two respective mappings?",
+          "options": [
+            {
+              "key": "A",
+              "text": "First mapping: CNAME (Canonical Name) Record; Second mapping: A (Address) Record",
+              "is_correct": true,
+              "rationale": "Correct positive signal: CNAME aliases an alias domain to a canonical hostname; A record maps a hostname directly to an IPv4 address."
+            },
+            {
+              "key": "B",
+              "text": "First mapping: A Record; Second mapping: PTR Record",
+              "is_correct": false,
+              "rationale": "Misconception: A record maps to an IP address, not another hostname; PTR is reverse DNS."
+            },
+            {
+              "key": "C",
+              "text": "First mapping: MX Record; Second mapping: NS Record",
+              "is_correct": false,
+              "rationale": "Misconception: MX is for mail exchanges; NS specifies authoritative name servers."
+            },
+            {
+              "key": "D",
+              "text": "First mapping: TXT Record; Second mapping: SOA Record",
+              "is_correct": false,
+              "rationale": "Misconception: TXT holds metadata/SPF; SOA holds zone authority parameters."
+            }
+          ],
+          "correct_option": "A",
+          "concept_tested": "CN_08_DNS_SYSTEM",
+          "explanation": "CNAME (Canonical Name) records define an alias pointing to another domain name. An A (Address) record maps a fully qualified domain name (FQDN) directly to a 32-bit IPv4 address."
+        }
+      ],
+      "lesson": {
+        "title": "Domain Name System (DNS) Architecture",
+        "body": "DNS resolves human-readable domain names to IP addresses through a hierarchical distributed database consisting of Root servers, Top-Level Domain (TLD) servers, and Authoritative nameservers.",
+        "axiom": "DNS resolves human-readable domain names to IP addresses through a hierarchical distributed database consisting of Root ...",
+        "diagram": "[Protocol Architecture Diagram: Domain Name System (DNS) Architecture]\n+------------------------------------------------+\n| Layer Operation: Recursive queries obligate the contacted serv |\n+------------------------------------------------+",
+        "trap": "Assuming recursive queries are handled directly by root servers rather than the local resolver.",
+        "rules": [
+          "Recursive queries obligate the contacted server to return the final answer.",
+          "Iterative queries return referrals to other nameservers in the hierarchy.",
+          "DNS records include A (IPv4), AAAA (IPv6), CNAME (canonical alias), and MX (mail server)."
+        ],
+        "key_points": [
+          "Recursive queries obligate the contacted server to return the final answer.",
+          "Iterative queries return referrals to other nameservers in the hierarchy.",
+          "DNS records include A (IPv4), AAAA (IPv6), CNAME (canonical alias), and MX (mail server)."
+        ]
+      },
+      "practice_questions": [
+        {
+          "id": "PQ_08_1",
+          "text": "Which DNS resource record type maps a domain name alias to its canonical domain name rather than directly to an IP address?",
+          "options": [
+            {
+              "key": "A",
+              "text": "CNAME Record",
+              "is_correct": true
+            },
+            {
+              "key": "B",
+              "text": "A Record",
+              "is_correct": false
+            },
+            {
+              "key": "C",
+              "text": "MX Record",
+              "is_correct": false
+            },
+            {
+              "key": "D",
+              "text": "PTR Record",
+              "is_correct": false
+            }
+          ],
+          "correct_option": "A",
+          "explanation": "A CNAME (Canonical Name) record aliases one domain name (e.g., www.example.com) to another canonical name (e.g., example.com)."
+        },
+        {
+          "id": "PQ_08_2",
+          "text": "Under what circumstance does DNS switch from using UDP Port 53 to TCP Port 53?",
+          "options": [
+            {
+              "key": "A",
+              "text": "When response size exceeds 512 bytes (without EDNS0) or during Zone Transfers between servers",
+              "is_correct": true
+            },
+            {
+              "key": "B",
+              "text": "Whenever an HTTPS website is being looked up",
+              "is_correct": false
+            },
+            {
+              "key": "C",
+              "text": "Whenever an IPv6 address (AAAA) is queried",
+              "is_correct": false
+            },
+            {
+              "key": "D",
+              "text": "Only when client computer restarts",
+              "is_correct": false
+            }
+          ],
+          "correct_option": "A",
+          "explanation": "Standard DNS responses over UDP are limited to 512 bytes. If the response exceeds this or when authoritative servers perform zone transfers (AXFR), TCP port 53 is used."
+        },
+        {
+          "id": "PQ_08_3",
+          "text": "What is the primary function of the TTL (Time-To-Live) field in a DNS response packet?",
+          "options": [
+            {
+              "key": "A",
+              "text": "Specifies the number of seconds the record can be cached by resolvers before expiring",
+              "is_correct": true
+            },
+            {
+              "key": "B",
+              "text": "Specifies the maximum router hops the query can travel across the Internet",
+              "is_correct": false
+            },
+            {
+              "key": "C",
+              "text": "Specifies the round-trip latency to the web server",
+              "is_correct": false
+            },
+            {
+              "key": "D",
+              "text": "Specifies the encryption key lifetime for DNSSEC",
+              "is_correct": false
+            }
+          ],
+          "correct_option": "A",
+          "explanation": "DNS TTL defines how long a client or recursive DNS cache can answer subsequent requests with that record without contacting the authoritative server."
+        }
+      ],
+      "diagnostic_question": {
+        "id": "DQ_08_A",
+        "text": "When a local DNS recursive resolver looks up the IP address for 'engineering.college.edu' without any cached entries, what is the correct hierarchical order of name server queries performed?",
+        "options": [
+          {
+            "key": "A",
+            "text": "Root DNS Server -> .edu Top-Level Domain (TLD) Server -> college.edu Authoritative DNS Server",
+            "is_correct": true,
+            "rationale": "Correct positive signal: DNS resolution follows the hierarchical tree: Root server provides TLD (.edu) referral; TLD server provides Authoritative (college.edu) referral."
+          },
+          {
+            "key": "B",
+            "text": "college.edu Authoritative Server -> .edu TLD Server -> Root Server",
+            "is_correct": false,
+            "rationale": "Misconception: Inverted hierarchy; the resolver does not know the authoritative server's address until TLD referral."
+          },
+          {
+            "key": "C",
+            "text": "Root DNS Server resolves the full host IP directly without intermediate referrals",
+            "is_correct": false,
+            "rationale": "Misconception: Root servers do not hold individual domain host records; they hold NS pointers to TLD servers."
+          },
+          {
+            "key": "D",
+            "text": "Local host broadcasts an ARP request across the Internet to discover the engineering IP",
+            "is_correct": false,
+            "rationale": "Misconception: ARP resolves IP to MAC on local Ethernet links only, cannot cross routers or resolve domain names."
+          }
+        ],
+        "correct_option": "A",
+        "concept_tested": "CN_08_DNS_SYSTEM",
+        "explanation": "DNS is a distributed hierarchical database. In an iterative resolution flow by a local recursive resolver: 1) Query Root Server (returns NS referral for .edu TLD). 2) Query .edu TLD Server (returns NS referral for authoritative server of college.edu). 3) Query Authoritative Server for college.edu (returns the A/AAAA record mapping engineering.college.edu to its IP address)."
+      },
+      "notes": {
+        "summary": "DNS resolves human-readable domain names to IP addresses through a hierarchical distributed database consisting of Root servers, Top-Level Domain (TLD) servers, and Authoritative nameservers.",
+        "key_points": [
+          "Recursive queries obligate the contacted server to return the final answer.",
+          "Iterative queries return referrals to other nameservers in the hierarchy.",
+          "DNS records include A (IPv4), AAAA (IPv6), CNAME (canonical alias), and MX (mail server)."
+        ],
+        "pitfalls": "Assuming recursive queries are handled directly by root servers rather than the local resolver."
+      }
+    },
+    {
+      "id": "CN_09_HTTP_APPLICATION",
+      "name": "HTTP/HTTPS & Web Protocols",
+      "tier": 4,
+      "category": "Application Layer",
+      "prerequisites": [
+        "CN_06_TCP_UDP_TRANSPORT"
+      ],
+      "diagnostic_pool": [
+        {
+          "id": "DQ_09_A",
+          "text": "An HTTP/1.1 client sends multiple sequential requests over a single TCP connection. What header directive enables persistent connections by default, and how does HTTP/2 solve the head-of-line (HoL) blocking problem present in HTTP/1.1 pipelining?",
+          "options": [
+            {
+              "key": "A",
+              "text": "Connection: keep-alive; HTTP/2 introduces binary framing and multiplexed concurrent streams over a single connection",
+              "is_correct": true,
+              "rationale": "Correct positive signal: HTTP/1.1 uses persistent keep-alive connections by default. HTTP/2 eliminates application-layer HoL blocking by breaking messages into independent binary frames multiplexed over concurrent streams."
+            },
+            {
+              "key": "B",
+              "text": "Connection: close; HTTP/2 opens 10 separate parallel TCP connections simultaneously",
+              "is_correct": false,
+              "rationale": "Misconception: 'close' disables persistence; HTTP/2 consolidates traffic into 1 single TCP connection, not multiple."
+            },
+            {
+              "key": "C",
+              "text": "Cache-Control: no-cache; HTTP/2 replaces TCP with raw UDP without reliability",
+              "is_correct": false,
+              "rationale": "Misconception: HTTP/2 still runs over TCP. (HTTP/3 uses QUIC over UDP)."
+            },
+            {
+              "key": "D",
+              "text": "Transfer-Encoding: chunked; HTTP/2 eliminates headers entirely",
+              "is_correct": false,
+              "rationale": "Misconception: HTTP/2 compresses headers using HPACK rather than eliminating them."
+            }
+          ],
+          "correct_option": "A",
+          "concept_tested": "CN_09_HTTP_APPLICATION",
+          "explanation": "In HTTP/1.1, persistent connections ('Connection: keep-alive') allow multiple HTTP requests over one TCP connection, but responses must be returned strictly in FIFO order, creating application-level Head-of-Line (HoL) blocking. HTTP/2 solves this by introducing a binary framing layer that interleaves requests and responses into multiplexed, prioritized streams over a single TCP connection."
+        },
+        {
+          "id": "DQ_09_B",
+          "text": "A web browser requests a cached image with the request header 'If-None-Match: \"e84b-5c8\"'. If the web server finds that the asset on disk has not been altered since the browser cached it, what HTTP status code and body is returned?",
+          "options": [
+            {
+              "key": "A",
+              "text": "304 Not Modified, with empty response body to save network bandwidth",
+              "is_correct": true,
+              "rationale": "Correct positive signal: Conditional validation responds with 304 and zero body payload, instructing the browser to render from its local disk cache."
+            },
+            {
+              "key": "B",
+              "text": "200 OK, re-downloading the entire image payload again",
+              "is_correct": false,
+              "rationale": "Misconception: 200 OK indicates the asset changed or no cache validator matched, transmitting the full payload."
+            },
+            {
+              "key": "C",
+              "text": "301 Moved Permanently, redirecting to a new image CDN URL",
+              "is_correct": false,
+              "rationale": "Misconception: 301 is a permanent URL redirection, not a cache validation code."
+            },
+            {
+              "key": "D",
+              "text": "204 No Content, permanently deleting the image from browser cache",
+              "is_correct": false,
+              "rationale": "Misconception: 204 indicates an action succeeded without returning content, not conditional cache freshness."
+            }
+          ],
+          "correct_option": "A",
+          "concept_tested": "CN_09_HTTP_APPLICATION",
+          "explanation": "HTTP conditional headers ('If-None-Match' with ETag or 'If-Modified-Since' with timestamp) allow efficient cache validation. If the resource is unchanged, the server returns '304 Not Modified' with headers only and no body payload, minimizing latency and data transfer."
+        },
+        {
+          "id": "DQ_09_C",
+          "text": "Why does the modern HTTP/3 standard transition from TCP to QUIC running over UDP?",
+          "options": [
+            {
+              "key": "A",
+              "text": "In HTTP/2 over TCP, a single packet loss stalls ALL multiplexed streams (Transport HoL blocking); QUIC handles packet loss per stream independently over UDP",
+              "is_correct": true,
+              "rationale": "Correct positive signal: QUIC implements independent flow control and loss recovery per stream, so packet loss on stream A never delays stream B."
+            },
+            {
+              "key": "B",
+              "text": "UDP allows web servers to transmit unlimited uncompressed traffic without congestion control",
+              "is_correct": false,
+              "rationale": "Misconception: QUIC implements sophisticated congestion control inside user space on top of UDP."
+            },
+            {
+              "key": "C",
+              "text": "TCP is being phased out globally and routers refuse to forward TCP port 80 packets",
+              "is_correct": false,
+              "rationale": "Misconception: TCP remains the backbone of the Internet; HTTP/3 is an optimization for web multiplexing."
+            },
+            {
+              "key": "D",
+              "text": "QUIC eliminates the need for TLS encryption",
+              "is_correct": false,
+              "rationale": "Misconception: QUIC integrates TLS 1.3 into its handshake by default; it does not eliminate encryption."
+            }
+          ],
+          "correct_option": "A",
+          "concept_tested": "CN_09_HTTP_APPLICATION",
+          "explanation": "Although HTTP/2 solved application-layer Head-of-Line blocking, all its streams share a single TCP connection. When a single TCP segment is dropped, TCP halts delivery of all succeeding bytes to the application until retransmission arrives. HTTP/3 solves this by using QUIC over UDP, providing stream-isolated retransmission and 0-RTT connection establishment."
+        }
+      ],
+      "lesson": {
+        "title": "HTTP and Application Layer Protocols",
+        "body": "HTTP/1.1 introduced persistent TCP connections and pipelining. HTTP/2 introduced binary framing, multiplexing over a single TCP connection, and header compression (HPACK). HTTPS encrypts communication using TLS/SSL.",
+        "axiom": "HTTP/1.1 introduced persistent TCP connections and pipelining. HTTP/2 introduced binary framing, multiplexing over a sin...",
+        "diagram": "[Protocol Architecture Diagram: HTTP and Application Layer Protocols]\n+------------------------------------------------+\n| Layer Operation: HTTP is stateless; state is preserved using c |\n+------------------------------------------------+",
+        "trap": "Believing POST is idempotent or that HTTPS encrypts the underlying TCP handshake.",
+        "rules": [
+          "HTTP is stateless; state is preserved using cookies, headers, or web tokens.",
+          "Idempotent methods (GET, PUT, DELETE) produce the same side-effects regardless of repeated executions.",
+          "HTTPS operates over TCP port 443; HTTP uses port 80."
+        ],
+        "key_points": [
+          "HTTP is stateless; state is preserved using cookies, headers, or web tokens.",
+          "Idempotent methods (GET, PUT, DELETE) produce the same side-effects regardless of repeated executions.",
+          "HTTPS operates over TCP port 443; HTTP uses port 80."
+        ]
+      },
+      "practice_questions": [
+        {
+          "id": "PQ_09_1",
+          "text": "Which HTTP status code signifies that a requested resource has been permanently moved to a new URI?",
+          "options": [
+            {
+              "key": "A",
+              "text": "301 Moved Permanently",
+              "is_correct": true
+            },
+            {
+              "key": "B",
+              "text": "302 Found (Temporary Redirect)",
+              "is_correct": false
+            },
+            {
+              "key": "C",
+              "text": "404 Not Found",
+              "is_correct": false
+            },
+            {
+              "key": "D",
+              "text": "503 Service Unavailable",
+              "is_correct": false
+            }
+          ],
+          "correct_option": "A",
+          "explanation": "301 Moved Permanently indicates the target resource has been assigned a new permanent URI in the Location header."
+        },
+        {
+          "id": "PQ_09_2",
+          "text": "What conditional HTTP request header is sent by a browser to check whether a cached asset has been modified since it was last downloaded?",
+          "options": [
+            {
+              "key": "A",
+              "text": "If-Modified-Since (or If-None-Match with ETag)",
+              "is_correct": true
+            },
+            {
+              "key": "B",
+              "text": "Cache-Control: public",
+              "is_correct": false
+            },
+            {
+              "key": "C",
+              "text": "Content-Type: text/html",
+              "is_correct": false
+            },
+            {
+              "key": "D",
+              "text": "Authorization: Bearer",
+              "is_correct": false
+            }
+          ],
+          "correct_option": "A",
+          "explanation": "If-Modified-Since and If-None-Match (ETag) validate freshness with the server; if unchanged, server responds with '304 Not Modified'."
+        },
+        {
+          "id": "PQ_09_3",
+          "text": "Why does HTTP/3 adopt QUIC over UDP instead of TCP?",
+          "options": [
+            {
+              "key": "A",
+              "text": "To eliminate TCP-level Head-of-Line blocking where a single packet drop stalls all multiplexed streams",
+              "is_correct": true
+            },
+            {
+              "key": "B",
+              "text": "Because UDP eliminates all security overhead",
+              "is_correct": false
+            },
+            {
+              "key": "C",
+              "text": "Because routers cannot inspect UDP headers",
+              "is_correct": false
+            },
+            {
+              "key": "D",
+              "text": "To remove port numbers from transport packets",
+              "is_correct": false
+            }
+          ],
+          "correct_option": "A",
+          "explanation": "In HTTP/2 over TCP, if one packet is lost, TCP stalls ALL streams until retransmission. HTTP/3 with QUIC over UDP isolates streams so packet loss on one stream does not block others."
+        }
+      ],
+      "diagnostic_question": {
+        "id": "DQ_09_A",
+        "text": "An HTTP/1.1 client sends multiple sequential requests over a single TCP connection. What header directive enables persistent connections by default, and how does HTTP/2 solve the head-of-line (HoL) blocking problem present in HTTP/1.1 pipelining?",
+        "options": [
+          {
+            "key": "A",
+            "text": "Connection: keep-alive; HTTP/2 introduces binary framing and multiplexed concurrent streams over a single connection",
+            "is_correct": true,
+            "rationale": "Correct positive signal: HTTP/1.1 uses persistent keep-alive connections by default. HTTP/2 eliminates application-layer HoL blocking by breaking messages into independent binary frames multiplexed over concurrent streams."
+          },
+          {
+            "key": "B",
+            "text": "Connection: close; HTTP/2 opens 10 separate parallel TCP connections simultaneously",
+            "is_correct": false,
+            "rationale": "Misconception: 'close' disables persistence; HTTP/2 consolidates traffic into 1 single TCP connection, not multiple."
+          },
+          {
+            "key": "C",
+            "text": "Cache-Control: no-cache; HTTP/2 replaces TCP with raw UDP without reliability",
+            "is_correct": false,
+            "rationale": "Misconception: HTTP/2 still runs over TCP. (HTTP/3 uses QUIC over UDP)."
+          },
+          {
+            "key": "D",
+            "text": "Transfer-Encoding: chunked; HTTP/2 eliminates headers entirely",
+            "is_correct": false,
+            "rationale": "Misconception: HTTP/2 compresses headers using HPACK rather than eliminating them."
+          }
+        ],
+        "correct_option": "A",
+        "concept_tested": "CN_09_HTTP_APPLICATION",
+        "explanation": "In HTTP/1.1, persistent connections ('Connection: keep-alive') allow multiple HTTP requests over one TCP connection, but responses must be returned strictly in FIFO order, creating application-level Head-of-Line (HoL) blocking. HTTP/2 solves this by introducing a binary framing layer that interleaves requests and responses into multiplexed, prioritized streams over a single TCP connection."
+      },
+      "notes": {
+        "summary": "HTTP/1.1 introduced persistent TCP connections and pipelining. HTTP/2 introduced binary framing, multiplexing over a single TCP connection, and header compression (HPACK). HTTPS encrypts communication using TLS/SSL.",
+        "key_points": [
+          "HTTP is stateless; state is preserved using cookies, headers, or web tokens.",
+          "Idempotent methods (GET, PUT, DELETE) produce the same side-effects regardless of repeated executions.",
+          "HTTPS operates over TCP port 443; HTTP uses port 80."
+        ],
+        "pitfalls": "Believing POST is idempotent or that HTTPS encrypts the underlying TCP handshake."
+      }
+    },
+    {
+      "id": "CN_10_NETWORK_SECURITY",
+      "name": "Network Security & TLS Cryptography",
+      "tier": 5,
+      "category": "Network Security",
+      "prerequisites": [
+        "CN_09_HTTP_APPLICATION",
+        "CN_06_TCP_UDP_TRANSPORT"
+      ],
+      "diagnostic_pool": [
+        {
+          "id": "DQ_10_A",
+          "text": "During an HTTPS TLS 1.2 handshake, how are asymmetric (public key) and symmetric cryptography combined to ensure both confidential communication and high throughput?",
+          "options": [
+            {
+              "key": "A",
+              "text": "Asymmetric cryptography authenticates the server and securely exchanges a symmetric session key; symmetric encryption then encrypts bulk application data",
+              "is_correct": true,
+              "rationale": "Correct positive signal: Asymmetric crypto (RSA/Diffie-Hellman + Certificates) is computationally heavy and used only during handshake to agree on a pre-master secret; lightweight symmetric crypto (AES-GCM) encrypts actual bulk data."
+            },
+            {
+              "key": "B",
+              "text": "Asymmetric encryption encrypts all bulk data packets throughout the entire session",
+              "is_correct": false,
+              "rationale": "Misconception: Asymmetric crypto is orders of magnitude slower than symmetric crypto; using it for bulk transfer would cripple server CPU."
+            },
+            {
+              "key": "C",
+              "text": "Symmetric encryption is used to distribute the server's public key certificate",
+              "is_correct": false,
+              "rationale": "Misconception: Certificates contain public keys signed by Certificate Authorities (CAs) using asymmetric digital signatures."
+            },
+            {
+              "key": "D",
+              "text": "Only hash functions (SHA-256) are used without any encryption keys",
+              "is_correct": false,
+              "rationale": "Misconception: Hashing guarantees message integrity, but provides neither confidentiality nor key exchange on its own."
+            }
+          ],
+          "correct_option": "A",
+          "concept_tested": "CN_10_NETWORK_SECURITY",
+          "explanation": "TLS utilizes hybrid cryptography: Asymmetric cryptography (e.g., ECDHE, RSA) and X.509 Digital Certificates authenticate the server and negotiate a shared pre-master secret without leaking it to eavesdroppers. Once negotiated, fast hardware-accelerated symmetric cipher suites (e.g., AES-256-GCM, ChaCha20) encrypt and decrypt bulk application traffic."
+        },
+        {
+          "id": "DQ_10_B",
+          "text": "What vital security property does Ephemeral Diffie-Hellman (DHE / ECDHE) key exchange provide to HTTPS web sessions that static RSA key exchange lacked?",
+          "options": [
+            {
+              "key": "A",
+              "text": "Forward Secrecy: Compromising the server's private key in the future cannot decrypt previously recorded encrypted session traffic",
+              "is_correct": true,
+              "rationale": "Correct positive signal: Ephemeral keys are discarded immediately after the session finishes, protecting past sessions from future private key compromise."
+            },
+            {
+              "key": "B",
+              "text": "Zero-Latency: Completely eliminates the need for TCP SYN and ACK packets",
+              "is_correct": false,
+              "rationale": "Misconception: DHE operates at the TLS cryptographic layer, not TCP connection establishment."
+            },
+            {
+              "key": "C",
+              "text": "Passwordless Login: Automatically authorizes the client without user credentials",
+              "is_correct": false,
+              "rationale": "Misconception: Key exchange establishes channel encryption, not user account authentication."
+            },
+            {
+              "key": "D",
+              "text": "Quantum Immunity: Generates keys that are mathematically infinite in bit length",
+              "is_correct": false,
+              "rationale": "Misconception: Standard ECC/DHE is vulnerable to Shor's algorithm on quantum computers; post-quantum crypto requires lattice-based algorithms."
+            }
+          ],
+          "correct_option": "A",
+          "concept_tested": "CN_10_NETWORK_SECURITY",
+          "explanation": "Forward Secrecy ensures that session keys are ephemeral (temporary per connection). In static RSA, if an adversary records encrypted traffic today and steals the server's private key years later, they can decrypt all historical recordings. With ECDHE, each session derives a unique session key that is never stored, making retroactive decryption impossible."
+        },
+        {
+          "id": "DQ_10_C",
+          "text": "What fundamental architectural capability distinguishes a Stateful Inspection Firewall from a Stateless Packet Filter?",
+          "options": [
+            {
+              "key": "A",
+              "text": "A stateful firewall maintains a dynamic state table tracking connection handshakes (SYN, ESTABLISHED, FIN) and automatically permits returning response packets",
+              "is_correct": true,
+              "rationale": "Correct positive signal: Stateful inspection understands connection context and dynamically permits outbound-initiated returning sessions without opening wide port ranges."
+            },
+            {
+              "key": "B",
+              "text": "A stateless packet filter decrypts all TLS encrypted application payloads",
+              "is_correct": false,
+              "rationale": "Misconception: Stateless filters inspect only static headers (IP/port) and cannot decrypt TLS payloads."
+            },
+            {
+              "key": "C",
+              "text": "A stateful firewall operates exclusively at the Physical Layer (Layer 1)",
+              "is_correct": false,
+              "rationale": "Misconception: Stateful firewalls operate across Layers 3 and 4 (and Layer 7 in NGFWs)."
+            },
+            {
+              "key": "D",
+              "text": "A stateless packet filter stores user passwords in an internal SQLite database",
+              "is_correct": false,
+              "rationale": "Misconception: Stateless filters evaluate static ACL rules row-by-row on individual packets without databases."
+            }
+          ],
+          "correct_option": "A",
+          "concept_tested": "CN_10_NETWORK_SECURITY",
+          "explanation": "Stateless filters inspect individual packets in isolation against static rules (IP, Port). Stateful firewalls track TCP handshakes, sequence numbers, and active session states. When an internal client initiates an outbound connection, the firewall records the session in its state table and automatically permits returning response packets, preventing unauthorized incoming connections without needing wide open inbound rules."
+        }
+      ],
+      "lesson": {
+        "title": "Network Security, Cryptography & Firewalls",
+        "body": "Symmetric encryption (AES) uses one shared key for high-speed bulk data. Asymmetric encryption (RSA, ECC) uses public/private key pairs for key exchange and digital signatures. Firewalls enforce packet filtering policies.",
+        "axiom": "Symmetric encryption (AES) uses one shared key for high-speed bulk data. Asymmetric encryption (RSA, ECC) uses public/pr...",
+        "diagram": "[Protocol Architecture Diagram: Network Security, Cryptography & Firewalls]\n+------------------------------------------------+\n| Layer Operation: Confidentiality is provided by encryption; In |\n+------------------------------------------------+",
+        "trap": "Assuming digital signatures encrypt the message body or that asymmetric encryption is faster than symmetric ciphers.",
+        "rules": [
+          "Confidentiality is provided by encryption; Integrity is provided by cryptographic hashes/MACs.",
+          "Digital signatures provide authenticity and non-repudiation by encrypting a hash with the sender's private key.",
+          "Stateful firewalls track TCP connection states, whereas stateless filters inspect headers independently."
+        ],
+        "key_points": [
+          "Confidentiality is provided by encryption; Integrity is provided by cryptographic hashes/MACs.",
+          "Digital signatures provide authenticity and non-repudiation by encrypting a hash with the sender's private key.",
+          "Stateful firewalls track TCP connection states, whereas stateless filters inspect headers independently."
+        ]
+      },
+      "practice_questions": [
+        {
+          "id": "PQ_10_1",
+          "text": "What mathematical property enables Diffie-Hellman Ephemeral (DHE / ECDHE) key exchange to provide Forward Secrecy?",
+          "options": [
+            {
+              "key": "A",
+              "text": "Session keys are derived from temporary per-session key pairs; compromising the server's long-term private key later cannot decrypt recorded past traffic",
+              "is_correct": true
+            },
+            {
+              "key": "B",
+              "text": "The encryption algorithm changes passwords every 10 seconds",
+              "is_correct": false
+            },
+            {
+              "key": "C",
+              "text": "The client disables browser cache",
+              "is_correct": false
+            },
+            {
+              "key": "D",
+              "text": "Private keys are transmitted inside an encrypted UDP tunnel",
+              "is_correct": false
+            }
+          ],
+          "correct_option": "A",
+          "explanation": "Forward Secrecy ensures past encrypted sessions remain safe even if the server's long-term private key is leaked in the future, because ephemeral session keys are discarded after session close."
+        },
+        {
+          "id": "PQ_10_2",
+          "text": "What type of firewall inspects IP addresses, port numbers, and TCP sequence numbers to track active connections across packet streams?",
+          "options": [
+            {
+              "key": "A",
+              "text": "Stateful Inspection Packet Firewall",
+              "is_correct": true
+            },
+            {
+              "key": "B",
+              "text": "Stateless Packet Filter",
+              "is_correct": false
+            },
+            {
+              "key": "C",
+              "text": "Physical Layer Repeater",
+              "is_correct": false
+            },
+            {
+              "key": "D",
+              "text": "Circuit-level Proxy without TCP awareness",
+              "is_correct": false
+            }
+          ],
+          "correct_option": "A",
+          "explanation": "Stateful inspection firewalls maintain a state table tracking the lifecycle of established TCP connections (SYN, ESTABLISHED, FIN), permitting legitimate returning traffic automatically."
+        },
+        {
+          "id": "PQ_10_3",
+          "text": "Which cryptographic primitive ensures message integrity and detects unauthorized tampering of data in transit?",
+          "options": [
+            {
+              "key": "A",
+              "text": "Cryptographic Hash Function / HMAC (e.g., SHA-256)",
+              "is_correct": true
+            },
+            {
+              "key": "B",
+              "text": "Base64 Encoding",
+              "is_correct": false
+            },
+            {
+              "key": "C",
+              "text": "Caesar Substitution Cipher",
+              "is_correct": false
+            },
+            {
+              "key": "D",
+              "text": "HTTP User-Agent String",
+              "is_correct": false
+            }
+          ],
+          "correct_option": "A",
+          "explanation": "A cryptographic hash produces a fixed-size digest (avalanche effect). An HMAC incorporates a secret key to prove both integrity and authenticity."
+        }
+      ],
+      "diagnostic_question": {
+        "id": "DQ_10_A",
+        "text": "During an HTTPS TLS 1.2 handshake, how are asymmetric (public key) and symmetric cryptography combined to ensure both confidential communication and high throughput?",
+        "options": [
+          {
+            "key": "A",
+            "text": "Asymmetric cryptography authenticates the server and securely exchanges a symmetric session key; symmetric encryption then encrypts bulk application data",
+            "is_correct": true,
+            "rationale": "Correct positive signal: Asymmetric crypto (RSA/Diffie-Hellman + Certificates) is computationally heavy and used only during handshake to agree on a pre-master secret; lightweight symmetric crypto (AES-GCM) encrypts actual bulk data."
+          },
+          {
+            "key": "B",
+            "text": "Asymmetric encryption encrypts all bulk data packets throughout the entire session",
+            "is_correct": false,
+            "rationale": "Misconception: Asymmetric crypto is orders of magnitude slower than symmetric crypto; using it for bulk transfer would cripple server CPU."
+          },
+          {
+            "key": "C",
+            "text": "Symmetric encryption is used to distribute the server's public key certificate",
+            "is_correct": false,
+            "rationale": "Misconception: Certificates contain public keys signed by Certificate Authorities (CAs) using asymmetric digital signatures."
+          },
+          {
+            "key": "D",
+            "text": "Only hash functions (SHA-256) are used without any encryption keys",
+            "is_correct": false,
+            "rationale": "Misconception: Hashing guarantees message integrity, but provides neither confidentiality nor key exchange on its own."
+          }
+        ],
+        "correct_option": "A",
+        "concept_tested": "CN_10_NETWORK_SECURITY",
+        "explanation": "TLS utilizes hybrid cryptography: Asymmetric cryptography (e.g., ECDHE, RSA) and X.509 Digital Certificates authenticate the server and negotiate a shared pre-master secret without leaking it to eavesdroppers. Once negotiated, fast hardware-accelerated symmetric cipher suites (e.g., AES-256-GCM, ChaCha20) encrypt and decrypt bulk application traffic."
+      },
+      "notes": {
+        "summary": "Symmetric encryption (AES) uses one shared key for high-speed bulk data. Asymmetric encryption (RSA, ECC) uses public/private key pairs for key exchange and digital signatures. Firewalls enforce packet filtering policies.",
+        "key_points": [
+          "Confidentiality is provided by encryption; Integrity is provided by cryptographic hashes/MACs.",
+          "Digital signatures provide authenticity and non-repudiation by encrypting a hash with the sender's private key.",
+          "Stateful firewalls track TCP connection states, whereas stateless filters inspect headers independently."
+        ],
+        "pitfalls": "Assuming digital signatures encrypt the message body or that asymmetric encryption is faster than symmetric ciphers."
+      }
+    }
+  ]
+}

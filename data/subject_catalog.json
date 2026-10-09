@@ -1,0 +1,961 @@
+{
+  "subjects": [
+    {
+      "id": "CN",
+      "name": "Computer Networks",
+      "course_code": "CS301",
+      "description": "Layered protocol architectures, transport protocols, routing, subnetting, and network security.",
+      "total_questions": 2500,
+      "topics": [
+        {
+          "id": "CN_01_OSI_LAYERS",
+          "name": "OSI & TCP/IP Architecture",
+          "category": "Architecture & Fundamentals",
+          "question_count": 250,
+          "notes": {
+            "title": "OSI and TCP/IP Reference Architectures",
+            "summary": "Network communication relies on standardized encapsulation. Layer 3 (Network) handles logical addressing and packet routing across networks, whereas Layer 2 (Data Link) manages hop-to-hop frame delivery using physical MAC addresses. Layer 4 (Transport) multiplexes processes using 16-bit port numbers.",
+            "key_points": [
+              "Routers forward packets at Layer 3 based on destination IP; switches forward frames at Layer 2 based on destination MAC.",
+              "Transport Layer uses port numbers (e.g. 80, 443, 22) to deliver segments to specific processes.",
+              "Each layer adds its own Protocol Data Unit (PDU) header during encapsulation."
+            ],
+            "pitfalls": "Confusing Layer 2 MAC forwarding with Layer 3 IP routing, or assuming switches rewrite IP packet headers."
+          },
+          "bkt_defaults": {
+            "p_init": 0.2,
+            "p_transit": 0.15,
+            "p_guess": 0.2,
+            "p_slip": 0.1,
+            "mastery_threshold": 0.8
+          }
+        },
+        {
+          "id": "CN_02_FRAMING_CRC",
+          "name": "Data Link Framing & CRC Error Detection",
+          "category": "Data Link Layer",
+          "question_count": 250,
+          "notes": {
+            "title": "Data Link Framing and CRC Error Detection",
+            "summary": "Cyclic Redundancy Check (CRC) is a polynomial division code using modulo-2 arithmetic (XOR operations) without carries. For a generator polynomial of degree r, exactly r check bits are appended to the frame.",
+            "key_points": [
+              "Modulo-2 addition and subtraction are identical to bitwise XOR.",
+              "For generator polynomial of degree r, exactly r zeros are appended before division.",
+              "A zero remainder at the receiver indicates no detectable bit errors."
+            ],
+            "pitfalls": "Performing standard base-10 arithmetic instead of modulo-2 XOR division, or appending r+1 zeros."
+          },
+          "bkt_defaults": {
+            "p_init": 0.2,
+            "p_transit": 0.15,
+            "p_guess": 0.2,
+            "p_slip": 0.1,
+            "mastery_threshold": 0.8
+          }
+        },
+        {
+          "id": "CN_03_FLOW_CONTROL",
+          "name": "Flow & Error Control (Stop-and-Wait, Go-Back-N, SR)",
+          "category": "Data Link Layer",
+          "question_count": 250,
+          "notes": {
+            "title": "Flow and Error Control Mechanisms",
+            "summary": "Sliding window protocols balance throughput against buffer limits. In Go-Back-N (GBN) with k-bit sequence numbers, sender window is at most 2^k - 1, and receiver accepts only in-order packets. Selective Repeat (SR) uses sender and receiver windows of size 2^(k-1).",
+            "key_points": [
+              "Go-Back-N retransmits all packets starting from the first unacknowledged frame upon timeout.",
+              "Selective Repeat buffers out-of-order packets and requests only damaged or lost frames.",
+              "Maximum window size for GBN is 2^k - 1; for Selective Repeat it is 2^(k-1)."
+            ],
+            "pitfalls": "Using window size 2^k in GBN, which causes ambiguity between new frames and retransmissions."
+          },
+          "bkt_defaults": {
+            "p_init": 0.2,
+            "p_transit": 0.15,
+            "p_guess": 0.2,
+            "p_slip": 0.1,
+            "mastery_threshold": 0.8
+          }
+        },
+        {
+          "id": "CN_04_SUBNETTING_IP",
+          "name": "IPv4 Addressing & Subnet Masking",
+          "category": "Network Layer",
+          "question_count": 250,
+          "notes": {
+            "title": "IPv4 Subnetting and VLSM Addressing",
+            "summary": "An IPv4 address consists of 32 bits divided into network bits and host bits. A /n mask has n network bits and 32-n host bits. The total number of addresses is 2^(32-n), with 2^(32-n) - 2 usable host addresses (excluding network ID and broadcast address).",
+            "key_points": [
+              "Usable hosts formula = 2^h - 2, where h is the number of remaining host bits.",
+              "Network address has all host bits set to 0; broadcast address has all host bits set to 1.",
+              "Subnet mask must be contiguous high-order 1s followed by contiguous 0s."
+            ],
+            "pitfalls": "Forgetting to subtract 2 for network and broadcast addresses, or mixing up CIDR slash notations."
+          },
+          "bkt_defaults": {
+            "p_init": 0.2,
+            "p_transit": 0.15,
+            "p_guess": 0.2,
+            "p_slip": 0.1,
+            "mastery_threshold": 0.8
+          }
+        },
+        {
+          "id": "CN_05_ROUTING_ALGO",
+          "name": "Distance Vector & Link State Routing",
+          "category": "Network Layer",
+          "question_count": 250,
+          "notes": {
+            "title": "Routing Protocols: Distance Vector vs Link State",
+            "summary": "Distance Vector (e.g. RIP) relies on Bellman-Ford where routers share periodic distance vectors with direct neighbors, suffering from count-to-infinity. Link State (e.g. OSPF) uses Dijkstra's shortest-path algorithm where routers flood link states to build a global network topology.",
+            "key_points": [
+              "Distance Vector: shares entire table with immediate neighbors; slow convergence.",
+              "Link State: floods link states to all nodes; fast convergence and no count-to-infinity.",
+              "Split horizon and poison reverse mitigate routing loops in distance vector protocols."
+            ],
+            "pitfalls": "Believing Link State protocols pass routing tables rather than raw link-state advertisements (LSAs)."
+          },
+          "bkt_defaults": {
+            "p_init": 0.2,
+            "p_transit": 0.15,
+            "p_guess": 0.2,
+            "p_slip": 0.1,
+            "mastery_threshold": 0.8
+          }
+        },
+        {
+          "id": "CN_06_TCP_UDP_TRANSPORT",
+          "name": "TCP vs UDP Transport Protocols",
+          "category": "Transport Layer",
+          "question_count": 250,
+          "notes": {
+            "title": "Transport Protocols: TCP vs UDP",
+            "summary": "TCP is connection-oriented, reliable, byte-stream oriented, and features flow/congestion control via a 3-way handshake. UDP is connectionless, lightweight, and preserves application message boundaries without retransmissions.",
+            "key_points": [
+              "TCP uses 3-way handshake (SYN, SYN-ACK, ACK) and 4-way teardown (FIN, ACK, FIN, ACK).",
+              "UDP has an 8-byte minimal header suitable for real-time media, DNS queries, and VoIP.",
+              "TCP guarantees in-order delivery via sequence and acknowledgment numbers."
+            ],
+            "pitfalls": "Assuming UDP guarantees packet delivery or thinking TCP is message-oriented rather than stream-oriented."
+          },
+          "bkt_defaults": {
+            "p_init": 0.2,
+            "p_transit": 0.15,
+            "p_guess": 0.2,
+            "p_slip": 0.1,
+            "mastery_threshold": 0.8
+          }
+        },
+        {
+          "id": "CN_07_TCP_CONGESTION",
+          "name": "TCP Congestion Control (AIMD, Slow Start)",
+          "category": "Transport Layer",
+          "question_count": 250,
+          "notes": {
+            "title": "TCP Congestion Control Mechanisms",
+            "summary": "TCP uses Slow Start (exponential window growth), Congestion Avoidance (Additive Increase: +1 MSS per RTT), and Fast Retransmit / Fast Recovery upon receiving 3 duplicate ACKs (Multiplicative Decrease).",
+            "key_points": [
+              "In Slow Start, congestion window (cwnd) doubles every RTT until ssthresh is reached.",
+              "In Congestion Avoidance, cwnd increases linearly by 1 MSS per RTT.",
+              "On timeout, cwnd resets to 1 MSS and ssthresh is set to cwnd/2; on 3 dup ACKs, Fast Recovery applies."
+            ],
+            "pitfalls": "Confusing flow control (receiver buffer management via rwnd) with congestion control (network pipe capacity via cwnd)."
+          },
+          "bkt_defaults": {
+            "p_init": 0.2,
+            "p_transit": 0.15,
+            "p_guess": 0.2,
+            "p_slip": 0.1,
+            "mastery_threshold": 0.8
+          }
+        },
+        {
+          "id": "CN_08_DNS_SYSTEM",
+          "name": "Domain Name System (DNS) & Name Resolution",
+          "category": "Application Layer",
+          "question_count": 250,
+          "notes": {
+            "title": "Domain Name System (DNS) Architecture",
+            "summary": "DNS resolves human-readable domain names to IP addresses through a hierarchical distributed database consisting of Root servers, Top-Level Domain (TLD) servers, and Authoritative nameservers.",
+            "key_points": [
+              "Recursive queries obligate the contacted server to return the final answer.",
+              "Iterative queries return referrals to other nameservers in the hierarchy.",
+              "DNS records include A (IPv4), AAAA (IPv6), CNAME (canonical alias), and MX (mail server)."
+            ],
+            "pitfalls": "Assuming recursive queries are handled directly by root servers rather than the local resolver."
+          },
+          "bkt_defaults": {
+            "p_init": 0.2,
+            "p_transit": 0.15,
+            "p_guess": 0.2,
+            "p_slip": 0.1,
+            "mastery_threshold": 0.8
+          }
+        },
+        {
+          "id": "CN_09_HTTP_APPLICATION",
+          "name": "HTTP/HTTPS & Application Layer Protocols",
+          "category": "Application Layer",
+          "question_count": 250,
+          "notes": {
+            "title": "HTTP and Application Layer Protocols",
+            "summary": "HTTP/1.1 introduced persistent TCP connections and pipelining. HTTP/2 introduced binary framing, multiplexing over a single TCP connection, and header compression (HPACK). HTTPS encrypts communication using TLS/SSL.",
+            "key_points": [
+              "HTTP is stateless; state is preserved using cookies, headers, or web tokens.",
+              "Idempotent methods (GET, PUT, DELETE) produce the same side-effects regardless of repeated executions.",
+              "HTTPS operates over TCP port 443; HTTP uses port 80."
+            ],
+            "pitfalls": "Believing POST is idempotent or that HTTPS encrypts the underlying TCP handshake."
+          },
+          "bkt_defaults": {
+            "p_init": 0.2,
+            "p_transit": 0.15,
+            "p_guess": 0.2,
+            "p_slip": 0.1,
+            "mastery_threshold": 0.8
+          }
+        },
+        {
+          "id": "CN_10_NETWORK_SECURITY",
+          "name": "Network Security, Cryptography & Firewalls",
+          "category": "Security",
+          "question_count": 250,
+          "notes": {
+            "title": "Network Security, Cryptography & Firewalls",
+            "summary": "Symmetric encryption (AES) uses one shared key for high-speed bulk data. Asymmetric encryption (RSA, ECC) uses public/private key pairs for key exchange and digital signatures. Firewalls enforce packet filtering policies.",
+            "key_points": [
+              "Confidentiality is provided by encryption; Integrity is provided by cryptographic hashes/MACs.",
+              "Digital signatures provide authenticity and non-repudiation by encrypting a hash with the sender's private key.",
+              "Stateful firewalls track TCP connection states, whereas stateless filters inspect headers independently."
+            ],
+            "pitfalls": "Assuming digital signatures encrypt the message body or that asymmetric encryption is faster than symmetric ciphers."
+          },
+          "bkt_defaults": {
+            "p_init": 0.2,
+            "p_transit": 0.15,
+            "p_guess": 0.2,
+            "p_slip": 0.1,
+            "mastery_threshold": 0.8
+          }
+        }
+      ]
+    },
+    {
+      "id": "OS",
+      "name": "Operating Systems",
+      "course_code": "CS302",
+      "description": "Kernel architecture, process lifecycle, CPU scheduling, synchronization, deadlocks, and virtual memory.",
+      "total_questions": 2500,
+      "topics": [
+        {
+          "id": "OS_01_PROCESS_MGMT",
+          "name": "Process Lifecycle, States & PCB",
+          "category": "Process Management",
+          "question_count": 250,
+          "notes": {
+            "title": "Process Lifecycle, States and PCB",
+            "summary": "A process is a program in execution. The Operating System represents each process using a Process Control Block (PCB) tracking PID, program counter, registers, memory allocations, and state (New, Ready, Running, Waiting, Terminated).",
+            "key_points": [
+              "Context switching saves the current process state into its PCB and restores another's, incurring CPU overhead.",
+              "Ready state processes are in memory waiting for CPU allocation; Waiting processes wait for I/O or events.",
+              "fork() creates an exact duplicate child process with a unique PID."
+            ],
+            "pitfalls": "Assuming a blocked/waiting process transitions directly to running without passing through the ready queue."
+          },
+          "bkt_defaults": {
+            "p_init": 0.2,
+            "p_transit": 0.15,
+            "p_guess": 0.2,
+            "p_slip": 0.1,
+            "mastery_threshold": 0.8
+          }
+        },
+        {
+          "id": "OS_02_CPU_SCHEDULING",
+          "name": "CPU Scheduling (FCFS, SJF, Round Robin, Priority)",
+          "category": "CPU Scheduling",
+          "question_count": 250,
+          "notes": {
+            "title": "CPU Scheduling Algorithms",
+            "summary": "Shortest Job First (SJF) is provably optimal for minimizing average waiting time but requires predicting future CPU burst durations. Round Robin (RR) provides fair interactive responsiveness based on a time quantum.",
+            "key_points": [
+              "Non-preemptive algorithms cannot interrupt a running process until burst completion or voluntary yield.",
+              "If RR time quantum is very large, it degrades to FCFS; if too small, context-switch overhead dominates.",
+              "Preemptive SJF is also known as Shortest Remaining Time First (SRTF)."
+            ],
+            "pitfalls": "Overlooking context switch overhead when calculating turnaround and waiting times in Round Robin."
+          },
+          "bkt_defaults": {
+            "p_init": 0.2,
+            "p_transit": 0.15,
+            "p_guess": 0.2,
+            "p_slip": 0.1,
+            "mastery_threshold": 0.8
+          }
+        },
+        {
+          "id": "OS_03_SYNCHRONIZATION",
+          "name": "Process Synchronization, Critical Section & Semaphores",
+          "category": "Concurrency",
+          "question_count": 250,
+          "notes": {
+            "title": "Process Synchronization and Semaphores",
+            "summary": "Race conditions occur when concurrent threads access shared data without synchronization. The Critical Section problem requires Mutual Exclusion, Progress, and Bounded Waiting. Semaphores and mutexes provide atomic synchronization primitives.",
+            "key_points": [
+              "Counting semaphores manage multiple instances of a resource; binary semaphores act as mutex locks.",
+              "wait() (or P) decrements the semaphore; signal() (or V) increments it atomically.",
+              "Deadlocks can arise if multiple processes acquire locks in inconsistent orders."
+            ],
+            "pitfalls": "Assuming busy-waiting spinlocks are efficient on single-core uniprocessor systems."
+          },
+          "bkt_defaults": {
+            "p_init": 0.2,
+            "p_transit": 0.15,
+            "p_guess": 0.2,
+            "p_slip": 0.1,
+            "mastery_threshold": 0.8
+          }
+        },
+        {
+          "id": "OS_04_DEADLOCKS",
+          "name": "Deadlock Detection, Prevention & Banker's Algorithm",
+          "category": "Deadlocks",
+          "question_count": 250,
+          "notes": {
+            "title": "Deadlock Detection, Prevention and Banker's Algorithm",
+            "summary": "Deadlock requires four simultaneous conditions: Mutual Exclusion, Hold and Wait, No Preemption, and Circular Wait. Banker's Algorithm ensures the system never enters an unsafe state by verifying that a safe sequence exists.",
+            "key_points": [
+              "An unsafe state is not automatically a deadlock, but every deadlock is an unsafe state.",
+              "Need matrix in Banker's Algorithm = Max - Allocation.",
+              "Circular wait prevention enforces a strict global linear ordering on all resource acquisitions."
+            ],
+            "pitfalls": "Equating an unsafe state directly with a deadlocked state."
+          },
+          "bkt_defaults": {
+            "p_init": 0.2,
+            "p_transit": 0.15,
+            "p_guess": 0.2,
+            "p_slip": 0.1,
+            "mastery_threshold": 0.8
+          }
+        },
+        {
+          "id": "OS_05_MEMORY_PAGING",
+          "name": "Main Memory Management, Paging & Segmentation",
+          "category": "Memory Management",
+          "question_count": 250,
+          "notes": {
+            "title": "Main Memory Management, Paging and TLB",
+            "summary": "Paging divides physical memory into fixed-size frames and logical memory into pages of identical size. The Translation Lookaside Buffer (TLB) caches page-to-frame translations to avoid multiple memory accesses.",
+            "key_points": [
+              "Paging eliminates external fragmentation but can produce internal fragmentation in the last page.",
+              "Logical address consists of page number (p) and page offset (d).",
+              "Effective Memory Access Time (EMAT) = TLB_hit_rate * (TLB_time + Mem_time) + (1 - TLB_hit_rate) * (TLB_time + 2 * Mem_time)."
+            ],
+            "pitfalls": "Believing paging causes external fragmentation, or forgetting the extra memory lookup on a TLB miss."
+          },
+          "bkt_defaults": {
+            "p_init": 0.2,
+            "p_transit": 0.15,
+            "p_guess": 0.2,
+            "p_slip": 0.1,
+            "mastery_threshold": 0.8
+          }
+        },
+        {
+          "id": "OS_06_VIRTUAL_MEMORY",
+          "name": "Virtual Memory, Page Faults & Page Replacement (LRU, FIFO)",
+          "category": "Virtual Memory",
+          "question_count": 250,
+          "notes": {
+            "title": "Virtual Memory and Page Replacement",
+            "summary": "Virtual memory permits execution of processes larger than physical RAM via demand paging. Page replacement algorithms decide which victim frame to evict when memory is full.",
+            "key_points": [
+              "Belady's Anomaly occurs in FIFO where increasing frame allocation paradoxically increases page faults.",
+              "Optimal algorithm (OPT) evicts the page that will not be used for the longest period in the future.",
+              "Thrashing happens when a process spends more time swapping pages in/out than executing CPU instructions."
+            ],
+            "pitfalls": "Assuming LRU (Least Recently Used) suffers from Belady's Anomaly; LRU is a stack algorithm and never exhibits it."
+          },
+          "bkt_defaults": {
+            "p_init": 0.2,
+            "p_transit": 0.15,
+            "p_guess": 0.2,
+            "p_slip": 0.1,
+            "mastery_threshold": 0.8
+          }
+        },
+        {
+          "id": "OS_07_FILE_SYSTEMS",
+          "name": "File Systems, Directory Structures & Inodes",
+          "category": "Storage",
+          "question_count": 250,
+          "notes": {
+            "title": "File System Architecture and Inodes",
+            "summary": "File systems organize persistent data into directories and blocks. In Unix file systems, an inode stores metadata (permissions, owner, size, timestamps) and direct, single-indirect, double-indirect, and triple-indirect block pointers.",
+            "key_points": [
+              "An inode does not store the file name; file names are stored in directory entries mapping name to inode number.",
+              "Hard links share the same inode number; soft (symbolic) links create a separate file storing the target path.",
+              "Deleting a file only removes its directory entry; data blocks are freed when link count drops to zero."
+            ],
+            "pitfalls": "Thinking file names are stored inside the inode data structure itself."
+          },
+          "bkt_defaults": {
+            "p_init": 0.2,
+            "p_transit": 0.15,
+            "p_guess": 0.2,
+            "p_slip": 0.1,
+            "mastery_threshold": 0.8
+          }
+        },
+        {
+          "id": "OS_08_DISK_SCHEDULING",
+          "name": "Disk Scheduling Algorithms (SCAN, C-SCAN, LOOK)",
+          "category": "Storage",
+          "question_count": 250,
+          "notes": {
+            "title": "Disk Scheduling Algorithms",
+            "summary": "Magnetic disk access time is dominated by seek time. Scheduling algorithms reorder I/O requests to minimize total head movement across concentric cylinders.",
+            "key_points": [
+              "SSTF (Shortest Seek Time First) selects closest request to current head position, but can cause starvation.",
+              "SCAN (Elevator) sweeps from one end of disk to the other servicing requests in direction of travel.",
+              "C-SCAN (Circular SCAN) services requests in one direction only, then returns directly to start without servicing."
+            ],
+            "pitfalls": "Assuming SCAN reverses direction immediately without traveling to the disk end cylinder."
+          },
+          "bkt_defaults": {
+            "p_init": 0.2,
+            "p_transit": 0.15,
+            "p_guess": 0.2,
+            "p_slip": 0.1,
+            "mastery_threshold": 0.8
+          }
+        },
+        {
+          "id": "OS_09_THREADS_CONCURRENCY",
+          "name": "Multithreading Models & Kernel vs User Threads",
+          "category": "Concurrency",
+          "question_count": 250,
+          "notes": {
+            "title": "Multithreading Models and Kernel vs User Threads",
+            "summary": "A thread is the basic unit of CPU utilization. Threads within the same process share code, data section, and OS resources, but maintain independent thread IDs, program counters, register sets, and stacks.",
+            "key_points": [
+              "User-level threads are managed without kernel support; a blocking system call blocks the entire process.",
+              "Kernel-level threads are scheduled independently by OS kernel, supporting true multi-core concurrency.",
+              "Thread creation is significantly lighter weight than process creation because address space is shared."
+            ],
+            "pitfalls": "Assuming threads in the same process have independent heap memories or global variables."
+          },
+          "bkt_defaults": {
+            "p_init": 0.2,
+            "p_transit": 0.15,
+            "p_guess": 0.2,
+            "p_slip": 0.1,
+            "mastery_threshold": 0.8
+          }
+        },
+        {
+          "id": "OS_10_SECURITY_PROTECTION",
+          "name": "System Calls, Dual-Mode Operation & Protection",
+          "category": "Security",
+          "question_count": 250,
+          "notes": {
+            "title": "Dual-Mode Operation, System Calls and Protection",
+            "summary": "Hardware provides dual-mode execution (User Mode and Kernel/Privileged Mode) via a mode bit. Privileged instructions (I/O instructions, timer resets, interrupt masks) can only be executed in Kernel Mode.",
+            "key_points": [
+              "System calls trigger a software interrupt (trap) that switches mode bit from user (1) to kernel (0).",
+              "Access Matrix models protection domains and rights (read, write, execute) for objects.",
+              "Hardware timers prevent user programs from monopolizing the CPU indefinitely."
+            ],
+            "pitfalls": "Believing user programs can execute direct I/O instructions without passing through kernel system calls."
+          },
+          "bkt_defaults": {
+            "p_init": 0.2,
+            "p_transit": 0.15,
+            "p_guess": 0.2,
+            "p_slip": 0.1,
+            "mastery_threshold": 0.8
+          }
+        }
+      ]
+    },
+    {
+      "id": "DBMS",
+      "name": "Database Management Systems",
+      "course_code": "CS303",
+      "description": "Relational algebra, SQL, ER modeling, normalization, transaction ACID properties, and indexing.",
+      "total_questions": 2500,
+      "topics": [
+        {
+          "id": "DBMS_01_RELATIONAL_MODEL",
+          "name": "Relational Data Model, Schema & Key Constraints",
+          "category": "Relational Model",
+          "question_count": 250,
+          "notes": {
+            "title": "Relational Data Model, Integrity Constraints and Keys",
+            "summary": "Relational databases structure data into tables (relations) of rows (tuples) and columns (attributes). A Superkey uniquely identifies tuples; a Candidate Key is a minimal superkey; a Primary Key is chosen among candidate keys.",
+            "key_points": [
+              "Entity Integrity: Primary key attributes cannot contain NULL values.",
+              "Referential Integrity: Foreign keys must match an existing primary key in the referenced relation or be NULL.",
+              "Foreign keys establish relationships across distinct relations and maintain referential consistency."
+            ],
+            "pitfalls": "Confusing candidate keys with superkeys, or allowing primary key fields to take NULL."
+          },
+          "bkt_defaults": {
+            "p_init": 0.2,
+            "p_transit": 0.15,
+            "p_guess": 0.2,
+            "p_slip": 0.1,
+            "mastery_threshold": 0.8
+          }
+        },
+        {
+          "id": "DBMS_02_SQL_QUERIES",
+          "name": "SQL Queries, Aggregations, Grouping & Outer Joins",
+          "category": "SQL",
+          "question_count": 250,
+          "notes": {
+            "title": "SQL Queries, Aggregations, Grouping and Joins",
+            "summary": "SQL queries execute in logical order: FROM -> WHERE -> GROUP BY -> HAVING -> SELECT -> ORDER BY. The WHERE clause filters individual rows before aggregation, while HAVING filters aggregated groups.",
+            "key_points": [
+              "Aggregate functions (SUM, AVG, COUNT, MIN, MAX) ignore NULL values (except COUNT(*)).",
+              "INNER JOIN retains only matching tuples; LEFT/RIGHT OUTER JOIN retains unmatched tuples from the outer table padded with NULLs.",
+              "HAVING cannot be used without an aggregate condition or GROUP BY clause."
+            ],
+            "pitfalls": "Using aggregate functions inside the WHERE clause instead of the HAVING clause."
+          },
+          "bkt_defaults": {
+            "p_init": 0.2,
+            "p_transit": 0.15,
+            "p_guess": 0.2,
+            "p_slip": 0.1,
+            "mastery_threshold": 0.8
+          }
+        },
+        {
+          "id": "DBMS_03_RELATIONAL_ALGEBRA",
+          "name": "Relational Algebra Operations & Query Equivalence",
+          "category": "Relational Algebra",
+          "question_count": 250,
+          "notes": {
+            "title": "Relational Algebra Operations and Equivalences",
+            "summary": "Relational algebra is a procedural query language consisting of fundamental operations: Selection (sigma), Projection (pi), Cartesian Product (x), Set Union (cup), Set Difference (-), and Rename (rho).",
+            "key_points": [
+              "Selection filters tuples based on a predicate condition; Projection extracts specific attributes.",
+              "Natural Join (bowtie) equates common attributes and projects out duplicate columns.",
+              "Relational completeness means a language can express any query formulatable in relational algebra."
+            ],
+            "pitfalls": "Confusing Selection (filters rows) with Projection (filters columns)."
+          },
+          "bkt_defaults": {
+            "p_init": 0.2,
+            "p_transit": 0.15,
+            "p_guess": 0.2,
+            "p_slip": 0.1,
+            "mastery_threshold": 0.8
+          }
+        },
+        {
+          "id": "DBMS_04_ER_MODELING",
+          "name": "Entity-Relationship Modeling & Schema Conversion",
+          "category": "Data Modeling",
+          "question_count": 250,
+          "notes": {
+            "title": "Entity-Relationship Modeling and Schema Conversion",
+            "summary": "ER models depict conceptual schemas using Entities (rectangles), Attributes (ovals), and Relationships (diamonds). Weak entities lack a primary key of their own and depend on an identifying relationship with an owner entity.",
+            "key_points": [
+              "A weak entity set is represented with a double rectangle and its partial key (discriminator) is dashed-underlined.",
+              "Cardinality ratios include 1:1, 1:N, N:1, and M:N.",
+              "M:N relationships must be converted into a separate relational table with foreign keys from both participating entities."
+            ],
+            "pitfalls": "Attempting to embed an M:N relationship directly into one of the entity tables without an association table."
+          },
+          "bkt_defaults": {
+            "p_init": 0.2,
+            "p_transit": 0.15,
+            "p_guess": 0.2,
+            "p_slip": 0.1,
+            "mastery_threshold": 0.8
+          }
+        },
+        {
+          "id": "DBMS_05_NORMALIZATION",
+          "name": "Functional Dependencies & Normal Forms (1NF to BCNF)",
+          "category": "Normalization",
+          "question_count": 250,
+          "notes": {
+            "title": "Functional Dependencies and Normal Forms",
+            "summary": "Normalization minimizes data redundancy and update anomalies. 1NF requires atomic values; 2NF eliminates partial dependencies; 3NF eliminates transitive dependencies; BCNF requires every determinant (X in X -> Y) to be a superkey.",
+            "key_points": [
+              "1NF: All attribute values must be atomic (no arrays or repeating groups).",
+              "2NF: Relation in 1NF with no non-prime attribute partially dependent on any candidate key.",
+              "3NF: Relation in 2NF with no non-prime attribute transitively dependent on candidate keys.",
+              "BCNF is strictly stronger than 3NF; every BCNF decomposition is in 3NF, but not vice versa."
+            ],
+            "pitfalls": "Assuming all 3NF relations are automatically in BCNF, or missing dependency preservation tradeoffs in BCNF."
+          },
+          "bkt_defaults": {
+            "p_init": 0.2,
+            "p_transit": 0.15,
+            "p_guess": 0.2,
+            "p_slip": 0.1,
+            "mastery_threshold": 0.8
+          }
+        },
+        {
+          "id": "DBMS_06_TRANSACTIONS_ACID",
+          "name": "Transaction Management & ACID Properties",
+          "category": "Transactions",
+          "question_count": 250,
+          "notes": {
+            "title": "Transaction Processing and ACID Properties",
+            "summary": "A transaction is a logical unit of database processing that must satisfy ACID properties: Atomicity (all-or-nothing), Consistency (preserves database integrity constraints), Isolation (concurrent execution equivalent to serial), and Durability (committed changes persist).",
+            "key_points": [
+              "Atomicity is enforced by transaction rollback / undo logging.",
+              "Isolation is maintained by concurrency control protocols (locks, timestamps).",
+              "Durability is guaranteed by redo logging and Write-Ahead Logging (WAL) on non-volatile disk."
+            ],
+            "pitfalls": "Confusing Durability with Consistency, or thinking commit can be rolled back once acknowledged."
+          },
+          "bkt_defaults": {
+            "p_init": 0.2,
+            "p_transit": 0.15,
+            "p_guess": 0.2,
+            "p_slip": 0.1,
+            "mastery_threshold": 0.8
+          }
+        },
+        {
+          "id": "DBMS_07_CONCURRENCY_CONTROL",
+          "name": "Concurrency Control & Two-Phase Locking (2PL)",
+          "category": "Concurrency",
+          "question_count": 250,
+          "notes": {
+            "title": "Concurrency Control and Two-Phase Locking (2PL)",
+            "summary": "Concurrent schedules must be conflict serializable. Two-Phase Locking (2PL) ensures conflict serializability by requiring that all locks are acquired during a growing phase before any lock is released in a shrinking phase.",
+            "key_points": [
+              "Basic 2PL guarantees serializability but does NOT prevent deadlocks.",
+              "Strict 2PL holds all exclusive (X) locks until transaction commit/abort to prevent cascading aborts.",
+              "Rigorous 2PL holds all shared (S) and exclusive (X) locks until commit/abort."
+            ],
+            "pitfalls": "Assuming Two-Phase Locking prevents deadlocks; 2PL can easily lead to deadlock cycles."
+          },
+          "bkt_defaults": {
+            "p_init": 0.2,
+            "p_transit": 0.15,
+            "p_guess": 0.2,
+            "p_slip": 0.1,
+            "mastery_threshold": 0.8
+          }
+        },
+        {
+          "id": "DBMS_08_RECOVERY_SYSTEMS",
+          "name": "Database Recovery, Write-Ahead Logging & Checkpoints",
+          "category": "Recovery",
+          "question_count": 250,
+          "notes": {
+            "title": "Database Recovery and Write-Ahead Logging (WAL)",
+            "summary": "The Write-Ahead Logging (WAL) protocol dictates that log records describing a change must reach stable storage before the corresponding data page is flushed to disk. Checkpoints speed up crash recovery by bounding the log scan.",
+            "key_points": [
+              "WAL rule: log is written before database page is written to disk.",
+              "Recovery process scans backward to the latest checkpoint, then redoes committed transactions and undoes uncommitted ones.",
+              "Steal policy allows buffer manager to write dirty pages to disk before transaction commits."
+            ],
+            "pitfalls": "Flushing database pages to disk before their corresponding WAL log records are persisted."
+          },
+          "bkt_defaults": {
+            "p_init": 0.2,
+            "p_transit": 0.15,
+            "p_guess": 0.2,
+            "p_slip": 0.1,
+            "mastery_threshold": 0.8
+          }
+        },
+        {
+          "id": "DBMS_09_INDEXING_BTREES",
+          "name": "Indexing, B-Trees & B+ Tree File Structures",
+          "category": "Storage & Indexing",
+          "question_count": 250,
+          "notes": {
+            "title": "B-Trees and B+ Tree Indexing Structures",
+            "summary": "B+ Trees are balanced multi-way search trees optimized for block-based disk storage. In a B+ Tree, all data records/pointers reside exclusively in leaf nodes linked as a doubly linked list, providing O(log N) search and efficient range queries.",
+            "key_points": [
+              "Internal nodes store only routing keys and child pointers; leaf nodes store actual keys and data/record pointers.",
+              "Leaves are sequentially linked, enabling fast linear range scans without traversing internal nodes.",
+              "Every non-root node in a B+ Tree of order m has between ceil(m/2) and m children."
+            ],
+            "pitfalls": "Confusing B-Trees (where data pointers can reside in internal nodes) with B+ Trees (where all data pointers are strictly in leaves)."
+          },
+          "bkt_defaults": {
+            "p_init": 0.2,
+            "p_transit": 0.15,
+            "p_guess": 0.2,
+            "p_slip": 0.1,
+            "mastery_threshold": 0.8
+          }
+        },
+        {
+          "id": "DBMS_10_QUERY_OPTIMIZATION",
+          "name": "Query Processing, Evaluation Plans & Cost Estimation",
+          "category": "Query Optimization",
+          "question_count": 250,
+          "notes": {
+            "title": "Query Processing and Cost-Based Optimization",
+            "summary": "The query optimizer translates SQL into an initial relational algebra expression tree, applies heuristic transformation rules (pushing selections and projections down), and estimates costs to choose the most efficient physical access plan.",
+            "key_points": [
+              "Pushing selections down reduces the size of intermediate relations early in execution.",
+              "Join algorithms include Nested-Loop Join, Block Nested-Loop, Index Nested-Loop, and Hash Join.",
+              "Catalog statistics (histograms, number of tuples, distinct values) guide cost estimations."
+            ],
+            "pitfalls": "Evaluating Cartesian products before selections instead of pushing selections down."
+          },
+          "bkt_defaults": {
+            "p_init": 0.2,
+            "p_transit": 0.15,
+            "p_guess": 0.2,
+            "p_slip": 0.1,
+            "mastery_threshold": 0.8
+          }
+        }
+      ]
+    },
+    {
+      "id": "DSA",
+      "name": "Data Structures and Algorithms",
+      "course_code": "CS304",
+      "description": "Linear and hierarchical data structures, graphs, asymptotic complexity, sorting, searching, and DP.",
+      "total_questions": 2500,
+      "topics": [
+        {
+          "id": "DSA_01_ARRAYS_LINKEDLISTS",
+          "name": "Arrays, Linked Lists & Pointer Manipulations",
+          "category": "Linear Structures",
+          "question_count": 250,
+          "notes": {
+            "title": "Arrays, Linked Lists and Asymptotic Complexity",
+            "summary": "Arrays provide O(1) random access by index via contiguous memory, but insertions/deletions take O(N). Singly and doubly linked lists provide O(1) insertions/deletions at known node references, but sequential O(N) access.",
+            "key_points": [
+              "Array element address = Base + Index * ElementSize.",
+              "Doubly linked lists store previous and next pointers, requiring 2x pointer overhead per node.",
+              "Fast and slow pointers (Floyd's cycle detection) detect loops in linked lists in O(N) time and O(1) space."
+            ],
+            "pitfalls": "Assuming accessing the k-th node of a linked list takes O(1) time."
+          },
+          "bkt_defaults": {
+            "p_init": 0.2,
+            "p_transit": 0.15,
+            "p_guess": 0.2,
+            "p_slip": 0.1,
+            "mastery_threshold": 0.8
+          }
+        },
+        {
+          "id": "DSA_02_STACKS_QUEUES",
+          "name": "Stacks, Queues & Monotonic Sequences",
+          "category": "Linear Structures",
+          "question_count": 250,
+          "notes": {
+            "title": "Stacks, Queues and Monotonic Structures",
+            "summary": "Stacks operate on LIFO (Last-In-First-Out) principles, while Queues operate on FIFO (First-In-First-Out). Monotonic stacks and deques efficiently solve nearest smaller/greater element and sliding window maximum problems in O(N) time.",
+            "key_points": [
+              "A stack can be used to evaluate postfix expressions and parse balanced parentheses.",
+              "A circular queue avoids wasted space by wrapping indices using modulo arithmetic: (rear + 1) % capacity.",
+              "Two stacks can simulate a FIFO queue with amortized O(1) time per operation."
+            ],
+            "pitfalls": "Forgetting stack underflow/overflow checks, or confusing LIFO with FIFO order."
+          },
+          "bkt_defaults": {
+            "p_init": 0.2,
+            "p_transit": 0.15,
+            "p_guess": 0.2,
+            "p_slip": 0.1,
+            "mastery_threshold": 0.8
+          }
+        },
+        {
+          "id": "DSA_03_BINARY_TREES",
+          "name": "Binary Trees, Traversals (Pre/In/Post) & Properties",
+          "category": "Trees",
+          "question_count": 250,
+          "notes": {
+            "title": "Binary Tree Traversals and Structural Properties",
+            "summary": "A binary tree gives each node at most two children. Standard depth-first traversals are Preorder (Root-L-R), Inorder (L-Root-R), and Postorder (L-R-Root). Breadth-first traversal visits nodes level by level using a queue.",
+            "key_points": [
+              "A full binary tree has nodes with either 0 or 2 children; a complete binary tree is filled completely except possibly the bottom level.",
+              "A binary tree with N nodes has exactly N + 1 null pointer references.",
+              "Inorder traversal of a Binary Search Tree (BST) visits keys in strictly sorted ascending order."
+            ],
+            "pitfalls": "Confusing height (longest path from node to leaf) with depth (path length from root to node)."
+          },
+          "bkt_defaults": {
+            "p_init": 0.2,
+            "p_transit": 0.15,
+            "p_guess": 0.2,
+            "p_slip": 0.1,
+            "mastery_threshold": 0.8
+          }
+        },
+        {
+          "id": "DSA_04_BST_BALANCED_TREES",
+          "name": "Binary Search Trees & Balanced Trees (AVL, Red-Black)",
+          "category": "Trees",
+          "question_count": 250,
+          "notes": {
+            "title": "Binary Search Trees and Self-Balancing Trees",
+            "summary": "In a BST, all keys in the left subtree are smaller than the node's key, and all keys in the right subtree are larger. Unbalanced BSTs degenerate to O(N) linked lists. AVL and Red-Black trees maintain O(log N) operations via tree rotations.",
+            "key_points": [
+              "AVL balance factor = height(left) - height(right), strictly within {-1, 0, 1}.",
+              "AVL rebalancing uses Single Rotations (LL, RR) and Double Rotations (LR, RL).",
+              "Red-Black trees ensure the longest path is at most twice the length of the shortest path."
+            ],
+            "pitfalls": "Inserting sorted elements into an unbalanced BST, causing O(N) worst-case time."
+          },
+          "bkt_defaults": {
+            "p_init": 0.2,
+            "p_transit": 0.15,
+            "p_guess": 0.2,
+            "p_slip": 0.1,
+            "mastery_threshold": 0.8
+          }
+        },
+        {
+          "id": "DSA_05_HEAPS_PRIORITY",
+          "name": "Binary Heaps, Priority Queues & Heap Sort",
+          "category": "Priority Queues",
+          "question_count": 250,
+          "notes": {
+            "title": "Binary Heaps and Priority Queues",
+            "summary": "A Binary Heap is a complete binary tree satisfying the heap property (Min-Heap: parent <= children; Max-Heap: parent >= children). Represented in an array where node i has children 2i+1 and 2i+2, and parent floor((i-1)/2).",
+            "key_points": [
+              "Insert: append to array end and heapify-up in O(log N) time.",
+              "Extract-Min/Max: replace root with last element and heapify-down in O(log N) time.",
+              "Building a heap from an unordered array of N elements takes O(N) time (not O(N log N))."
+            ],
+            "pitfalls": "Assuming building a heap takes O(N log N) time; bottom-up BuildHeap runs in linear O(N) time."
+          },
+          "bkt_defaults": {
+            "p_init": 0.2,
+            "p_transit": 0.15,
+            "p_guess": 0.2,
+            "p_slip": 0.1,
+            "mastery_threshold": 0.8
+          }
+        },
+        {
+          "id": "DSA_06_HASHING",
+          "name": "Hash Tables, Hash Functions & Collision Resolution",
+          "category": "Hashing",
+          "question_count": 250,
+          "notes": {
+            "title": "Hash Tables and Collision Resolution",
+            "summary": "Hash tables map keys to indices using a hash function, targeting O(1) average time complexity. Collisions are handled via Open Hashing (Separate Chaining with linked lists/BSTs) or Closed Hashing (Open Addressing with Linear/Quadratic probing, Double Hashing).",
+            "key_points": [
+              "Load factor alpha = N / M (number of elements / number of buckets).",
+              "Linear probing suffers from primary clustering; double hashing eliminates primary and secondary clustering.",
+              "Worst-case search in separate chaining degrades to O(N) if all keys hash to the same bucket."
+            ],
+            "pitfalls": "Neglecting to rehash when load factor exceeds threshold, degrading O(1) average performance."
+          },
+          "bkt_defaults": {
+            "p_init": 0.2,
+            "p_transit": 0.15,
+            "p_guess": 0.2,
+            "p_slip": 0.1,
+            "mastery_threshold": 0.8
+          }
+        },
+        {
+          "id": "DSA_07_GRAPHS",
+          "name": "Graph Representations, BFS, DFS & Topological Sort",
+          "category": "Graphs",
+          "question_count": 250,
+          "notes": {
+            "title": "Graph Representations, Traversals and Topo Sort",
+            "summary": "Graphs G = (V, E) are represented as Adjacency Matrices (O(V^2) space, O(1) edge lookup) or Adjacency Lists (O(V + E) space, optimal for sparse graphs). BFS uses a queue to find unweighted shortest paths; DFS uses a stack/recursion for connectivity and cycles.",
+            "key_points": [
+              "BFS finds shortest paths in unweighted graphs in O(V + E) time.",
+              "DFS detects cycles in directed graphs using a recursion call stack (gray nodes / back edges).",
+              "Topological Sort requires a Directed Acyclic Graph (DAG) and runs in O(V + E) time using Kahn's in-degree algorithm or DFS finish times."
+            ],
+            "pitfalls": "Attempting topological sort on a graph containing a directed cycle."
+          },
+          "bkt_defaults": {
+            "p_init": 0.2,
+            "p_transit": 0.15,
+            "p_guess": 0.2,
+            "p_slip": 0.1,
+            "mastery_threshold": 0.8
+          }
+        },
+        {
+          "id": "DSA_08_SORTING_SEARCHING",
+          "name": "Sorting Algorithms (Merge, Quick) & Binary Search",
+          "category": "Algorithms",
+          "question_count": 250,
+          "notes": {
+            "title": "Sorting Algorithms and Binary Search",
+            "summary": "Comparison-based sorting has a lower bound of Omega(N log N). MergeSort is stable and guarantees O(N log N) worst-case time with O(N) auxiliary space. QuickSort has O(N log N) average time, O(1) space, but O(N^2) worst case on poor pivot choices.",
+            "key_points": [
+              "Binary Search requires a sorted array and achieves O(log N) time with middle element comparisons.",
+              "Stability preserves the relative order of duplicate elements (MergeSort, InsertionSort are stable; QuickSort, HeapSort are not).",
+              "Non-comparison sorts (Counting Sort, Radix Sort) achieve O(N + K) linear time under bounded integer keys."
+            ],
+            "pitfalls": "Applying binary search to an unsorted array, or assuming QuickSort is unconditionally O(N log N) in the worst case."
+          },
+          "bkt_defaults": {
+            "p_init": 0.2,
+            "p_transit": 0.15,
+            "p_guess": 0.2,
+            "p_slip": 0.1,
+            "mastery_threshold": 0.8
+          }
+        },
+        {
+          "id": "DSA_09_DYNAMIC_PROGRAMMING",
+          "name": "Dynamic Programming (Memoization, Tabulation, Optimal Substructure)",
+          "category": "Algorithms",
+          "question_count": 250,
+          "notes": {
+            "title": "Dynamic Programming: Memoization and Tabulation",
+            "summary": "Dynamic Programming solves optimization problems exhibiting Overlapping Subproblems and Optimal Substructure by storing subproblem solutions. Top-down uses recursion with memoization; bottom-up uses iterative tabulation.",
+            "key_points": [
+              "0/1 Knapsack: each item can be included at most once, running in O(N * W) pseudo-polynomial time.",
+              "Longest Common Subsequence (LCS): state DP[i][j] compares s1[i-1] with s2[j-1].",
+              "Space optimization reduces 2D DP tables to 1D arrays when state depends only on previous row."
+            ],
+            "pitfalls": "Attempting a greedy approach on 0/1 Knapsack, which fails because fractional choices are prohibited."
+          },
+          "bkt_defaults": {
+            "p_init": 0.2,
+            "p_transit": 0.15,
+            "p_guess": 0.2,
+            "p_slip": 0.1,
+            "mastery_threshold": 0.8
+          }
+        },
+        {
+          "id": "DSA_10_GREEDY_DIVIDE",
+          "name": "Greedy Strategies & Divide-and-Conquer Paradigm",
+          "category": "Algorithms",
+          "question_count": 250,
+          "notes": {
+            "title": "Greedy Algorithms and Divide-and-Conquer Paradigm",
+            "summary": "Greedy algorithms make the locally optimal choice at each step hoping for a global optimum, requiring the Greedy Choice Property. Divide-and-Conquer breaks problems into independent subproblems, solves them recursively, and combines results.",
+            "key_points": [
+              "Fractional Knapsack has the greedy choice property (sort by value/weight density); 0/1 Knapsack does not.",
+              "Dijkstra's shortest path and Prim's/Kruskal's Minimum Spanning Tree (MST) are greedy algorithms.",
+              "Master Theorem solves recurrences T(N) = aT(N/b) + f(N) for Divide-and-Conquer."
+            ],
+            "pitfalls": "Applying Dijkstra's algorithm to graphs with negative edge weights, which yields incorrect shortest paths."
+          },
+          "bkt_defaults": {
+            "p_init": 0.2,
+            "p_transit": 0.15,
+            "p_guess": 0.2,
+            "p_slip": 0.1,
+            "mastery_threshold": 0.8
+          }
+        }
+      ]
+    }
+  ]
+}
