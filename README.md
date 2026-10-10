@@ -286,4 +286,3 @@ All test suites execute with **0 console errors** and **100% test pass rate**.
 1. **Local Browser Persistence**: Currently runs in browser persistence mode (`localStorage`). Clearing browser storage resets demo accounts to their initial seeds.
 2. **Prototype Authentication**: Employs client-side demo role verification for immediate evaluation; production requires server-enforced JWT/OAuth2.
 3. **Question Bank Scope**: Currently Computer Networks (`CS301`) is fully populated with questions, micro-lessons, and retests; other departmental subjects are structured for curriculum expansion.
->>>>>>> 679516a (feat: complete GapPath platform with test scheduling fix and cloud deployment readiness)
