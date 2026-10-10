@@ -838,29 +838,102 @@ class GapPathHandler(http.server.SimpleHTTPRequestHandler):
             return
 
         # 3. Questions query
-        subject = query.get("subject", "CN")
+        subject = query.get("subject")
+        if subject in ["All", "all", "ALL", ""]:
+            subject = None
+
+        COURSE_SUBJECT_MAP = {
+            "CS301": "DBMS",
+            "CS201": "DSA",
+            "CS302": "OS",
+            "CS202": "CN",
+            "COMPUTER NETWORKS": "CN",
+            "DATABASE MANAGEMENT SYSTEMS": "DBMS",
+            "OPERATING SYSTEMS": "OS",
+            "DATA STRUCTURES AND ALGORITHMS": "DSA",
+            "DATA STRUCTURES & ALGORITHMS": "DSA"
+        }
+        resolved_subj = None
+        if subject and isinstance(subject, str):
+            s_clean = subject.strip().upper()
+            resolved_subj = COURSE_SUBJECT_MAP.get(s_clean, s_clean)
+
         topics = query.get("topics")
         if isinstance(topics, str):
             topics = [t.strip() for t in topics.split(",") if t.strip()]
-        elif not topics:
+        elif not topics or not isinstance(topics, list):
             topics = []
+
+        TOPIC_ALIASES = {
+            "DBMS_01_ER_MODEL": "DBMS_04_ER_MODELING",
+            "DBMS_02_RELATIONAL_ALGEBRA": "DBMS_03_RELATIONAL_ALGEBRA",
+            "DBMS_03_SQL_QUERIES": "DBMS_02_SQL_QUERIES",
+            "DBMS_04_NORMALIZATION": "DBMS_05_NORMALIZATION",
+            "DBMS_05_TRANSACTION_ACID": "DBMS_06_TRANSACTIONS_ACID",
+            "DBMS_06_CONCURRENCY_CONTROL": "DBMS_07_CONCURRENCY_CONTROL",
+            "DBMS_07_INDEXING_BTREES": "DBMS_09_INDEXING_BTREES",
+            "DBMS_08_QUERY_OPTIMIZATION": "DBMS_10_QUERY_OPTIMIZATION",
+            "DBMS_09_CRASH_RECOVERY": "DBMS_08_RECOVERY_SYSTEMS",
+            "DBMS_10_NOSQL_DISTRIBUTED": "DBMS_01_RELATIONAL_MODEL",
+
+            "DSA_01_ASYMPTOTIC_ANALYSIS": "DSA_10_GREEDY_DIVIDE",
+            "DSA_02_ARRAYS_STRINGS": "DSA_01_ARRAYS_LINKEDLISTS",
+            "DSA_03_LINKED_LISTS": "DSA_01_ARRAYS_LINKEDLISTS",
+            "DSA_04_STACKS_QUEUES": "DSA_02_STACKS_QUEUES",
+            "DSA_05_TREES_BST": "DSA_03_BINARY_TREES",
+            "DSA_06_HEAPS_PRIORITY": "DSA_05_HEAPS_PRIORITY",
+            "DSA_07_HASHING_MAPS": "DSA_06_HASHING",
+            "DSA_08_GRAPH_TRAVERSAL": "DSA_07_GRAPHS",
+            "DSA_09_GRAPH_SHORTEST_PATH": "DSA_07_GRAPHS",
+            "DSA_10_DYNAMIC_PROGRAMMING": "DSA_09_DYNAMIC_PROGRAMMING"
+        }
+
+        norm_topics = set()
+        for t in topics:
+            norm_topics.add(t)
+            if t in TOPIC_ALIASES:
+                norm_topics.add(TOPIC_ALIASES[t])
+            for k, v in TOPIC_ALIASES.items():
+                if v == t:
+                    norm_topics.add(k)
         
         difficulty = query.get("difficulty", "All")
         try:
             count = int(query.get("count", 5))
         except (ValueError, TypeError):
             count = 5
+        if count <= 0:
+            count = 5
 
         # Filter candidates
         candidates = []
         for q in questions:
-            if subject and q.get("subject_id") != subject and q.get("subject") != subject:
-                continue
-            if topics and q.get("topic_id") not in topics:
-                continue
+            if norm_topics:
+                if q.get("topic_id") not in norm_topics:
+                    continue
+            elif resolved_subj:
+                q_sub_id = (q.get("subject_id") or "").upper()
+                q_sub = (q.get("subject") or "").upper()
+                if q_sub_id != resolved_subj and q_sub != resolved_subj:
+                    continue
             if difficulty and difficulty != "All" and q.get("difficulty") != difficulty:
                 continue
             candidates.append(q)
+
+        # Fallback if filtered count is less than requested count and difficulty filter was applied
+        if len(candidates) < count and difficulty and difficulty != "All":
+            for q in questions:
+                if q in candidates:
+                    continue
+                if norm_topics:
+                    if q.get("topic_id") not in norm_topics:
+                        continue
+                elif resolved_subj:
+                    q_sub_id = (q.get("subject_id") or "").upper()
+                    q_sub = (q.get("subject") or "").upper()
+                    if q_sub_id != resolved_subj and q_sub != resolved_subj:
+                        continue
+                candidates.append(q)
 
         total_available = len(candidates)
         # Select sample
@@ -883,20 +956,23 @@ class GapPathHandler(http.server.SimpleHTTPRequestHandler):
                     "key": k,
                     "text": opt["text"],
                     "is_correct": opt.get("is_correct", False),
+                    "explanation": opt.get("rationale") or opt.get("explanation", ""),
                     "rationale": opt.get("rationale", "")
                 })
             shuffled_out.append({
                 "question_id": q["question_id"],
                 "subject": q["subject"],
-                "subject_id": q.get("subject_id", subject),
+                "subject_id": q.get("subject_id", resolved_subj or subject),
                 "topic_id": q["topic_id"],
                 "topic_name": q["topic_name"],
+                "concept_id": q["topic_id"],
+                "concept_name": q["topic_name"],
                 "difficulty": q["difficulty"],
                 "text": q["text"],
                 "options": final_opts,
                 "correct_option": new_key,
-                "explanation": q["explanation"],
-                "misconception_tag": q.get("misconception_tag", ""),
+                "explanation": q.get("explanation", "Official curriculum explanation."),
+                "misconception_tag": q.get("misconception_tag", "Conceptual Misconception"),
                 "notes": q.get("notes", {}),
                 "video_recommendation": q.get("video_recommendation", {})
             })
@@ -909,9 +985,11 @@ class GapPathHandler(http.server.SimpleHTTPRequestHandler):
                 "success": True,
                 "total_available": total_available,
                 "count": len(shuffled_out),
-                "subject": subject,
+                "subject": resolved_subj or subject,
                 "questions": shuffled_out
             }).encode("utf-8"))
+        except Exception as e:
+            print(f"[Questions API Notice] Error sending response: {e}")
         except (ConnectionResetError, ConnectionAbortedError, BrokenPipeError):
             pass
 

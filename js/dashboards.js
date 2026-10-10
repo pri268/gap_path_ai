@@ -4146,28 +4146,28 @@ class DashboardEngine {
         { id: "OS_10_SECURITY_PROTECTION", name: "System Calls, Dual-Mode Operation & Protection" }
       ],
       DBMS: [
-        { id: "DBMS_01_ER_MODEL", name: "Entity-Relationship (ER) Modeling & Constraints" },
-        { id: "DBMS_02_RELATIONAL_ALGEBRA", name: "Relational Algebra Operations" },
-        { id: "DBMS_03_SQL_QUERIES", name: "SQL Queries, Subqueries & Aggregate Functions" },
-        { id: "DBMS_04_NORMALIZATION", name: "Functional Dependencies & Normal Forms (1NF-BCNF)" },
-        { id: "DBMS_05_TRANSACTION_ACID", name: "Transaction Processing & ACID Properties" },
-        { id: "DBMS_06_CONCURRENCY_CONTROL", name: "Concurrency Control, Serializability & 2PL" },
-        { id: "DBMS_07_INDEXING_BTREES", name: "Database Indexing, B-Trees & B+ Trees" },
-        { id: "DBMS_08_QUERY_OPTIMIZATION", name: "Query Processing & Cost-Based Optimization" },
-        { id: "DBMS_09_CRASH_RECOVERY", name: "Database Crash Recovery & Write-Ahead Logging (ARIES)" },
-        { id: "DBMS_10_NOSQL_DISTRIBUTED", name: "NoSQL Data Stores & CAP Theorem" }
+        { id: "DBMS_01_RELATIONAL_MODEL", name: "Relational Data Model, Schema & Key Constraints" },
+        { id: "DBMS_02_SQL_QUERIES", name: "SQL Queries, Aggregations, Grouping & Outer Joins" },
+        { id: "DBMS_03_RELATIONAL_ALGEBRA", name: "Relational Algebra Operations & Query Equivalence" },
+        { id: "DBMS_04_ER_MODELING", name: "Entity-Relationship (ER) Modeling & Schema Conversion" },
+        { id: "DBMS_05_NORMALIZATION", name: "Functional Dependencies & Normal Forms (1NF-BCNF)" },
+        { id: "DBMS_06_TRANSACTIONS_ACID", name: "Transaction Processing & ACID Properties" },
+        { id: "DBMS_07_CONCURRENCY_CONTROL", name: "Concurrency Control, Serializability & 2PL" },
+        { id: "DBMS_08_RECOVERY_SYSTEMS", name: "Database Recovery, Write-Ahead Logging & Checkpoints" },
+        { id: "DBMS_09_INDEXING_BTREES", name: "Database Indexing, B-Trees & B+ Trees" },
+        { id: "DBMS_10_QUERY_OPTIMIZATION", name: "Query Processing & Cost-Based Optimization" }
       ],
       DSA: [
-        { id: "DSA_01_ASYMPTOTIC_ANALYSIS", name: "Asymptotic Notation & Time/Space Complexity" },
-        { id: "DSA_02_ARRAYS_STRINGS", name: "Arrays, Dynamic Sizing & String Manipulation" },
-        { id: "DSA_03_LINKED_LISTS", name: "Singly, Doubly & Circular Linked Lists" },
-        { id: "DSA_04_STACKS_QUEUES", name: "Stacks, Queues, Deques & Monotonic Deques" },
-        { id: "DSA_05_TREES_BST", name: "Binary Trees, Binary Search Trees & AVL Balancing" },
-        { id: "DSA_06_HEAPS_PRIORITY", name: "Binary Heaps & Priority Queues" },
-        { id: "DSA_07_HASHING_MAPS", name: "Hash Tables, Collision Resolution & Probing" },
-        { id: "DSA_08_GRAPH_TRAVERSAL", name: "Graph Representations, BFS & DFS Traversals" },
-        { id: "DSA_09_GRAPH_SHORTEST_PATH", name: "Dijkstra, Bellman-Ford, Prim & Kruskal" },
-        { id: "DSA_10_DYNAMIC_PROGRAMMING", name: "Dynamic Programming & Greedy Algorithms" }
+        { id: "DSA_01_ARRAYS_LINKEDLISTS", name: "Arrays, Linked Lists & Pointer Manipulations" },
+        { id: "DSA_02_STACKS_QUEUES", name: "Stacks, Queues & Monotonic Sequences" },
+        { id: "DSA_03_BINARY_TREES", name: "Binary Trees, Traversals & Tree Properties" },
+        { id: "DSA_04_BST_BALANCED_TREES", name: "Binary Search Trees & Balanced Trees (AVL, Red-Black)" },
+        { id: "DSA_05_HEAPS_PRIORITY", name: "Binary Heaps & Priority Queues" },
+        { id: "DSA_06_HASHING", name: "Hash Tables, Collision Resolution & Probing" },
+        { id: "DSA_07_GRAPHS", name: "Graph Representations, BFS & DFS Traversals" },
+        { id: "DSA_08_SORTING_SEARCHING", name: "Sorting Algorithms (Merge, Quick) & Binary Search" },
+        { id: "DSA_09_DYNAMIC_PROGRAMMING", name: "Dynamic Programming (Memoization, Tabulation)" },
+        { id: "DSA_10_GREEDY_DIVIDE", name: "Greedy Strategies & Divide-and-Conquer Paradigm" }
       ]
     };
 

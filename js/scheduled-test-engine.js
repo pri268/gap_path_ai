@@ -10,6 +10,30 @@
  * 6. Visible teacher-configurable mastery threshold (default 80%) with move-forward gate.
  */
 
+const SCHEDULED_TOPIC_ALIASES = {
+  "DBMS_01_ER_MODEL": "DBMS_04_ER_MODELING",
+  "DBMS_02_RELATIONAL_ALGEBRA": "DBMS_03_RELATIONAL_ALGEBRA",
+  "DBMS_03_SQL_QUERIES": "DBMS_02_SQL_QUERIES",
+  "DBMS_04_NORMALIZATION": "DBMS_05_NORMALIZATION",
+  "DBMS_05_TRANSACTION_ACID": "DBMS_06_TRANSACTIONS_ACID",
+  "DBMS_06_CONCURRENCY_CONTROL": "DBMS_07_CONCURRENCY_CONTROL",
+  "DBMS_07_INDEXING_BTREES": "DBMS_09_INDEXING_BTREES",
+  "DBMS_08_QUERY_OPTIMIZATION": "DBMS_10_QUERY_OPTIMIZATION",
+  "DBMS_09_CRASH_RECOVERY": "DBMS_08_RECOVERY_SYSTEMS",
+  "DBMS_10_NOSQL_DISTRIBUTED": "DBMS_01_RELATIONAL_MODEL",
+
+  "DSA_01_ASYMPTOTIC_ANALYSIS": "DSA_10_GREEDY_DIVIDE",
+  "DSA_02_ARRAYS_STRINGS": "DSA_01_ARRAYS_LINKEDLISTS",
+  "DSA_03_LINKED_LISTS": "DSA_01_ARRAYS_LINKEDLISTS",
+  "DSA_04_STACKS_QUEUES": "DSA_02_STACKS_QUEUES",
+  "DSA_05_TREES_BST": "DSA_03_BINARY_TREES",
+  "DSA_06_HEAPS_PRIORITY": "DSA_05_HEAPS_PRIORITY",
+  "DSA_07_HASHING_MAPS": "DSA_06_HASHING",
+  "DSA_08_GRAPH_TRAVERSAL": "DSA_07_GRAPHS",
+  "DSA_09_GRAPH_SHORTEST_PATH": "DSA_07_GRAPHS",
+  "DSA_10_DYNAMIC_PROGRAMMING": "DSA_09_DYNAMIC_PROGRAMMING"
+};
+
 class ScheduledTestEngine {
   constructor(questionBank) {
     this.questionBank = questionBank || window.gQuestionBank;
@@ -35,7 +59,6 @@ class ScheduledTestEngine {
     this.retestCurrentIndex = 0;
     this.retestAttempt = null;
 
-    // Review & Keyboard accessibility state
     // Review & Keyboard accessibility state
     this.isReviewing = false;
     this._keyListener = null;
@@ -78,17 +101,11 @@ class ScheduledTestEngine {
           window.gSubjectCatalog = await catRes.json();
         }
       }
-      if (!window.gAllQuestions) {
-        const qRes = await fetch("/api/questions?count=100");
+      if (!window.gAllQuestions || window.gAllQuestions.length < 50) {
+        const qRes = await fetch("/api/questions?count=300");
         if (qRes.ok) {
           const qData = await qRes.json();
           if (qData.questions) window.gAllQuestions = qData.questions;
-        } else {
-          const staticRes = await fetch("data/synthetic_questions_10000.json");
-          if (staticRes.ok) {
-            const staticData = await staticRes.json();
-            if (staticData.questions) window.gAllQuestions = staticData.questions.slice(0, 100);
-          }
         }
       }
     } catch (e) {
@@ -105,11 +122,18 @@ class ScheduledTestEngine {
     }
 
     let totalQuestions = 0;
+    const expandedTopicIds = new Set(topicIds || []);
+    (topicIds || []).forEach(id => {
+      if (SCHEDULED_TOPIC_ALIASES[id]) expandedTopicIds.add(SCHEDULED_TOPIC_ALIASES[id]);
+      Object.entries(SCHEDULED_TOPIC_ALIASES).forEach(([k, v]) => {
+        if (v === id) expandedTopicIds.add(k);
+      });
+    });
 
     // 1. Check in loaded 10,000 dataset if present
     if (window.gAllQuestions && Array.isArray(window.gAllQuestions) && window.gAllQuestions.length > 0) {
       const matching = window.gAllQuestions.filter(q => {
-        if (!topicIds.includes(q.topic_id)) return false;
+        if (!expandedTopicIds.has(q.topic_id)) return false;
         if (difficulty !== "All" && q.difficulty !== difficulty) return false;
         const correctOpts = (q.options || []).filter(o => o.is_correct);
         return correctOpts.length === 1;
@@ -119,16 +143,16 @@ class ScheduledTestEngine {
 
     // 2. Check in subject catalog
     if (totalQuestions === 0 && window.gSubjectCatalog && window.gSubjectCatalog.subjects) {
-      const subj = window.gSubjectCatalog.subjects.find(s => s.id === subjectId);
+      const subj = window.gSubjectCatalog.subjects.find(s => s.id === subjectId || s.name === subjectId);
       if (subj && subj.topics) {
-        const matchingTopics = subj.topics.filter(t => topicIds.includes(t.id));
+        const matchingTopics = subj.topics.filter(t => expandedTopicIds.has(t.id));
         totalQuestions = matchingTopics.reduce((acc, t) => acc + (t.question_count || 250), 0);
       }
     }
 
     // 3. Fallback to questionBank concepts
     if (totalQuestions === 0 && this.questionBank && this.questionBank.concepts) {
-      const concepts = this.questionBank.concepts.filter(c => topicIds.includes(c.id));
+      const concepts = this.questionBank.concepts.filter(c => expandedTopicIds.has(c.id));
       concepts.forEach(c => {
         const pool = c.diagnostic_pool || [];
         const practice = c.practice_questions || [];
@@ -139,14 +163,13 @@ class ScheduledTestEngine {
           const correctOpts = q.options.filter(o => o.is_correct);
           return correctOpts.length === 1;
         });
-
         totalQuestions += validated.length;
       });
     }
 
     // 4. Default for 4-subject dataset (each topic has 250 balanced questions)
-    if (totalQuestions === 0 && topicIds.length > 0) {
-      totalQuestions = topicIds.length * 250;
+    if (totalQuestions === 0 && (topicIds || []).length > 0) {
+      totalQuestions = (topicIds || []).length * 250;
     }
 
     const isSufficient = totalQuestions >= requestedCount && requestedCount > 0;
@@ -162,7 +185,7 @@ class ScheduledTestEngine {
   // ==========================================
   // 2. TEST START & QUESTION SELECTION
   // ==========================================
-  startTest(testId) {
+  async startTest(testId) {
     const studentUser = authEngine.getCurrentUser();
     if (!studentUser || studentUser.role !== CONFIG.ROLES.STUDENT) {
       alert("Access Denied: Tests can only be taken by authenticated students.");
@@ -219,9 +242,15 @@ class ScheduledTestEngine {
         remainingSecs = draft.remainingSeconds;
       }
     } else {
-      questions = this.generateQuestionsForStudent(test, studentUser.student_id);
-      if (questions.length === 0) {
-        alert("Error: No validated questions available for this test configuration.");
+      // 1. Show immediate responsive loading screen
+      this.renderLoadingScreen(test);
+      if (typeof switchTab === "function") switchTab("tab-scheduled-test");
+
+      // 2. Fetch validated questions dynamically from the server for this exact test
+      questions = await this.fetchValidatedQuestionsForTest(test, studentUser.student_id);
+
+      if (!questions || questions.length === 0) {
+        this.renderEmptyQuestionsError(test);
         return;
       }
     }
@@ -329,14 +358,222 @@ class ScheduledTestEngine {
     window.addEventListener("keydown", this._keyListener);
   }
 
-  generateQuestionsForStudent(test, studentId) {
+  renderLoadingScreen(test) {
+    const container = document.getElementById("scheduled-test-container");
+    if (!container) return;
+    container.innerHTML = `
+      <div class="test-taking-wrapper" style="text-align: center; padding: 60px 20px;">
+        <div class="card" style="max-width: 550px; margin: 0 auto; padding: 40px; background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 14px; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+          <div class="spinner mb-4" style="width: 48px; height: 48px; border: 4px solid rgba(56, 189, 248, 0.2); border-top-color: var(--primary-accent, #38BDF8); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px auto;"></div>
+          <h3 style="margin-bottom: 8px;">Preparing Your Assessment</h3>
+          <p class="text-sm text-muted mb-3">${test.title || 'Scheduled Test'} &middot; ${test.course_code || ''}</p>
+          <p class="text-xs" style="color: #94A3B8;">Fetching validated, randomized questions and shuffling choices for your test session...</p>
+        </div>
+      </div>
+    `;
+  }
+
+  renderEmptyQuestionsError(test) {
+    const container = document.getElementById("scheduled-test-container");
+    if (container) {
+      container.innerHTML = `
+        <div class="test-taking-wrapper" style="text-align: center; padding: 60px 20px;">
+          <div class="card" style="max-width: 550px; margin: 0 auto; padding: 40px; background: rgba(15, 23, 42, 0.95); border: 1px solid var(--rose-danger, #EF4444); border-radius: 14px;">
+            <div style="font-size: 40px; margin-bottom: 12px;">⚠️</div>
+            <h3 style="color: #FECDD3; margin-bottom: 10px;">No Questions Available</h3>
+            <p class="text-sm mb-4" style="color: #CBD5E1;">
+              We couldn't load validated questions for <strong>"${test.title}"</strong> (${test.subject_name || test.subject_id}).
+              Please verify the test topics or contact your instructor.
+            </p>
+            <button class="btn btn-primary" onclick="if (typeof switchTab === 'function') switchTab('tab-dashboard');">
+              ← Return to Dashboard
+            </button>
+          </div>
+        </div>
+      `;
+    }
+  }
+
+  async fetchValidatedQuestionsForTest(test, studentId) {
+    const count = test.question_count || 5;
+    const diff = test.difficulty || "All";
     const topicIds = test.topics || [];
+    const subject = test.subject_id || test.subject_name || "";
+
+    // 1. Request validated questions for that test's exact subject and selected topic IDs from the server
+    try {
+      const params = new URLSearchParams();
+      if (subject) params.set("subject", subject);
+      if (topicIds.length > 0) params.set("topics", topicIds.join(","));
+      if (diff) params.set("difficulty", diff);
+      params.set("count", count);
+      params.set("_t", Date.now().toString());
+
+      const res = await fetch(`/api/questions?${params.toString()}`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.questions && Array.isArray(data.questions) && data.questions.length > 0) {
+          return this.formatServerQuestions(data.questions, test);
+        }
+      }
+    } catch (apiErr) {
+      console.warn("Failed to query /api/questions from server:", apiErr);
+    }
+
+    // 2. Client-side static dataset fallback if server API is unavailable:
+    if (!window.gAllQuestions || window.gAllQuestions.length < 50) {
+      try {
+        const staticRes = await fetch("data/synthetic_questions_10000.json");
+        if (staticRes.ok) {
+          const staticData = await staticRes.json();
+          if (staticData.questions) window.gAllQuestions = staticData.questions;
+        }
+      } catch (staticErr) {
+        console.warn("Could not load static questions JSON fallback:", staticErr);
+      }
+    }
+
+    // 3. Fallback to generateQuestionsForStudent
+    const candidateQuestions = this.generateQuestionsForStudent(test, studentId);
+    if (candidateQuestions && candidateQuestions.length > 0) {
+      return candidateQuestions;
+    }
+
+    // 4. Curriculum synthesis fallback using subject catalog
+    return this.synthesizeCurriculumQuestions(test);
+  }
+
+  formatServerQuestions(serverQuestions, test) {
+    return serverQuestions.map((q, idx) => {
+      const topicName = q.topic_name || q.concept_name || q.topic_id || "Core Topic";
+      const topicId = q.topic_id || q.concept_id || `TOPIC_${idx}`;
+
+      const opts = (q.options || []).map(opt => ({
+        key: opt.key,
+        text: opt.text,
+        is_correct: !!opt.is_correct,
+        explanation: opt.explanation || opt.rationale || q.explanation || "Official curriculum explanation."
+      }));
+
+      return {
+        question_id: q.question_id || `Q_${test.id}_${idx + 1}`,
+        index: idx,
+        subject: q.subject || test.subject_name || "Curriculum",
+        subject_id: q.subject_id || test.subject_id || "CN",
+        topic_id: topicId,
+        topic_name: topicName,
+        concept_id: topicId,
+        concept_name: topicName,
+        difficulty: q.difficulty || test.difficulty || "Medium",
+        text: q.text,
+        options: opts,
+        correct_option: q.correct_option || "A",
+        explanation: q.explanation || "Official curriculum explanation.",
+        misconception_tag: q.misconception_tag || "Conceptual Misconception",
+        notes: q.notes || null,
+        video_recommendation: q.video_recommendation || null
+      };
+    });
+  }
+
+  synthesizeCurriculumQuestions(test) {
+    if (!window.gSubjectCatalog || !window.gSubjectCatalog.subjects) return [];
+
+    const rawTopicIds = test.topics || [];
+    const expandedTopicIds = new Set(rawTopicIds);
+    rawTopicIds.forEach(id => {
+      if (SCHEDULED_TOPIC_ALIASES[id]) expandedTopicIds.add(SCHEDULED_TOPIC_ALIASES[id]);
+      Object.entries(SCHEDULED_TOPIC_ALIASES).forEach(([k, v]) => {
+        if (v === id) expandedTopicIds.add(k);
+      });
+    });
+
+    const matchingTopics = [];
+    window.gSubjectCatalog.subjects.forEach(s => {
+      (s.topics || []).forEach(t => {
+        if (expandedTopicIds.size === 0 || expandedTopicIds.has(t.id)) {
+          matchingTopics.push({ topic: t, subject: s });
+        }
+      });
+    });
+
+    if (matchingTopics.length === 0) return [];
+
+    const needed = test.question_count || 5;
+    const synthesized = [];
+
+    for (let i = 0; i < needed; i++) {
+      const { topic, subject } = matchingTopics[i % matchingTopics.length];
+      const notes = topic.notes || {};
+      const keyPoints = Array.isArray(notes.key_points) && notes.key_points.length > 0
+        ? notes.key_points
+        : [`Fundamental principle governing ${topic.name}.`];
+      const correctText = keyPoints[0];
+      const pitfallText = typeof notes.pitfalls === "string" ? notes.pitfalls : "Violating architectural boundaries or protocol state invariants.";
+
+      const rawOpts = [
+        { text: correctText, is_correct: true, explanation: `Correct: ${notes.summary || correctText}` },
+        { text: pitfallText, is_correct: false, explanation: `Incorrect: This is a classic pitfall or violation in ${topic.name}.` },
+        { text: `Replaces standard bounds of ${topic.name} with unbounded speculative execution.`, is_correct: false, explanation: "Incorrect: Violates architectural isolation invariants." },
+        { text: `Bypasses hardware/software constraints and invalidates state tracking.`, is_correct: false, explanation: "Incorrect: Confuses interface abstraction with physical layer." }
+      ];
+
+      // Shuffle options
+      const shuffledOpts = [...rawOpts].sort(() => 0.5 - Math.random());
+      const keys = ["A", "B", "C", "D"];
+      let correctKey = "A";
+      const finalOpts = shuffledOpts.map((opt, oIdx) => {
+        const k = keys[oIdx];
+        if (opt.is_correct) correctKey = k;
+        return {
+          key: k,
+          text: opt.text,
+          is_correct: opt.is_correct,
+          explanation: opt.explanation
+        };
+      });
+
+      synthesized.push({
+        question_id: `Q_SYNTH_${topic.id}_${i + 1}`,
+        index: i,
+        subject: subject.name || test.subject_name || "Curriculum",
+        subject_id: subject.id || test.subject_id || "CN",
+        topic_id: topic.id,
+        topic_name: topic.name,
+        concept_id: topic.id,
+        concept_name: topic.name,
+        difficulty: test.difficulty || "Medium",
+        text: `Regarding ${topic.name}: Which of the following statements correctly identifies the core operational invariant or principle?`,
+        options: finalOpts,
+        correct_option: correctKey,
+        explanation: notes.summary || `Fundamental curriculum concept governing ${topic.name}.`,
+        misconception_tag: "Conceptual Invariant",
+        notes: notes,
+        video_recommendation: topic.video_recommendation || null
+      });
+    }
+
+    return synthesized;
+  }
+
+  generateQuestionsForStudent(test, studentId) {
+    const rawTopicIds = test.topics || [];
+    const expandedTopicIds = new Set(rawTopicIds);
+    rawTopicIds.forEach(id => {
+      if (SCHEDULED_TOPIC_ALIASES[id]) expandedTopicIds.add(SCHEDULED_TOPIC_ALIASES[id]);
+      Object.entries(SCHEDULED_TOPIC_ALIASES).forEach(([k, v]) => {
+        if (v === id) expandedTopicIds.add(k);
+      });
+    });
+
     const allCandidates = [];
 
     // 1. Try questions from loaded 10,000 dataset (window.gAllQuestions)
     if (window.gAllQuestions && Array.isArray(window.gAllQuestions) && window.gAllQuestions.length > 0) {
       window.gAllQuestions.forEach(q => {
-        if (topicIds.includes(q.topic_id)) {
+        const matchesTopic = expandedTopicIds.size > 0 && expandedTopicIds.has(q.topic_id);
+        const matchesSubject = !test.subject_id || q.subject_id === test.subject_id || q.subject === test.subject_name;
+        if (matchesTopic || (expandedTopicIds.size === 0 && matchesSubject)) {
           const correctCount = (q.options || []).filter(o => o.is_correct).length;
           if (correctCount === 1) {
             allCandidates.push({
@@ -364,7 +601,7 @@ class ScheduledTestEngine {
 
     // 2. Fallback to questionBank concepts
     if (allCandidates.length === 0 && this.questionBank && this.questionBank.concepts) {
-      const selectedConcepts = this.questionBank.concepts.filter(c => topicIds.includes(c.id));
+      const selectedConcepts = this.questionBank.concepts.filter(c => expandedTopicIds.has(c.id) || expandedTopicIds.size === 0);
       selectedConcepts.forEach(c => {
         const pool = c.diagnostic_pool || [];
         const practice = c.practice_questions || [];

@@ -794,9 +794,9 @@ function openAITutor() {
 }
 window.openAITutor = openAITutor;
 
-function startScheduledTest(testId) {
+async function startScheduledTest(testId) {
   if (window.scheduledTestEngineInstance) {
-    window.scheduledTestEngineInstance.startTest(testId);
+    await window.scheduledTestEngineInstance.startTest(testId);
   }
 }
 window.startScheduledTest = startScheduledTest;
