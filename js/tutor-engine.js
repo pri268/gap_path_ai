@@ -1128,28 +1128,9 @@ class TutorEngine {
           sourceLabel = "⚠️ AI Service Notice (API Error)";
           replyText = `### ⚠️ AI Service Error\n\n${data.error_message || "Gemini API returned an error."}\n\n**Guidance:** ${data.setup_guidance || "Verify that your GEMINI_API_KEY is valid and has active quota in Google AI Studio."}`;
         } else if (data.status === "unavailable" || !data.success) {
-          // AI service unavailable: Honest setup guidance
-          replyText = `
-### ⚠️ AI Tutor Service Configuration Required
-
-The real-time Gemini AI tutoring service is currently **unavailable** because a valid API key is not configured on the server.
-
-#### Setup Guidance to Enable AI Tutoring:
-1. **Configure your API key on the server:**
-   - In PowerShell:
-     \`\`\`powershell
-     $env:GEMINI_API_KEY = "your_google_ai_studio_api_key"
-     \`\`\`
-   - Or add a \`.env\` file in the project root:
-     \`\`\`
-     GEMINI_API_KEY=your_google_ai_studio_api_key
-     \`\`\`
-2. **Restart the server:** \`python scripts/server.py\`
-3. Once configured, GapPath AI Tutor will directly answer your questions, break down difficult topics, and provide contextual examples.
-
-*Note: For security and academic integrity, credentials must remain on the server and are never stored in client code. In the meantime, you can review verified lecture notes and tutorial videos for **${detectedTopic}** under **My Progress**.*
-          `.trim();
-          sourceLabel = "⚠️ AI Service Notice (Setup Required)";
+          replyText = this.generateCuratedPedagogicalResponse(userPrompt, detectedTopic, latestRecord) + 
+            `\n\n---\n*💡 AI Service Notice: Answered from GapPath's verified curriculum knowledge base. To enable real-time Gemini Flash dynamic conversational AI, configure \`GEMINI_API_KEY\` in your server or Render Environment settings.*`;
+          sourceLabel = "📚 GapPath Knowledge Base (Curriculum Grounded)";
           apiSuccess = true;
         }
       }
@@ -1163,11 +1144,8 @@ The real-time Gemini AI tutoring service is currently **unavailable** because a 
     }
 
     if (!apiSuccess) {
-      replyText = `
-### ⚠️ AI Tutor Connection Issue
-Unable to reach the tutoring service at this time. Please check your network connection or verify that \`scripts/server.py\` is running on port 3000.
-      `.trim();
-      sourceLabel = "⚠️ System Notice";
+      replyText = this.generateCuratedPedagogicalResponse(userPrompt, detectedTopic, latestRecord);
+      sourceLabel = "📚 GapPath Knowledge Base (Offline Fallback)";
     }
 
     const tutorMsg = {

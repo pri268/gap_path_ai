@@ -1489,9 +1489,18 @@ class ScheduledTestEngine {
         sourceLabel = data.source_label || "✨ GapPath AI (Gemini Flash)";
         this.testChatHistory.push({ role: "tutor", text: replyText });
       } else if (data.status === "unavailable") {
-        isNotice = true;
-        sourceLabel = "⚠️ AI Service Notice (Setup Required)";
-        replyText = data.setup_guidance || data.guidance || data.error_message || "The Gemini AI tutoring service is not currently configured with an API key on the server. Set GEMINI_API_KEY in your server environment to enable live AI responses.";
+        const curatedText = (window.tutorEngine && window.tutorEngine.generateCuratedPedagogicalResponse)
+          ? window.tutorEngine.generateCuratedPedagogicalResponse(userText, topicContext)
+          : null;
+        if (curatedText) {
+          replyText = curatedText;
+          sourceLabel = "📚 GapPath Knowledge Base";
+          isNotice = false;
+        } else {
+          isNotice = true;
+          sourceLabel = "⚠️ AI Service Notice (Setup Required)";
+          replyText = data.setup_guidance || data.guidance || data.error_message || "The Gemini AI tutoring service is not currently configured with an API key on the server. Set GEMINI_API_KEY in your server environment to enable live AI responses.";
+        }
       } else if (data.status === "error") {
         isNotice = true;
         sourceLabel = "⚠️ AI Service Notice (API Error)";

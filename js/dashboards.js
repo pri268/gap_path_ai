@@ -405,18 +405,18 @@ class DashboardEngine {
       aiBubble.style.margin = "8px 0";
 
       if (data.status === "unavailable") {
-        // Honest setup guidance, never fabricated or pretending it answered
+        const curatedText = (window.tutorEngine && window.tutorEngine.generateCuratedPedagogicalResponse)
+          ? window.tutorEngine.generateCuratedPedagogicalResponse(message, currentTopic)
+          : null;
         aiBubble.innerHTML = `
-          <div class="tutor-setup-notice-card" style="font-size: 12px;">
-            <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
-              <span>⚠️</span>
-              <strong>AI Service Unavailable: Setup Required</strong>
+          <div style="background: rgba(15, 23, 42, 0.95); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 8px; padding: 10px 14px; font-size: 13px; line-height: 1.5; color: #F8FAFC;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-size: 11px; color: #94A3B8;">
+              <span style="font-weight: 600; color: #38BDF8;">📚 GapPath Knowledge Base</span>
+              <span>${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
             </div>
-            <p style="margin: 0 0 6px 0; color: #F8FAFC;">
-              ${data.setup_guidance || data.guidance || "Gemini API key is not configured on the server. To enable live AI responses, configure GEMINI_API_KEY in your server environment."}
-            </p>
-            <div class="text-xs text-muted">
-              Credentials remain strictly on the server and are never exposed in frontend code. In the meantime, you can review verified lecture notes under <a href="javascript:void(0)" onclick="switchTab('tab-my-progress')" style="color: var(--cyan-accent); text-decoration: underline;">My Progress</a>.
+            <div>${curatedText ? (window.tutorEngine.formatMarkdown ? window.tutorEngine.formatMarkdown(curatedText) : curatedText) : (data.setup_guidance || data.guidance || "Configure GEMINI_API_KEY on the server to enable live generative AI.")}</div>
+            <div style="margin-top: 8px; padding-top: 6px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 11px; color: #94A3B8;">
+              💡 <em>Add GEMINI_API_KEY in Render service Environment tab to activate real-time Gemini Flash AI.</em>
             </div>
           </div>
         `;
